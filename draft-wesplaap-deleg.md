@@ -1,14 +1,13 @@
 ---
 title: Extensible Delegation for DNS
 abbrev: DELEG
-docname: draft-dnsop-deleg-latest
+docname: draft-wesplaap-deleg-latest
 date: {DATE}
 category: std
 updates: 1035
 
 ipr: trust200902
 submissiontype: IETF
-workgroup: dnsop
 area: Internet
 keyword: Internet-Draft
 
@@ -182,7 +181,8 @@ When a client receives the above record, the resolver should send queries for an
     example.com.  86400  IN DELEG 0   config3.example.org.
 
     Zone example.org.:
-    config3.example.org.  86400  IN SVCB 1 . ( ipv4hint=192.0.2.54,192.0.2.56
+    config3.example.org.  86400  IN SVCB 1 . ( 
+                    ipv4hint=192.0.2.54,192.0.2.56
                     ipv6hint=2001:db8:2423::3,2001:db8:2423::4 )
 
 A resolver trying to resolve a name under example.com would get the first record above from the parent authoritative server, .COM, indicating that the SVCB records found at config3.example.org should be used to locate the authoritative nameservers of example.com, and other parameters.
@@ -238,7 +238,7 @@ Some zone owners may wish to use multiple providers to serve their zone, in whic
 
 ## Loop Prevention
 
-The TargetName of an SVCB or DELEG record MAY be the owner of a CNAME record. Resolvers MUST follow CNAMEs as well as further alias SVCB records as normal, but MUST not allow more then 4 total lookups per delegation, with the first one being the DELEG referral and then 3 SVCB/CNAME lookups maximal.
+The TargetName of an SVCB or DELEG record MAY be the owner of a CNAME record. Resolvers MUST follow CNAMEs as well as further alias SVCB records as normal, but MUST NOT allow more then 4 total lookups per delegation, with the first one being the DELEG referral and then 3 SVCB/CNAME lookups maximal.
 
 Special care should be taken by both the zone owner and the delegated zone operator to ensure that a lookup loop is not created by having two AliasMode records rely on each other to serve the zone. Doing so may result in a resolution loop, and likely a denial of service. The mechanism on following CNAME and SVCB alias above should prevent exhaustion of server resources. If a resolution can not be found after 4 lookups the server should reply with a SERVFAIL error code.
 
@@ -418,10 +418,14 @@ John Levine, Erik Nygren, Jon Reed, Ben Kaduk, Mashooq Muhaimen, Jason Moreau, J
 
 # Differences to draft-homburg-deleg-incremental-deleg
 
-The draft mentioned above uses a similar yet different method to achieve a new delegation method. The main difference is that it does not use a new RR type, but instead uses SVCB under a different label (_deleg). This has the following problems:
-* The DNS tree now is no longer consistent as names under e.e _deleg.com decide where example.com is delegated. That is a big deviation from a consisten naming structure.
+The draft mentioned above uses a similar yet different method to achieve a new delegation method. The main difference is that it does not use a new RR type, but instead uses SVCB under a different label (_deleg). This has the following issues:
+
+* The DNS tree now is no longer consistent as names under e.g _deleg.com decide where example.com is delegated. That is a big deviation from a consistent naming structure.
+
 * It is also possible delegate the _deleg label making resolution even more complex
+
 * As it is an SVCB record only one alias mode is allowed per delegation
+
 * Every resolver supporting it would immediately have to send two queries for every iteration possibly causing a huge traffic increase to authorities
 
 # TODO
@@ -438,6 +442,9 @@ RFC EDITOR:
 RFC EDITOR:
 : PLEASE REMOVE THE THIS SECTION PRIOR TO PUBLICATION.
 
-~~~
-01234567890123456789012345678901234567890123456789012345678901234567891
-~~~
+## since draft-wesplaap-deleg-00
+
+* Clarified SVCB priority behaviour
+
+* Added section on differences to draft-homburg-deleg-incremental-deleg
+
