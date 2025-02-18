@@ -204,38 +204,227 @@ For the RDATA parameters to a DELEG RR, the DNS Service Bindings (SVCB) registry
 
 #  Examples
 
-Here is an example of the zone content off the com zone for a delegation for example.com with DELEG and NS records:
+The following example shows an excerpt from a signed root zone. It shows the delegation point for "example." and "test."
 
-    example.com.  86400  IN DELEG  1 ns1.example.com. (
-                    Glue4=192.0.2.1 Glue6=2001:DB8::1 )
-    example.com.  86400  IN DELEG  0 ns2.example.net.
-    example.com.  86400  IN DELEG  0 ns3.example.org.
-    example.com.  86400  IN NS     ns1.example.com.
-    example.com.  86400  IN NS     ns2.example.net.
-    example.com.  86400  IN NS     ns3.example.org.
-    ns1.example.com.    86400   IN  A  192.0.2.1
-    ns1.example.com     86400   IN  AAAA    2001:DB8::1
+The "example." delegation has DELEG and NS records. The "test." delegation has DELEG but no NS records.
+
+    example.   300 IN DELEG 1 a.example. Glue4=192.0.2.1 (
+                            Glue6=2001:DB8::1 )
+    example.   300 IN DELEG 0 ns2.example.net.
+    example.   300 IN DELEG 0 ns3.example.org.
+    example.   300 IN RRSIG DELEG 13 4 300 20250214164848 (
+                            20250207134348 21261 . HyDHYVT5KcqWc7J..= )
+    example.   300 IN NS    a.example.
+    example.   300 IN NS    b.example.net.
+    example.   300 IN NS    c.example.org.
+    example.   300 IN DS    65163 13 2 5F86F2F3AE2B02... 
+    example.   300 IN RRSIG DS 13 4 300 20250214164848 (
+                            20250207134348 21261 . O0k558jHhyrC21J..= )
+    example.   300 IN NSEC  a.example. NS DS RRSIG NSEC DELEG
+    example.   300 IN RRSIG NSEC 13 4 300 20250214164848 (
+                            20250207134348 21261 . 1Kl8vab96gG21Aa..= )
+    a.example. 300 IN A     192.0.2.1
+    a.example. 300 IN AAAA  2001:DB8::1
+
+The "test." delegation point has a DELEG record and no NS record.
     
-Another example of a referral answer of a DELEG aware authority using the signed content above to delegate example.com. The actual cryptographic data is abbreviated:
+    test.      300 IN DELEG 0 ns2.example.net
+    test.      300 IN RRSIG DELEG 13 4 300 20250214164848 (
+                            20250207134348 21261 . 98Aac9f7A1Ac26Q..= ) 
+    test.      300 IN NSEC  a.test. RRSIG NSEC DELEG
+    test.      300 IN RRSIG NSEC 13 4 300  20250214164848 (
+                            20250207134348 21261 . kj7YY5tr9h7UqlK..= )
+    
+## Responses
 
-    example.com.  86400 IN DELEG  1 ns1.example.com. (
-                Glue4=192.0.2.1 Glue6=2001:DB8::1 )
-    example.com.  86400 IN DELEG  0 ns2.example.net.
-    example.com.  86400 IN DELEG  0 ns3.example.org.
-    example.com.  86400 IN RRSIG DELEG 13 4 3600 (
-                              20250214164848 20250207134348 21261 com. 
-                              cqWc7J.... ==)
-    example.com.  86400 IN DS 65163 13 2 (
-                              5F86F2F3AE2B02... )
-    example.com.  86400 IN RRSIG DS 13 4 3600 (
-                              20250214164848 20250207134348 21261 com. 
-                              cqWc7J.... ==)
-    example.com.  86400 IN	NSEC \000example.com. NS DS RRSIG NSEC DELEG
-    example.com.  86400 IN RRSIG NSEC 13 4 3600 (
-                              20250214164848 20250207134348 21261 com. 
-                              cqWc7J.... ==)
-                              
+The following sections show referral examples:
 
+## DO bit clear, DE bit clear
+
+### Query for foo.example
+         
+;; Header: QR RCODE=0  
+;;
+    
+;; Question  
+foo.example.  IN MX
+    
+;; Answer  
+;; (empty)
+
+;; Authority  
+example.   300 IN NS    a.example.  
+example.   300 IN NS    b.example.net.  
+example.   300 IN NS    c.example.org.  
+
+;; Additional   
+a.example. 300 IN A     192.0.2.1  
+a.example. 300 IN AAAA  2001:DB8::1  
+
+### Query for foo.test
+
+;; Header: QR AA RCODE=3
+;;
+    
+;; Question  
+foo.test.   IN MX 
+    
+;; Answer  
+;; (empty)
+
+;; Authority  
+.   300 IN SOA ...
+
+;; Additional   
+;; (empty)    
+    
+     
+## DO bit set, DE bit clear
+
+### Query for foo.example
+
+
+    ;; Header: QR DO RCODE=0  
+    ;;
+    
+    ;; Question  
+    foo.example.   IN MX
+    
+    ;; Answer  
+    ;; (empty)
+    
+    ;; Authority  
+        
+    example.   300 IN NS    a.example.  
+    example.   300 IN NS    b.example.net.  
+    example.   300 IN NS    c.example.org.  
+    example.   300 IN DS    65163 13 2 5F86F2F3AE2B02...  
+    example.   300 IN RRSIG DS 13 4 300 20250214164848 (  
+                            20250207134348 21261 . O0k558jHhyrC21J..= )  
+    ;; Additional  
+    a.example. 300 IN A     192.0.2.1  
+    a.example. 300 IN AAAA  2001:DB8::1
+    
+    
+### Query for foo.test
+
+    ;; Header: QR DO AA RCODE=3  
+    ;;
+        
+    ;; Question  
+    foo.test.      IN MX 
+        
+    ;; Answer  
+    ;; (empty)
+
+    ;; Authority  
+    .          300 IN SOA ...
+    .          300 IN RRSIG SOA ...
+    .          300 IN NSEC  aaa NS SOA RRSIG NSEC DNSKEY ZONEMD
+    .          300 IN RRSIG NSEC 13 4 300  
+    test.      300 IN NSEC  a.test. RRSIG NSEC DELEG
+    test.      300 IN RRSIG NSEC 13 4 300  20250214164848 (
+                            20250207134348 21261 . aBFYask;djf7UqlK..= )
+
+    ;; Additional   
+    ;; (empty)    
+    
+
+## DO bit clear, DE bit set
+
+### Query for foo.example
+
+
+    ;; Header: QR DE RCODE=0  
+    ;;
+
+    ;; Question  
+    foo.example.  IN MX
+
+    ;; Answer  
+    ;; (empty)
+
+    ;; Authority  
+    example.   300 IN DELEG 1 a.example. Glue4=192.0.2.1 (
+                            Glue6=2001:DB8::1 )
+    example.   300 IN DELEG 0 ns2.example.net.
+    example.   300 IN DELEG 0 ns3.example.org.
+
+    ;; Additional   
+    ;; (empty)  
+    
+### Query for foo.test
+
+    ;; Header: QR AA RCODE=0
+    ;;
+        
+    ;; Question  
+    foo.test.   IN MX 
+        
+    ;; Answer  
+    ;; (empty)
+
+    ;; Authority  
+    test.      300 IN DELEG 0 ns2.example.net
+
+    ;; Additional   
+    ;; (empty)    
+        
+
+
+## DO bit set, DE bit set
+
+### Query for foo.example
+
+    ;; Header: QR DO DE RCODE=0  
+    ;;
+    
+    ;; Question  
+    foo.example.  IN MX
+    
+    ;; Answer  
+    ;; (empty)
+    
+    ;; Authority  
+        
+    example.   300 IN DELEG 1 a.example. Glue4=192.0.2.1 (
+                            Glue6=2001:DB8::1 )
+    example.   300 IN DELEG 0 ns2.example.net.
+    example.   300 IN DELEG 0 ns3.example.org.
+    example.   300 IN RRSIG DELEG 13 4 300 20250214164848 (
+                            20250207134348 21261 . HyDHYVT5KcqWc7J..= )
+    example.   300 IN DS    65163 13 2 5F86F2F3AE2B02...  
+    example.   300 IN RRSIG DS 13 4 300 20250214164848 (  
+                            20250207134348 21261 . O0k558jHhyrC21J..= )  
+
+    ;; Additional  
+    a.example. 300 IN A     192.0.2.1  
+    a.example. 300 IN AAAA  2001:DB8::1  
+
+### Query for foo.test
+    
+    
+    ;; Header: QR DO DE AA RCODE=3  
+    ;;
+        
+    ;; Question  
+    foo.test.      IN MX 
+        
+    ;; Answer  
+    ;; (empty)
+
+    ;; Authority  
+    .          300 IN SOA ...
+    .          300 IN RRSIG SOA ...
+    .          300 IN NSEC  aaa NS SOA RRSIG NSEC DNSKEY ZONEMD
+    .          300 IN RRSIG NSEC 13 4 300  
+    test.      300 IN NSEC  a.test. RRSIG NSEC DELEG
+    test.      300 IN RRSIG NSEC 13 4 300  20250214164848 (
+                            20250207134348 21261 . aBFYask;djf7UqlK..= )
+
+    ;; Additional   
+    ;; (empty)    
+    
      
 # Acknowledgments {:unnumbered}
 
