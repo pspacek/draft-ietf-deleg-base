@@ -19,6 +19,7 @@ If the query has the DE EDNS0 flag clear:
     Option D: Set RCODE=NXDOMAIN and return nothing in the Authority section
     Option G: Set RCODE=SERVFAIL and return nothing in the Authority section
     Option H: Return NS and glue records in the Authority section synthesized from the DELEG records
+    Option I: Return DELEG records in the Authority section
   If the auth has both NS and DELEG records:
     Option E: Return only NS records in the Authority section
     Option F: Return both DELEG and NS records in the Authority section
