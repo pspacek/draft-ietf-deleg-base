@@ -20,12 +20,12 @@ subject to a Simplified BSD License) in Contributions.
 ## Other Resources
 
 Discussion of this work occurs on the
-[dnsop working group mailing list](https://mailarchive.ietf.org/arch/browse/dnsop/)
-([subscribe](https://www.ietf.org/mailman/listinfo/dnsop)).  In addition to
+[deleg working group mailing list](https://mailarchive.ietf.org/arch/browse/dd/)
+([subscribe](https://www.ietf.org/mailman/listinfo/dd)).  In addition to
 contributions in GitHub, you are encouraged to participate in discussions there.
 
 **Note**: Some working groups adopt a policy whereby substantive discussion of
 technical issues needs to occur on the mailing list.
 
 You might also like to familiarize yourself with other
-[working group documents](https://datatracker.ietf.org/wg/ns2/documents/).
+[working group documents](https://datatracker.ietf.org/wg/deleg/documents/).
