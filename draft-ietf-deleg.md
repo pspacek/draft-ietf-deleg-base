@@ -177,7 +177,7 @@ A DELEG RRset MAY be present at a delegation point.  The DELEG RRset MAY contain
 
 A DELEG RRset MAY be present with or without NS or DS RRsets at the delegation point.
 
-An authoritative server that is DELEG aware MUST put all DELEG resource records for the delegation into the authority section when the resolver has signalled DELEG support. It SHOULD NOT supply DELEG records in the response when resolver has not signalled DELEG support.
+An authoritative server that is DELEG aware MUST put all DELEG resource records for the delegation into the authority section when the resolver has signaled DELEG support. It SHOULD NOT supply DELEG records in the response when resolver has not signaled DELEG support.
 
 If the delegation does not have DELEG records the authoritative server MUST send the NS records and, if the zone is DNSSEC signed, prove the absence of the DELEG RRSet.
 
@@ -203,15 +203,15 @@ Setting the DE bit to one in a query indicates to the server that the resolver i
 
 As the DELEG record is authoritative in the parent zone of a zone cut similar to DS it has to be signed in the parent zone.
 
-In order for the validator to understand that the delegation uses DELEG this draft introduces a new DNSKEY flag TBD. When this flag is set for the key that signs the DS or DELEG record, usually the zone signing key (ZSK), and the requester has signalled that it understands DELEG an authenticated denial of existence MUST be send with the referral response, so that a DELEG aware validator can prove the existence or absence of a DELEG record and detect a downgrade attack.
+In order for the validator to understand that the delegation uses DELEG this draft introduces a new DNSKEY flag TBD. When this flag is set for the key that signs the DS or DELEG record, usually the zone signing key (ZSK), and the requester has signaled that it understands DELEG an authenticated denial of existence MUST be send with the referral response, so that a DELEG aware validator can prove the existence or absence of a DELEG record and detect a downgrade attack.
 
 A Validating Stub Resolver that is DELEG aware has to use a Security-Aware Resolver that is DELEG aware and if it is behind a forwarder this has to be security and DELEG aware as well.
 
 # IANA Considerations
 
-IANA is requested to allocate the DELEG RR in the Resource Record (RR) TYPEs registry, with the meaning of "enchanced delegation information" and referencing this document.
+IANA is requested to allocate the DELEG RR in the Resource Record (RR) TYPEs registry, with the meaning of "enhanced delegation information" and referencing this document.
 
-IANA is requested to assign a new bit in the DNSKEY RR Flags registry ({{!RFC4034}}) for the DELEG bit (N), with the descripion "DELEG" and referencing this document.
+IANA is requested to assign a new bit in the DNSKEY RR Flags registry ({{!RFC4034}}) for the DELEG bit (N), with the description "DELEG" and referencing this document.
 
 IANA is requested to assign a bit from the EDNS Header Flags registry ({{!RFC6891}}), with the abbreviation DE, the description "DELEG enabled" and referencing this document.
 
@@ -467,12 +467,12 @@ RFC EDITOR:
 
 ## since draft-wesplaap-deleg-00
 
-* Clarified SVCB priority behaviour
+* Clarified SVCB priority behavior
 
 * Added section on differences to draft-homburg-deleg-incremental-deleg
 
 ## since draft-wesplaap-deleg-01
 
-* Reorganised and streamlined the draft to the bare mininum for DELEG as an NS replacement
+* Reorganised and streamlined the draft to the bare minimum for DELEG as an NS replacement
 * Defined codepoints for temporary testing
 * Added examples
