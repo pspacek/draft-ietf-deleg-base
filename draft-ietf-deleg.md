@@ -420,8 +420,7 @@ foo.test.   IN MX
 
 ### Query for foo.test
 
-
-    ;; Header: QR DO DE AA RCODE=3
+    ;; Header: QR DO DE AA RCODE=0
     ;;
 
     ;; Question
@@ -431,13 +430,12 @@ foo.test.   IN MX
     ;; (empty)
 
     ;; Authority
-    .          300 IN SOA ...
-    .          300 IN RRSIG SOA ...
-    .          300 IN NSEC  aaa NS SOA RRSIG NSEC DNSKEY ZONEMD
-    .          300 IN RRSIG NSEC 13 4 300
+    test.      300 IN DELEG INCLUDE ns2.example.net.
+    test.      300 IN RRSIG DELEG 13 4 300 20250214164848 (
+                            20250207134348 21261 . 98Aac9f7A1Ac26Q..= )
     test.      300 IN NSEC  a.test. RRSIG NSEC DELEG
     test.      300 IN RRSIG NSEC 13 4 300  20250214164848 (
-                            20250207134348 21261 . aBFYask;djf7UqlK..= )
+                            20250207134348 21261 . kj7YY5tr9h7UqlK..= )
 
     ;; Additional
     ;; (empty)
