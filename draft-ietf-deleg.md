@@ -11,18 +11,18 @@ date:
 consensus: true
 v: 3
 area: Internet
-workgroup: DELEG
+workgroup: deleg
 keyword:
  - Internet-Draft
  - DNS
  - delegation
 venue:
-  group: WG
+  group: deleg
   type: Working Group
-  mail: WG@example.com
-  arch: https://example.com/WG
-  github: USER/REPO
-  latest: https://example.com/LATEST
+  mail: dd@ietf.org
+  arch: https://mailarchive.ietf.org/arch/browse/dd/
+  github: ietf-wg-deleg/draft-ietf-deleg-base/
+  latest: https://github.com/ietf-wg-deleg/draft-ietf-deleg-base/tree/gh-pages
 
 ipr: trust200902
 
