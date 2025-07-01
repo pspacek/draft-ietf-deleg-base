@@ -215,6 +215,8 @@ IANA is requested to assign a new bit in the DNSKEY RR Flags registry ({{!RFC403
 
 IANA is requested to assign a bit from the EDNS Header Flags registry ({{!RFC6891}}), with the abbreviation DE, the description "DELEG enabled" and referencing this document.
 
+IANA is requested to assign a value from the Extended DNS Error Codes ({{!RFC8914}}), with the Purpose "New Delegation Only" and referencing this document.
+
 For the RDATA parameters to a DELEG RR, the DNS Service Bindings (SVCB) registry ({{!RFC9460}}) is used.  This document requests no new assignments to that registry, though it is expected that future DELEG work will.
 
 --- back
@@ -293,7 +295,7 @@ foo.test.   IN MX
 .   300 IN SOA ...
 
 ;; Additional
-;; (empty)
+;; OPT with Extended DNS Error: New Delegation Only
 
 
 ## DO bit set, DE bit clear
@@ -344,7 +346,7 @@ foo.test.   IN MX
                             20250207134348 21261 . aBFYask;djf7UqlK..= )
 
     ;; Additional
-    ;; (empty)
+    ;; OPT with Extended DNS Error: New Delegation Only
 
 
 ## DO bit clear, DE bit set
