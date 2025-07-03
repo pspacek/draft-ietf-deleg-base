@@ -205,6 +205,10 @@ Record types defined as authoritative on the parent side of zone cut (currently 
 
 DELEG unaware recursive resolvers will not be able to determine correct NS set for QTYPE=DELEG queries. This is not a bug.
 
+### Algorithm
+
+TODO: Update RFC 1034 sec 4.3.2. Algorithm + RFC 6672 sec 3.4.1. Resolver Algorithm so implementers don't have to construct it in their heads from scratch.
+
 
 ## Authoritative Servers
 DELEG aware authortiative server MUST copy the DE bit from the query into the response.
