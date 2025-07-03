@@ -166,26 +166,17 @@ The DELEG record uses a new resource record type, whose contents are identical t
 * The target of a DELEG INCLUDE record MUST be outside of the delegated domain.
 * The target of a DELEG DIRECT record MUST be a domain below the delegated domain.
 
-## Use of DELEG record
-
-The DELEG record creates a zone cut similar to the NS record:
-
-* Record types defined as authoritative in the child zone MUST be resolved using the name servers defined in the DELEG record.
-* Record types defined as authoritative on the parent side of zone cut (currently DS and DELEG types) retain the same special handling as if zone cut was created by a NS records.
+# Use of DELEG record
 
 A DELEG RRset MAY be present at a delegation point.  The DELEG RRset MAY contain multiple records. DELEG RRsets MUST NOT appear at a zone's apex.
 
 A DELEG RRset MAY be present with or without NS or DS RRsets at the delegation point.
 
-An authoritative server that is DELEG aware MUST put all DELEG resource records for the delegation into the authority section when the resolver has signaled DELEG support. It SHOULD NOT supply DELEG records in the response when resolver has not signaled DELEG support.
+## Resolvers
 
-If the delegation does not have DELEG records the authoritative server MUST send the NS records and, if the zone is DNSSEC signed, prove the absence of the DELEG RRSet.
+### Signaling DELEG support
 
-A resolver that is DELEG aware MUST signal its support by sending the DE bit when iterating and MUST use the DELEG records in the referral response.
-
-## Signaling DELEG support
-
-For a long time there will be both DELEG and NS needed for delegation. As both methods should be configured to get to a proper resolution it is not necessary to send both in a referral response. We therefore purpose an EDNS flag to be use similar to the DO Bit for DNSSEC to be used to signal that the sender understands DELEG and does not need NS or glue information in the referral.
+A resolver that is DELEG aware MUST signal its support by sending the DE bit when iterating.
 
 This bit is referred to as the "DELEG" (DE) bit.  In the context of the EDNS0 OPT meta-RR, the DE bit is the TBD of the "extended RCODE and flags" portion of the EDNS0 OPT meta-RR, structured as follows (to be updated when assigned):
 
@@ -196,7 +187,32 @@ This bit is referred to as the "DELEG" (DE) bit.  In the context of the EDNS0 OP
       2: |DO|CO|DE|              Z                       |
          +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 
-Setting the DE bit to one in a query indicates to the server that the resolver is able to accept delegations using DELEG only. The DE bit cleared (set to zero) indicates the resolver is unprepared to handle DELEG and hence can only be served NS, DS and glue in a delegation response. The DE bit of the query MUST be copied in the response.
+Setting the DE bit to one in a query indicates the resolver understands new DELEG semantics and does not need NS RR to follow a referral. The DE bit cleared (set to zero) indicates the resolver is unprepared to handle DELEG and hence can only be served NS, DS and glue in a delegation response.
+
+Motivation: For a long time there will be both DELEG and NS needed for delegation. As both methods should be configured to get to a proper resolution it is not necessary to send both in a referral response. We therefore purpose an EDNS flag to be use similar to the DO Bit for DNSSEC to be used to signal that the sender understands DELEG and does not need NS or glue information in the referral.
+
+### Referral
+
+The DELEG record creates a zone cut similar to the NS record.
+
+If a DELEG record exists on a given delegation point, all record types defined as authoritative in the child zone MUST be resolved using the name servers defined in the DELEG record. In such case resolver MUST NOT use NS records even if they happen to be present in cache, even if resolution using DELEG records have failed for some reason. Such fallback from DELEG to NS would invalidate security guarantees of DELEG protocol.
+
+If no DELEG record exists on a given delegation point resolver MUST use NS records as specified by RFC1034.
+
+### Parent-side types, QTYPE=DELEG
+
+Record types defined as authoritative on the parent side of zone cut (currently DS and DELEG types) retain the same special handling as before, i.e. {{!RFC4035}} section 2.6 applies.
+
+DELEG unaware recursive resolvers will not be able to determine correct NS set for QTYPE=DELEG queries. This is not a bug.
+
+
+## Authoritative Servers
+DELEG aware authortiative server MUST copy the DE bit from the query into the response.
+(TODO: not really necessary protocol-wise, but might be nice for monitoring the deployment?)
+
+An authoritative server that is DELEG aware MUST put all DELEG resource records for the delegation into the authority section when the resolver has signaled DELEG support. It SHOULD NOT supply DELEG records in the response when resolver has not signaled DELEG support.
+
+If the delegation does not have DELEG records the authoritative server MUST send the NS records and, if the zone is DNSSEC signed, prove the absence of the DELEG RRSet.
 
 
 ## DNSSEC
