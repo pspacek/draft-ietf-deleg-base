@@ -99,8 +99,7 @@ def answer(row):
         # odd combinations of an old auth with a DELEG RR in zone
         match row[NSRR]:
             case NSRR.PRESENT:
-                # DELEG RR is occluded by NS and does not affect processing
-                note = " (DELEG RR occluded)"
+                note = " (DELEG RR is treated as non-authoritative RR and does not affect processing)"
             case NSRR.ABSENT:
                 # NS does not exist so it's not a zone cut from old auth's perspective
                 # old server does not know DELEG is allowed only on zone cut so it will be accepted
