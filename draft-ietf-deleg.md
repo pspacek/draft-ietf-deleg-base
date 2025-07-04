@@ -211,7 +211,7 @@ TODO: Update RFC 1034 sec 4.3.2. Algorithm + RFC 6672 sec 3.4.1. Resolver Algori
 
 
 ## Authoritative Servers
-DELEG aware authortiative servers have to act different when handling DE=0 queries from DELEG unaware clients, and DE=1 queries from DELEG aware clients.
+DELEG aware authoritative servers have to act different when handling DE=0 queries from DELEG unaware clients, and DE=1 queries from DELEG aware clients.
 
 ### Unaware clients, DE=0
 A query with DE EDNS bit cleared indicates a DELEG unaware client. Such client has no use for DELEG information. In this case DELEG aware authoritative server MUST answer as if it is DELEG unaware.
@@ -246,13 +246,26 @@ TODO: debate if WG wants to do explicit SERVFAIL for this case instead of 'just'
 
 ### Aware clients, DE=1
 
+DE flag set to one in a query enables DELEG aware behavior in authoritative servers. In summary, the server treats DELEG records create zone cut and are authoritative on parent side of zone cut. This new zone cut type has priority over legacy delegation with NS RRset.
+
+#### QTYPE=DELEG
+
+An explicit query for DELEG RR type at a delegation point behaves much like query for DS RR type: Server answers authortiatively from the parent zone. All previous specifications for special handling QTYPE=DS apply equally to QTYPE=DELEG. In summary, server either provides authoritative DELEG RRset or proves non-existence of it.
+
+#### Delegation with DELEG
+
+If the delegation has a DELEG RRset, the authoritative server MUST put DELEG RRset into the authority section of the referral. In this case server MUST NOT add NS RRset into the authority section. Presence of covering RRSIG follows DNSSEC specification for answers with authoritative zone data.
+
+Similarly rules for DS RRset inclusion into referrals apply as specified by DNSSEC protocol without changes.
+
+#### Delegation without DELEG
+
+If the delegation does not have DELEG RRset, the authoritative server MUST put the NS RRset into the authority section of the referral. Absence of DELEG RRset must be proven as specified by DNSSEC protocol for authoritative data.
+
+Similarly rules for DS RRset inclusion into referrals apply as specified by DNSSEC protocol without changes. Please note in practice the same process and records are used to prove non-existence of DELEG and DS RRsets.
+
 The server MUST copy the DE bit from the query into the response.
 (TODO: not really necessary protocol-wise, but might be nice for monitoring the deployment?)
-
-An authoritative server that is DELEG aware MUST put all DELEG resource records for the delegation into the authority section when the resolver has signaled DELEG support. It SHOULD NOT supply DELEG records in the response when resolver has not signaled DELEG support.
-
-If the delegation does not have DELEG records the authoritative server MUST send the NS records and, if the zone is DNSSEC signed, prove the absence of the DELEG RRSet.
-
 
 ## DNSSEC
 
