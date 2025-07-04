@@ -1207,10 +1207,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-authoritative-servers" class="internal xref">Authoritative Servers</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.1">
-                    <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1" class="auto internal xref">3.2.1</a>.  <a href="#name-unaware-clients-de0" class="internal xref">Unaware clients, DE=0</a></p>
+                    <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1" class="auto internal xref">3.2.1</a>.  <a href="#name-deleg-unaware-clients" class="internal xref">DELEG-unaware Clients</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.2">
-                    <p id="section-toc.1-1.3.2.2.2.2.1"><a href="#section-3.2.2" class="auto internal xref">3.2.2</a>.  <a href="#name-aware-clients-de1" class="internal xref">Aware clients, DE=1</a></p>
+                    <p id="section-toc.1-1.3.2.2.2.2.1"><a href="#section-3.2.2" class="auto internal xref">3.2.2</a>.  <a href="#name-deleg-aware-clients" class="internal xref">DELEG-aware Clients</a></p>
 </li>
                 </ul>
 </li>
@@ -1541,62 +1541,52 @@ delegsub.sub.sld.test. DELEG ...
         <h3 id="name-authoritative-servers">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-authoritative-servers" class="section-name selfRef">Authoritative Servers</a>
         </h3>
-<p id="section-3.2-1">DELEG aware authoritative servers have to act different when handling DE=0 queries from DELEG unaware clients, and DE=1 queries from DELEG aware clients.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<div id="unaware-clients-de0">
+<p id="section-3.2-1">DELEG-aware authoritative servers act differently when handling queries from DELEG-unaware clients (those with DE=0) and queries from DELEG-aware clients (those with DE=1).<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">The server MUST copy the value of the DE bit from the query into the response.
+(TODO: not really necessary protocol-wise, but might be nice for monitoring the deployment?)<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<div id="deleg-unaware-clients">
 <section id="section-3.2.1">
-          <h4 id="name-unaware-clients-de0">
-<a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-unaware-clients-de0" class="section-name selfRef">Unaware clients, DE=0</a>
+          <h4 id="name-deleg-unaware-clients">
+<a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-deleg-unaware-clients" class="section-name selfRef">DELEG-unaware Clients</a>
           </h4>
-<p id="section-3.2.1-1">A query with DE EDNS bit cleared indicates a DELEG unaware client. Such client has no use for DELEG information. In this case DELEG aware authoritative server MUST answer as if it is DELEG unaware.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.1-2">In summary, in this specific case, DELEG RR does not create zone cut and is not returned in referral responses, and is not considered authoritative on the parent side of a zone cut. DNSSEC signing is unaffected by this instruction, i.e. no special handling for NSEC type bitmap is necessary.<a href="#section-3.2.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.1-3">Two corner cases arise if a zone cut contains DELEG RR and server is answering a DE=0 query:<a href="#section-3.2.1-3" class="pilcrow">¶</a></p>
-<div id="qtypedeleg">
+<p id="section-3.2.1-1">DELEG-unaware clients do not use DELEG records for delegation.
+When a DELEG-aware authoritative server responds to a DELEG-unaware client, any DELEG RR in the response does not create zone cut, is not returned in referral responses, and is not considered authoritative on the parent side of a zone cut. Because of this, DELEG-aware authoritative servers MUST answer as if they are DELEG-unaware.
+Please note this instruction does not affect DNSSEC signing, i.e. no special handling for NSEC type bitmap is necessary and DELEG RR type is accuratelly represented even for DELEG-unaware clients.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-2">Two surprising narrow cases of DELEG-aware authoritative responding in DELEG-unaware manner are described here.<a href="#section-3.2.1-2" class="pilcrow">¶</a></p>
+<div id="deleg-unaware-clients-requesting-qtypedeleg">
 <section id="section-3.2.1.1">
-            <h5 id="name-qtypedeleg">
-<a href="#section-3.2.1.1" class="section-number selfRef">3.2.1.1. </a><a href="#name-qtypedeleg" class="section-name selfRef">QTYPE=DELEG</a>
+            <h5 id="name-deleg-unaware-clients-reque">
+<a href="#section-3.2.1.1" class="section-number selfRef">3.2.1.1. </a><a href="#name-deleg-unaware-clients-reque" class="section-name selfRef">DELEG-unaware Clients Requesting QTYPE=DELEG</a>
             </h5>
-<p id="section-3.2.1.1-1">DE=0 query indicates that for this particular client DELEG RR type is 'not authoritative' on the parent side.<a href="#section-3.2.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.1.1-2">Let zone file for root zone contain following delegation with NS and DELEG records:<a href="#section-3.2.1.1-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3.2.1.1-3">
-<pre>
-example. NS    ...
-example. DELEG ...
-</pre><a href="#section-3.2.1.1-3" class="pilcrow">¶</a>
-</div>
-<p id="section-3.2.1.1-4">In this specific case, explicit QTYPE=DELEG query will result in referral response generated by following DELEG unaware rules:<a href="#section-3.2.1.1-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3.2.1.1-5">
-<pre>
-;; Authority
-example. NS    ...
-</pre><a href="#section-3.2.1.1-5" class="pilcrow">¶</a>
-</div>
-<p id="section-3.2.1.1-6">Other RRs might be included as specified by pre-DELEG protocols.<a href="#section-3.2.1.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.1-1">In DELEG-unaware clients, records with the DELEG RRtype are not authoritative on the parent side.
+Thus, queries with DE=0 and QTYPE=DELEG MUST result in a legacy referral response.<a href="#section-3.2.1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="deleg-without-ns">
+<div id="deleg-unaware-clients-with-deleg-rrs-present-but-no-ns-rrs">
 <section id="section-3.2.1.2">
-            <h5 id="name-deleg-without-ns">
-<a href="#section-3.2.1.2" class="section-number selfRef">3.2.1.2. </a><a href="#name-deleg-without-ns" class="section-name selfRef">DELEG without NS</a>
+            <h5 id="name-deleg-unaware-clients-with-">
+<a href="#section-3.2.1.2" class="section-number selfRef">3.2.1.2. </a><a href="#name-deleg-unaware-clients-with-" class="section-name selfRef">DELEG-unaware Clients with DELEG RRs Present but No NS RRs</a>
             </h5>
-<p id="section-3.2.1.2-1">DELEG unaware client might ask for a name which belongs to a zone delegated only with DELEG RRs but without any NS RRs. Such zone is, by definition, not resolvable for DELEG unaware client. Following pre-DELEG specification, in this case DELEG RR itself cannot create a zone cut and this can result in surprising response where RCODE=NXDOMAIN is returned, with correct proof of non-existance, for subdomains of such zone which does actually exist for DELEG aware clients.<a href="#section-3.2.1.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.1.2-2">In this specific case, authoritative server is RECOMMENDED to supplement DELEG unaware response with Extended DNS Error "New Delegation Only".<a href="#section-3.2.1.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.1.2-3">TODO: debate if WG wants to do explicit SERVFAIL for this case instead of 'just' EDE<a href="#section-3.2.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.2-1">DELEG-unaware clients might ask for a name which belongs to a zone delegated only with DELEG RRs (that is, without any NS RRs). Such zone is, by definition, not resolvable for DELEG-unaware clients. In this case the DELEG RR itself cannot create a zone cut, and the DELEG-aware authoritative server MUST return a legacy response.<a href="#section-3.2.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.2-2">The legacy response might be confusing for subdomains of zones which actually exist because DELEG-aware clients would get a different answer, namely a delegation. Example of a legacy response is in <a href="#legacynxdomain" class="auto internal xref">Appendix A.3.2</a>.<a href="#section-3.2.1.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.2-3">The authoritative server is RECOMMENDED to supplement DELEG unaware response with Extended DNS Error "New Delegation Only".<a href="#section-3.2.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.2-4">TODO: debate if WG wants to do explicit SERVFAIL for this case instead of 'just' EDE.<a href="#section-3.2.1.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
-<div id="aware-clients-de1">
+<div id="deleg-aware-clients">
 <section id="section-3.2.2">
-          <h4 id="name-aware-clients-de1">
-<a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-aware-clients-de1" class="section-name selfRef">Aware clients, DE=1</a>
+          <h4 id="name-deleg-aware-clients">
+<a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-deleg-aware-clients" class="section-name selfRef">DELEG-aware Clients</a>
           </h4>
-<p id="section-3.2.2-1">DE flag set to one in a query enables DELEG aware behavior in authoritative servers. In summary, the server treats DELEG records create zone cut and are authoritative on parent side of zone cut. This new zone cut type has priority over legacy delegation with NS RRset.<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
-<div id="qtypedeleg-1">
+<p id="section-3.2.2-1">When the client indicates that it is DELEG-aware by setting DE=1 in the query, DELEG-aware authoritative servers treat DELEG records as zone cuts, and the servers are authoritative on parent side of zone cut. This new zone cut has priority over legacy delegation with NS RRset.<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
+<div id="deleg-aware-clients-requesting-qtypedeleg">
 <section id="section-3.2.2.1">
-            <h5 id="name-qtypedeleg-2">
-<a href="#section-3.2.2.1" class="section-number selfRef">3.2.2.1. </a><a href="#name-qtypedeleg-2" class="section-name selfRef">QTYPE=DELEG</a>
+            <h5 id="name-deleg-aware-clients-request">
+<a href="#section-3.2.2.1" class="section-number selfRef">3.2.2.1. </a><a href="#name-deleg-aware-clients-request" class="section-name selfRef">DELEG-aware Clients Requesting QTYPE=DELEG</a>
             </h5>
-<p id="section-3.2.2.1-1">An explicit query for DELEG RR type at a delegation point behaves much like query for DS RR type: Server answers authortiatively from the parent zone. All previous specifications for special handling QTYPE=DS apply equally to QTYPE=DELEG. In summary, server either provides authoritative DELEG RRset or proves non-existence of it.<a href="#section-3.2.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.1-1">An explicit query for DELEG RR type at a delegation point behaves much like query for DS RR type: the server answers authortiatively from the parent zone. All previous specifications for special handling QTYPE=DS apply equally to QTYPE=DELEG. In summary, server either provides authoritative DELEG RRset or proves its non-existence.<a href="#section-3.2.2.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="delegation-with-deleg">
@@ -1604,19 +1594,17 @@ example. NS    ...
             <h5 id="name-delegation-with-deleg">
 <a href="#section-3.2.2.2" class="section-number selfRef">3.2.2.2. </a><a href="#name-delegation-with-deleg" class="section-name selfRef">Delegation with DELEG</a>
             </h5>
-<p id="section-3.2.2.2-1">If the delegation has a DELEG RRset, the authoritative server MUST put DELEG RRset into the authority section of the referral. In this case server MUST NOT add NS RRset into the authority section. Presence of covering RRSIG follows DNSSEC specification for answers with authoritative zone data.<a href="#section-3.2.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.2.2-2">Similarly rules for DS RRset inclusion into referrals apply as specified by DNSSEC protocol without changes.<a href="#section-3.2.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.2-1">If the delegation has a DELEG RRset, the authoritative server MUST put the DELEG RRset into the Authority section of the referral. In this case, the server MUST NOT include the NS RRset into the Authority section. Presence of the covering RRSIG follows the normal DNSSEC specification for answers with authoritative zone data.<a href="#section-3.2.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.2-2">Similarly, rules for DS RRset inclusion into referrals apply as specified by DNSSEC protocol.<a href="#section-3.2.2.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="delegation-without-deleg">
+<div id="deleg-aware-clients-with-ns-rrs-present-but-no-deleg-rrs">
 <section id="section-3.2.2.3">
-            <h5 id="name-delegation-without-deleg">
-<a href="#section-3.2.2.3" class="section-number selfRef">3.2.2.3. </a><a href="#name-delegation-without-deleg" class="section-name selfRef">Delegation without DELEG</a>
+            <h5 id="name-deleg-aware-clients-with-ns">
+<a href="#section-3.2.2.3" class="section-number selfRef">3.2.2.3. </a><a href="#name-deleg-aware-clients-with-ns" class="section-name selfRef">DELEG-aware Clients with NS RRs Present but No DELEG RRs</a>
             </h5>
-<p id="section-3.2.2.3-1">If the delegation does not have DELEG RRset, the authoritative server MUST put the NS RRset into the authority section of the referral. Absence of DELEG RRset must be proven as specified by DNSSEC protocol for authoritative data.<a href="#section-3.2.2.3-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.2.3-2">Similarly rules for DS RRset inclusion into referrals apply as specified by DNSSEC protocol without changes. Please note in practice the same process and records are used to prove non-existence of DELEG and DS RRsets.<a href="#section-3.2.2.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.2.3-3">The server MUST copy the DE bit from the query into the response.
-(TODO: not really necessary protocol-wise, but might be nice for monitoring the deployment?)<a href="#section-3.2.2.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.3-1">If the delegation does not have a DELEG RRset, the authoritative server MUST put the NS RRset into the authority section of the referral. Absence of DELEG RRset must be proven as specified by DNSSEC protocol for authoritative data.<a href="#section-3.2.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.3-2">Similarly, rules for DS RRset inclusion into referrals apply as specified by the DNSSEC protocol. Please note in practice the same process and records are used to prove non-existence of DELEG and DS RRsets.<a href="#section-3.2.2.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1924,7 +1912,7 @@ a.example. 300 IN AAAA  2001:DB8::1
 </div>
 </section>
 </div>
-<div id="query-for-footest-1">
+<div id="legacynxdomain">
 <section id="appendix-A.3.2">
           <h4 id="name-query-for-footest-2">
 <a href="#appendix-A.3.2" class="section-number selfRef">A.3.2. </a><a href="#name-query-for-footest-2" class="section-name selfRef">Query for foo.test</a>
@@ -1990,7 +1978,7 @@ example.   300 IN DELEG INCLUDE ns3.example.org.
 </div>
 </section>
 </div>
-<div id="query-for-footest-2">
+<div id="query-for-footest-1">
 <section id="appendix-A.4.2">
           <h4 id="name-query-for-footest-3">
 <a href="#appendix-A.4.2" class="section-number selfRef">A.4.2. </a><a href="#name-query-for-footest-3" class="section-name selfRef">Query for foo.test</a>
@@ -2057,7 +2045,7 @@ a.example. 300 IN AAAA  2001:DB8::1
 </div>
 </section>
 </div>
-<div id="query-for-footest-3">
+<div id="query-for-footest-2">
 <section id="appendix-A.5.2">
           <h4 id="name-query-for-footest-4">
 <a href="#appendix-A.5.2" class="section-number selfRef">A.5.2. </a><a href="#name-query-for-footest-4" class="section-name selfRef">Query for foo.test</a>
