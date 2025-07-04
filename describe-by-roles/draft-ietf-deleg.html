@@ -1067,7 +1067,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-deleg-latest</dd>
 <dt class="label-updates">Updates:</dt>
 <dd class="updates">
-<a href="https://www.rfc-editor.org/rfc/rfc1035" class="eref">1035</a>, <a href="https://www.rfc-editor.org/rfc/rfc6840" class="eref">6840</a> (if approved)</dd>
+<a href="https://www.rfc-editor.org/rfc/rfc1034" class="eref">1034</a>, <a href="https://www.rfc-editor.org/rfc/rfc1035" class="eref">1035</a>, <a href="https://www.rfc-editor.org/rfc/rfc6672" class="eref">6672</a>, <a href="https://www.rfc-editor.org/rfc/rfc6840" class="eref">6840</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
 <time datetime="2025-07-04" class="published">4 July 2025</time>
@@ -1464,7 +1464,74 @@ all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
           <h4 id="name-algorithm">
 <a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-algorithm" class="section-name selfRef">Algorithm</a>
           </h4>
-<p id="section-3.1.4-1">TODO: Update RFC 1034 sec 4.3.2. Algorithm + RFC 6672 sec 3.4.1. Resolver Algorithm so implementers don't have to construct it in their heads from scratch.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-1">This section updates instructions for step "2. Find the best servers to ask." of RFC1034 section 5.3.3 and <span>[<a href="#RFC6672" class="cite xref">RFC6672</a>]</span> section 3.4.1.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-2">There are two important details:<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1.4-3.1">
+              <p id="section-3.1.4-3.1.1">The algorithm description should explicitly describe RR types authoritative at the parent side of a zone cut. This is implied by <span>[<a href="#RFC4035" class="cite xref">RFC4035</a>]</span> section 3.1.4.1 for DS RR type but the text in the algorithm description was not updated. DELEG specification simply extends this existing behavior to DELEG RR type as well, and makes this special case explicit.<a href="#section-3.1.4-3.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.4-3.2">
+              <p id="section-3.1.4-3.2.1">When DELEG RRset exists, NS RRset is ignored on that particular zone cut by DELEG aware resolvers.<a href="#section-3.1.4-3.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.4-3.3">
+              <p id="section-3.1.4-3.3.1">DELEG and NS RR types can be used differently at each delegation level and resolver MUST be able follow chain of delegations which combines them in arbitrary ways.<a href="#section-3.1.4-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.1.4-4">Example of a valid delegation tree:<a href="#section-3.1.4-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1.4-5">
+<pre>
+; root zone with NS-only delegations
+. SOA ...
+test. NS ...
+
+; test. zone with NS+DELEG delegations
+test. SOA ...
+sld.test. NS ...
+sld.test. DELEG ...
+
+; sld.test. zone with NS-only delegation
+sld.test. SOA ...
+nssub.sld.test. NS ...
+
+; nssub.sld.test. zone with DELEG-only delegation
+delegsub.sub.sld.test. DELEG ...
+</pre><a href="#section-3.1.4-5" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1.4-6">Terms SNAME and SLIST used in the rest of this section are defined in RFC 1034 section 5.3.2.:<a href="#section-3.1.4-6" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-7">SNAME           the domain name we are searching for.<a href="#section-3.1.4-7" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-8">SLIST           a structure which describes the name servers and the
+                zone which the resolver is currently trying to query.<a href="#section-3.1.4-8" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-9">Modified description of Step 2. Find the best servers to ask follows:<a href="#section-3.1.4-9" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-10">Step 2 looks for a name server to ask for the required data.<a href="#section-3.1.4-10" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-11">First determine deepest possible zone cut which can potentially hold the answer for given (query name, type, class) combination:<a href="#section-3.1.4-11" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1.4-12.1">
+              <p id="section-3.1.4-12.1.1">Start with SNAME equal to QNAME.<a href="#section-3.1.4-12.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.4-12.2">
+              <p id="section-3.1.4-12.2.1">If QTYPE is a type authoritative at the parent side of a zone cut (DS or DELEG), remove leftmost label from SNAME. E.g. if QNAME is Test.Example. and QTYPE is DELEG or DS, set SNAME to Example.<a href="#section-3.1.4-12.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.4-12.3">
+              <p id="section-3.1.4-12.3.1">TODO: what to do about ". DELEG" (or DS) query? That leaves zero labels left. That by definition does not exist ...<a href="#section-3.1.4-12.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.1.4-13">Further general strategy is to look for locally-available DELEG and NS RRsets, starting at current SNAME. If none are found, shorten SNAME by removing leftmost label and check again. This effectivelly finds the deepest known delegation point on the path between SNAME and the root:<a href="#section-3.1.4-13" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1.4-14.1">
+              <p id="section-3.1.4-14.1.1">For given SNAME first check existence of DELEG RRset. If it exists, resolver MUST use it's content to populate SLIST. If the DELEG RRset is known to exist but is unusable (e.g. it is found in DNSSEC BAD cache), resolver MUST NOT fallback to NS RRset, even if it is locally available. Resolver MUST treat this case as if no servers were available/reachable.<a href="#section-3.1.4-14.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.4-14.2">
+              <p id="section-3.1.4-14.2.1">If a given SNAME is proven to not have a DELEG RRset but has NS RRset, resolver MUST copy it into SLIST.<a href="#section-3.1.4-14.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.4-14.3">
+              <p id="section-3.1.4-14.3.1">If SLIST is populated, terminate walk up the DNS tree.<a href="#section-3.1.4-14.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.4-14.4">
+              <p id="section-3.1.4-14.4.1">If SLIST is not populated, remove leftmost label from SNAME and inspect RR types for this new SNAME.<a href="#section-3.1.4-14.4.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.1.4-15">Rest of the Step 2's description is not affected by this document.<a href="#section-3.1.4-15" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-16">Please note the instructions to "Bound the amount of work" further down in the original text to apply. Suitable limits MUST be enforced to limit damage EVEN IF SOMEONE HAS INCORRECTLY CONFIGURED SOME DATA.<a href="#section-3.1.4-16" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1665,6 +1732,10 @@ say as DS RR type.<a href="#section-3.4.2-2" class="pilcrow">¶</a></p>
 <dt id="RFC4035">[RFC4035]</dt>
         <dd>
 <span class="refAuthor">Arends, R.</span>, <span class="refAuthor">Austein, R.</span>, <span class="refAuthor">Larson, M.</span>, <span class="refAuthor">Massey, D.</span>, and <span class="refAuthor">S. Rose</span>, <span class="refTitle">"Protocol Modifications for the DNS Security Extensions"</span>, <span class="seriesInfo">RFC 4035</span>, <span class="seriesInfo">DOI 10.17487/RFC4035</span>, <time datetime="2005-03" class="refDate">March 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4035">https://www.rfc-editor.org/rfc/rfc4035</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6672">[RFC6672]</dt>
+        <dd>
+<span class="refAuthor">Rose, S.</span> and <span class="refAuthor">W. Wijngaards</span>, <span class="refTitle">"DNAME Redirection in the DNS"</span>, <span class="seriesInfo">RFC 6672</span>, <span class="seriesInfo">DOI 10.17487/RFC6672</span>, <time datetime="2012-06" class="refDate">June 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6672">https://www.rfc-editor.org/rfc/rfc6672</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6840">[RFC6840]</dt>
         <dd>
