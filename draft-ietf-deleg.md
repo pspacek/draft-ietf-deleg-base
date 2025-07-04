@@ -266,14 +266,13 @@ Please note the instructions to "Bound the amount of work" further down in the o
 ## Authoritative Servers
 DELEG-aware authoritative servers act differently when handling queries from DELEG-unaware clients (those with DE=0) and queries from DELEG-aware clients (those with DE=1).
 
-DNSSEC signing in the presence of DELEG records is unaffected.
-That is, the presence or abscence of DELEG records is always reflected in the NSEC type bitmap, regardless of the type of query.
-
 ### DELEG-unaware Clients
 
 DELEG-unaware clients do not use DELEG records for delegation.
-When a DELEG-aware authoritative server responds to a DELEG-unaware client, any DELEG RR in the response does not create zone cut, is not returned in referral responses, and is not considered authoritative on the parent side of a zone cut.
-Because of this, DELEG-aware authoritative servers MUST answer as if they are DELEG-unaware except for two narrow cases described here.
+When a DELEG-aware authoritative server responds to a DELEG-unaware client, any DELEG RR in the response does not create zone cut, is not returned in referral responses, and is not considered authoritative on the parent side of a zone cut. Because of this, DELEG-aware authoritative servers MUST answer as if they are DELEG-unaware.
+Please note this instruction does not affect DNSSEC signing, i.e. no special handling for NSEC type bitmap is necessary and DELEG RR type is accuratelly represented even for DELEG-unaware clients.
+
+Two surprising narrow cases of DELEG-aware authoritative responding in DELEG-unaware manner are described here.
 
 #### DELEG-unaware Clients Requesting QTYPE=DELEG
 
