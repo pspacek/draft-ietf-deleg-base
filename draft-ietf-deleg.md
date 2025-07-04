@@ -281,12 +281,11 @@ Thus, queries with DE=0 and QTYPE=DELEG MUST result in a legacy referral respons
 
 #### DELEG-unaware Clients with DELEG RRs Present but No NS RRs
 
-DELEG-unaware clients might ask for a name which belongs to a zone delegated only with DELEG RRs (that is, without any NS RRs).
-Such zone is, by definition, not resolvable for DELEG-unaware clients.
-In this case the DELEG RR itself cannot create a zone cut, and the DELEG-aware authoritative server MUST return a response with an RCODE of NXDOMAIN (along with the DNSSEC proof of non-existance if the query had DO=1).
+DELEG-unaware clients might ask for a name which belongs to a zone delegated only with DELEG RRs (that is, without any NS RRs). Such zone is, by definition, not resolvable for DELEG-unaware clients. In this case the DELEG RR itself cannot create a zone cut, and the DELEG-aware authoritative server MUST return a legacy response.
+
+The legacy response might be confusing for subdomains of zones which actually exist because DELEG-aware clients would get a different answer, namely a delegation. Example of a legacy response is in {{legacynxdomain}}.
+
 The authoritative server is RECOMMENDED to supplement DELEG unaware response with Extended DNS Error "New Delegation Only".
- 
-This result might be confusing for subdomains of zones which actually exist because DELEG-aware clients would get a different answer, namely a delegation.
 
 TODO: debate if WG wants to do explicit SERVFAIL for this case instead of 'just' EDE.
 
@@ -484,7 +483,7 @@ foo.test.   IN MX
     a.example. 300 IN AAAA  2001:DB8::1
 
 
-### Query for foo.test
+### Query for foo.test {#legacynxdomain}
 
     ;; Header: QR DO AA RCODE=3
     ;;
