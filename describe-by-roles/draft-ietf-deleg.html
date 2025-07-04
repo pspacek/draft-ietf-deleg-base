@@ -1457,7 +1457,7 @@ all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
         <h3 id="name-authoritative-servers">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-authoritative-servers" class="section-name selfRef">Authoritative Servers</a>
         </h3>
-<p id="section-3.2-1">DELEG aware authortiative servers have to act different when handling DE=0 queries from DELEG unaware clients, and DE=1 queries from DELEG aware clients.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-1">DELEG aware authoritative servers have to act different when handling DE=0 queries from DELEG unaware clients, and DE=1 queries from DELEG aware clients.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 <div id="unaware-clients-de0">
 <section id="section-3.2.1">
           <h4 id="name-unaware-clients-de0">
@@ -1506,10 +1506,35 @@ example. NS    ...
           <h4 id="name-aware-clients-de1">
 <a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-aware-clients-de1" class="section-name selfRef">Aware clients, DE=1</a>
           </h4>
-<p id="section-3.2.2-1">The server MUST copy the DE bit from the query into the response.
-(TODO: not really necessary protocol-wise, but might be nice for monitoring the deployment?)<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.2-2">An authoritative server that is DELEG aware MUST put all DELEG resource records for the delegation into the authority section when the resolver has signaled DELEG support. It SHOULD NOT supply DELEG records in the response when resolver has not signaled DELEG support.<a href="#section-3.2.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.2-3">If the delegation does not have DELEG records the authoritative server MUST send the NS records and, if the zone is DNSSEC signed, prove the absence of the DELEG RRSet.<a href="#section-3.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-1">DE flag set to one in a query enables DELEG aware behavior in authoritative servers. In summary, the server treats DELEG records create zone cut and are authoritative on parent side of zone cut. This new zone cut type has priority over legacy delegation with NS RRset.<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
+<div id="qtypedeleg-1">
+<section id="section-3.2.2.1">
+            <h5 id="name-qtypedeleg-2">
+<a href="#section-3.2.2.1" class="section-number selfRef">3.2.2.1. </a><a href="#name-qtypedeleg-2" class="section-name selfRef">QTYPE=DELEG</a>
+            </h5>
+<p id="section-3.2.2.1-1">An explicit query for DELEG RR type at a delegation point behaves much like query for DS RR type: Server answers authortiatively from the parent zone. All previous specifications for special handling QTYPE=DS apply equally to QTYPE=DELEG. In summary, server either provides authoritative DELEG RRset or proves non-existence of it.<a href="#section-3.2.2.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="delegation-with-deleg">
+<section id="section-3.2.2.2">
+            <h5 id="name-delegation-with-deleg">
+<a href="#section-3.2.2.2" class="section-number selfRef">3.2.2.2. </a><a href="#name-delegation-with-deleg" class="section-name selfRef">Delegation with DELEG</a>
+            </h5>
+<p id="section-3.2.2.2-1">If the delegation has a DELEG RRset, the authoritative server MUST put DELEG RRset into the authority section of the referral. In this case server MUST NOT add NS RRset into the authority section. Presence of covering RRSIG follows DNSSEC specification for answers with authoritative zone data.<a href="#section-3.2.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.2-2">Similarly rules for DS RRset inclusion into referrals apply as specified by DNSSEC protocol without changes.<a href="#section-3.2.2.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="delegation-without-deleg">
+<section id="section-3.2.2.3">
+            <h5 id="name-delegation-without-deleg">
+<a href="#section-3.2.2.3" class="section-number selfRef">3.2.2.3. </a><a href="#name-delegation-without-deleg" class="section-name selfRef">Delegation without DELEG</a>
+            </h5>
+<p id="section-3.2.2.3-1">If the delegation does not have DELEG RRset, the authoritative server MUST put the NS RRset into the authority section of the referral. Absence of DELEG RRset must be proven as specified by DNSSEC protocol for authoritative data.<a href="#section-3.2.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.3-2">Similarly rules for DS RRset inclusion into referrals apply as specified by DNSSEC protocol without changes. Please note in practice the same process and records are used to prove non-existence of DELEG and DS RRsets.<a href="#section-3.2.2.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.2.3-3">The server MUST copy the DE bit from the query into the response.
+(TODO: not really necessary protocol-wise, but might be nice for monitoring the deployment?)<a href="#section-3.2.2.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 </section>
