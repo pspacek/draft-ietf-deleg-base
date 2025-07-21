@@ -48,80 +48,6 @@ author:
     organization: Salesforce
     email: tale@dd.org
 
-contributor:
--
-    name: Christian Elmerot
-    organization: Cloudflare
-    email: christian@elmerot.se
--
-    name: Edward Lewis
-    organization: ICANN
-    email: edward.lewis@icann.org
--
-    name: Roy Arends
-    organization: ICANN
-    email: roy.arends@icann.org
--
-    name: Shumon Huque
-    organization: Salesforce
-    email: shuque@gmail.com
--
-    name: Klaus Darilion
-    organization: nic.at
-    email: klaus.darilion@nic.at
--
-    name: Libor Peltan
-    organization: CZ.nic
-    email: libor.peltan@nic.cz
--
-    name: Vladimír Čunát
-    organization: CZ.nic
-    email: vladimir.cunat@nic.cz
--
-    name: Shane Kerr
-    organization: NS1
-    email: shane@time-travellers.org
--
-    name: David Blacka
-    organization: Verisign
-    email: davidb@verisign.com
--
-    name: George Michaelson
-    organization: APNIC
-    email: ggm@algebras.org
--
-    name: Ben Schwartz
-    organization: Meta
-    email: bemasc@meta.com
--
-    name: Jan Včelák
-    organization: NS1
-    email: jvcelak@ns1.com
--
-    name: Peter van Dijk
-    organization: PowerDNS
-    email: peter.van.dijk@powerdns.com
--
-    name: Philip Homburg
-    organization: NLnet Labs
-    email: philip@nlnetlabs.nl
--
-    name: Erik Nygren
-    organization: Akamai Technologies
-    email: erik+ietf@nygren.org
--
-    name: Vandan Adhvaryu
-    organization: Team Internet
-    email: vandan@adhvaryu.uk
--
-    name: Manu Bretelle
-    organization: Meta
-    email: chantr4@gmail.com
--
-    name: Bob Halley
-    organization: Cloudflare
-    email: bhalley@cloudflare.com
-
 --- abstract
 A delegation in the Domain Name System (DNS) is a mechanism that enables efficient and distributed management of the DNS namespace. It involves delegating authority over subdomains to specific DNS servers via NS records, allowing for a hierarchical structure and distributing the responsibility for maintaining DNS records.
 
@@ -606,6 +532,11 @@ foo.test.   IN MX
 This document is heavily based on past work done by Tim April in
 {{?I-D.tapril-ns2}} and thus extends the thanks to the people helping on this which are:
 John Levine, Erik Nygren, Jon Reed, Ben Kaduk, Mashooq Muhaimen, Jason Moreau, Jerrod Wiesman, Billy Tiemann, Gordon Marx and Brian Wellington.
+
+Work on DELEG protocol has started at IETF 118 hackaton. Hackaton participants: Christian Elmerot, David Blacka, David Lawrence, Edward Lewis, Erik Nygren, George Michaelson, Jan Včelák, Klaus Darilion, Libor Peltan, Manu Bretelle, Peter van Dijk, Petr Špaček, Philip Homburg, Ralf Weber, Roy Arends, Shane Kerr, Shumon Huque, Vandan Adhvaryu, Vladimír Čunát.
+
+Other people joined the effort after the initial hackaton: Ben Schwartz, Bob Halley, Paul Hoffman, ...
+
 
 # TODO
 
