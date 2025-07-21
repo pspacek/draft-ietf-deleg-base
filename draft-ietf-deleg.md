@@ -58,7 +58,7 @@ An NS record contains the hostname of the nameserver for the delegated namespace
 
 In the Domain Name System {{!STD13}}, subdomains within the domain name hierarchy are indicated by delegations to servers which are authoritative for their portion of the namespace.  The DNS records that do this, called NS records, contain hostnames of nameservers, which resolve to addresses.  No other information is available to the resolver. It is limited to connect to the authoritative servers over UDP and TCP port 53. This limitation is a barrier for efficient introduction of new DNS technology.
 
-The proposed DELEG record type remedies this problem by providing extensible parameters to indicate capabilities and additional information, such as glue that a resolver may use for the delegated authority. It is authoritative and thus signed in the parent side of the delegation making it possible to validate all delegation parameters (names and glue records) with DNSSEC.
+The proposed DELEG record type remedies this problem by providing extensible parameters to indicate capabilities and additional information, such as addresses that a resolver may use for the delegated authority. It is authoritative and thus signed in the parent side of the delegation making it possible to validate all delegation parameters with DNSSEC.
 
 This document only shows how DELEG can be used instead of or along side a NS record to create a delegation. Future documents can use the extensible mechanism for more advanced features like connecting to a name server with an encrypted transport.
 
@@ -86,8 +86,8 @@ The DELEG record uses a new resource record type, whose contents are identical t
 * The final INCLUDE target is an SVCB record, though there can be further indirection using CNAME or AliasMode SVCB records.
 * There can be multiple INCLUDE DELEG records, but further indirections through SVCB records have to comply with {{?RFC9460}} in that there can be only one AliasMode SVCB record per name.
 * In order to not allow unbounded indirection of DELEG records the maximum number of indirections, CNAME or AliasMode SVCB is 4.
-* The SVCB IPv4hint and IPv6hint parameters keep their key values of 4 and 6, but the presentation format with DELEG MUST be Glue4 and Glue6.
-* Glue4 and Glue6 records when present MUST be used to connect to the delegated name server.
+* The SVCB IPv4hint and IPv6hint parameters keep their key values of 4 and 6, but the presentation format with DELEG MUST be ipv4 and ipv6.
+* ipv4 and ipv6 records when present MUST be used to connect to the delegated name server.
 * The target of any DELEG record MUST NOT be '.'
 * The target of a DELEG INCLUDE record MUST be outside of the delegated domain.
 * The target of a DELEG DIRECT record MUST be a domain below the delegated domain.
@@ -311,8 +311,8 @@ The following example shows an excerpt from a signed root zone. It shows the del
 
 The "example." delegation has DELEG and NS records. The "test." delegation has DELEG but no NS records.
 
-    example.   300 IN DELEG DIRECT a.example. Glue4=192.0.2.1 (
-                            Glue6=2001:DB8::1 )
+    example.   300 IN DELEG DIRECT a.example. ipv4=192.0.2.1 (
+                            ipv6=2001:DB8::1 )
     example.   300 IN DELEG INCLUDE ns2.example.net.
     example.   300 IN DELEG INCLUDE ns3.example.org.
     example.   300 IN RRSIG DELEG 13 4 300 20250214164848 (
@@ -448,8 +448,8 @@ foo.test.   IN MX
     ;; (empty)
 
     ;; Authority
-    example.   300 IN DELEG DIRECT a.example. Glue4=192.0.2.1 (
-                            Glue6=2001:DB8::1 )
+    example.   300 IN DELEG DIRECT a.example. ipv4=192.0.2.1 (
+                            ipv6=2001:DB8::1 )
     example.   300 IN DELEG INCLUDE ns2.example.net.
     example.   300 IN DELEG INCLUDE ns3.example.org.
 
@@ -490,8 +490,8 @@ foo.test.   IN MX
 
     ;; Authority
 
-    example.   300 IN DELEG DIRECT a.example. Glue4=192.0.2.1 (
-                            Glue6=2001:DB8::1 )
+    example.   300 IN DELEG DIRECT a.example. ipv4=192.0.2.1 (
+                            ipv6=2001:DB8::1 )
     example.   300 IN DELEG INCLUDE ns2.example.net.
     example.   300 IN DELEG INCLUDE ns3.example.org.
     example.   300 IN RRSIG DELEG 13 4 300 20250214164848 (
