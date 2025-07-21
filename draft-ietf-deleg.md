@@ -617,20 +617,3 @@ RFC EDITOR:
   * DELEG QType code is 65432
   * DELEG EDNS Flag Bit is 3
   * DELEG DNSKEY Flag Bit is 0
-
-# Change Log
-
-RFC EDITOR:
-: PLEASE REMOVE THE THIS SECTION PRIOR TO PUBLICATION.
-
-## since draft-wesplaap-deleg-00
-
-* Clarified SVCB priority behavior
-
-* Added section on differences to draft-homburg-deleg-incremental-deleg
-
-## since draft-wesplaap-deleg-01
-
-* Reorganised and streamlined the draft to the bare minimum for DELEG as an NS replacement
-* Defined codepoints for temporary testing
-* Added examples
