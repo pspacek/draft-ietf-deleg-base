@@ -129,7 +129,7 @@ If no DELEG record exists on a given delegation point resolver MUST use NS recor
 
 Record types defined as authoritative on the parent side of zone cut (currently DS and DELEG types) retain the same special handling as before, i.e. {{!RFC4035}} section 2.6 applies.
 
-DELEG unaware recursive resolvers will not be able to determine correct NS set for QTYPE=DELEG queries. This is not a bug.
+DELEG-unaware recursive resolvers can get different types of answers for QTYPE=DELEG queries based on the configuration of the server, such as whether it is DELEG-aware and whether it also is authoritative for subdomains.
 
 ### Algorithm
 
