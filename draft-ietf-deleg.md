@@ -141,17 +141,17 @@ Legacy resolvers can get different types of answers for QTYPE=DELEG queries base
 
 ### Algorithm update
 
-This section updates instructions for step "2. Find the best servers to ask." of RFC1034 section 5.3.3 and {{!RFC6672}} section 3.4.1.
+This section updates instructions for step "2. Find the best servers to ask." of {{!RFC1034}} section 5.3.3 and {{!RFC6672}} section 3.4.1.
 
 There are two important details:
 
-- The algorithm description should explicitly describe RR types authoritative at the parent side of a zone cut. This is implied by {{!RFC4035}} section 3.1.4.1 for DS RR type but the text in the algorithm description was not updated. DELEG specification simply extends this existing behavior to DELEG RR type as well, and makes this special case explicit.
+- The algorithm description should explicitly describe RRtypes authoritative at the parent side of a zone cut. This is implied by {{!RFC4035}} section 3.1.4.1 for DS RR type, but the text in the algorithm description was not updated. This document simply extends this existing behavior to DELEG RRtype as well, and makes this special case explicit.
 
-- When DELEG RRset exists, NS RRset is ignored on that particular zone cut by DELEG aware resolvers.
+- When a DELEG RRset exists, NS RRset is ignored on that particular zone cut by DELEG-aware resolvers.
 
-- DELEG and NS RR types can be used differently at each delegation level and resolver MUST be able follow chain of delegations which combines them in arbitrary ways.
+- DELEG and NS RR types can be used differently at each delegation level, and DELEB-awre resolvers MUST be able follow chains of delegations which combines both types in arbitrary ways.
 
-Example of a valid delegation tree:
+An example of a valid delegation tree:
 
     ; root zone with NS-only delegations
     . SOA ...
@@ -169,15 +169,13 @@ Example of a valid delegation tree:
     ; nssub.sld.test. zone with DELEG-only delegation
     delegsub.sub.sld.test. DELEG ...
 
-Terms SNAME and SLIST used in the rest of this section are defined in RFC 1034 section 5.3.2.:
+The terms SNAME and SLIST used here are defined in Section 5.3.2 of {{!RFC1034}}:
 
-SNAME           the domain name we are searching for.
+SNAME is the domain name we are searching for.
 
-SLIST           a structure which describes the name servers and the
-                zone which the resolver is currently trying to query.
+SLIST is a structure which describes the name servers and the zone which the resolver is currently trying to query.
 
-DELEG-aware SLIST needs to be able to hold two types of information - delegations defined by NS records and also by DELEG records. DELEG and NS delegations can create cyclic dependencies and/or lead to duplicate entries which point onto the same server. Suitable limits MUST be enforced to limit damage EVEN IF SOMEONE HAS INCORRECTLY CONFIGURED SOME DATA.
-
+A DELEG-aware SLIST needs to be able to hold two types of information: delegations defined by NS records and delegations defined by DELEG records. DELEG and NS delegations can create cyclic dependencies and/or lead to duplicate entries which point to the same server. Resolvers need to enforce suitable limits to limit damage even if someone has incorrectly configured some of the data used to create an SLIST.
 
 Modified description of Step 2. Find the best servers to ask follows:
 
