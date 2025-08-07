@@ -58,9 +58,9 @@ An NS record contains the hostname of the nameserver for the delegated namespace
 
 In the Domain Name System {{!STD13}}, subdomains within the domain name hierarchy are indicated by delegations to servers which are authoritative for their portion of the namespace.  The DNS records that do this, called NS records, contain hostnames of nameservers, which resolve to addresses.  No other information is available to the resolver. It is limited to connect to the authoritative servers over UDP and TCP port 53. This limitation is a barrier for efficient introduction of new DNS technology.
 
-The proposed DELEG record type remedies this problem by providing extensible parameters to indicate capabilities and additional information, such as addresses that a resolver may use for the delegated authority. It is authoritative and thus signed in the parent side of the delegation making it possible to validate all delegation parameters with DNSSEC.
+The proposed DELEG and DELEGI record types remedy this problem by providing extensible parameters to indicate capabilities and additional information, such as addresses that a resolver may use for the delegated authority. The DELEG record is authoritative and thus signed in the parent side of the delegation making it possible to validate all delegation parameters with DNSSEC.
 
-This document only shows how DELEG can be used instead of or along side a NS record to create a delegation. Future documents can use the extensible mechanism for more advanced features like connecting to a name server with an encrypted transport.
+This document only shows how a DELEG record can be used instead of or along side a NS record to create a delegation. Future documents can use the extensible mechanism for more advanced features like connecting to a name server with an encrypted transport.
 
 ## Terminology
 
@@ -72,13 +72,20 @@ all capitals, as shown here.
 
 Terminology regarding the Domain Name System comes from {{?BCP219}}, with addition terms defined here:
 
-* legacy name servers: An authoritative server that does not support the DELEG record.
-* legacy resolvers: A resolver that does not support the DELEG record.
+* legacy name servers: An authoritative server that does not support the DELEG record
+* legacy resolvers: A resolver that does not support the DELEG record
+* DELEG-aware: An authoritative server or resolver that follows the protocol defined in this document
 
-# DELEG Record Type
+# DELEG and DELEGI Record Types
 
-The DELEG record uses a new resource record type, whose contents are identical to the SVCB record defined in {{?RFC9460}}. For extensions SVCB and DELEG use Service Parameter Keys (SvcParamKeys) and new SvcParamKeys that might be needed also will use the existing IANA Registry.
+The DELEG record uses a new resource record type, whose contents are a list of key-value pairs whose wire and display formats are the same as those in the SVCB record defined in {{?RFC9460}}.
+The list of key-value pairs is called "delegation information".
+See {{kv-iana}} for the IANA registry for the key-value pairs.
 
+The DELEGI record has the identical format as the DELEG record;
+however, as described below, the semantics of the DELEGI record are different in that the DELEG record creates a delegation and thus lives in the parent zone, and the DELEGI record only gives information about delegations and lives outside the parent zone.
+
+<!--
 ## Differences from SVCB
 
 * DELEG can only have two priorities 0 indicating INCLUDE and 1 indicating a DIRECT delegation. These terms MUST be used in the presentation format of the DELEG record.
@@ -91,6 +98,7 @@ The DELEG record uses a new resource record type, whose contents are identical t
 * The target of any DELEG record MUST NOT be '.'
 * The target of a DELEG INCLUDE record MUST be outside of the delegated domain.
 * The target of a DELEG DIRECT record MUST be a domain below the delegated domain.
+-->
 
 # Use of DELEG record
 
@@ -102,7 +110,7 @@ A DELEG RRset MAY be present with or without NS or DS RRsets at the delegation p
 
 ### Signaling DELEG support
 
-A resolver that is DELEG aware MUST signal its support by sending the DE bit when iterating.
+A resolver that is DELEG-aware MUST signal its support by sending the DE bit when iterating.
 
 This bit is referred to as the "DELEG" (DE) bit.  In the context of the EDNS0 OPT meta-RR, the DE bit is the TBD of the "extended RCODE and flags" portion of the EDNS0 OPT meta-RR, structured as follows (to be updated when assigned):
 
@@ -121,15 +129,15 @@ Motivation: For a long time there will be both DELEG and NS needed for delegatio
 
 The DELEG record creates a zone cut similar to the NS record.
 
-If a DELEG record exists on a given delegation point, all record types defined as authoritative in the child zone MUST be resolved using the name servers defined in the DELEG record. In such case resolver MUST NOT use NS records even if they happen to be present in cache, even if resolution using DELEG records have failed for some reason. Such fallback from DELEG to NS would invalidate security guarantees of DELEG protocol.
+If one or more DELEG records exist at a given delegation point, a DELEG-aware resolver MUST treat the name servers from those DELEG records as authoritative for the child zone. In such case, a DELEG-aware resolver MUST NOT use NS records even if they happen to be present in cache, even if resolution using DELEG records have failed for any reason. Such fallback from DELEG to NS would invalidate security guarantees of DELEG protocol.
 
-If no DELEG record exists on a given delegation point resolver MUST use NS records as specified by RFC1034.
+If no DELEG record exists at a given delegation point, DELEG-aware resolvers MUST use NS records as specified by RFC1034.
 
 ### Parent-side types, QTYPE=DELEG
 
 Record types defined as authoritative on the parent side of zone cut (currently DS and DELEG types) retain the same special handling as before, i.e. {{!RFC4035}} section 2.6 applies.
 
-DELEG-unaware recursive resolvers can get different types of answers for QTYPE=DELEG queries based on the configuration of the server, such as whether it is DELEG-aware and whether it also is authoritative for subdomains.
+Legacy resolvers can get different types of answers for QTYPE=DELEG queries based on the configuration of the server, such as whether it is DELEG-aware and whether it also is authoritative for subdomains.
 
 ### Algorithm update
 
@@ -326,7 +334,9 @@ IANA is requested to assign a bit from the EDNS Header Flags registry ({{!RFC689
 
 IANA is requested to assign a value from the Extended DNS Error Codes ({{!RFC8914}}), with the Purpose "New Delegation Only" and referencing this document.
 
-For the RDATA parameters to a DELEG RR, the DNS Service Bindings (SVCB) registry ({{!RFC9460}}) is used.  This document requests no new assignments to that registry, though it is expected that future DELEG work will.
+## Delegation Information {#kv-iana}
+
++++++ Initial registrations will go here +++++
 
 --- back
 
