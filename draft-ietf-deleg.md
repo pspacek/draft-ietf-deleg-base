@@ -131,7 +131,7 @@ Record types defined as authoritative on the parent side of zone cut (currently 
 
 DELEG-unaware recursive resolvers can get different types of answers for QTYPE=DELEG queries based on the configuration of the server, such as whether it is DELEG-aware and whether it also is authoritative for subdomains.
 
-### Algorithm
+### Algorithm update
 
 This section updates instructions for step "2. Find the best servers to ask." of RFC1034 section 5.3.3 and {{!RFC6672}} section 3.4.1.
 
@@ -168,6 +168,9 @@ SNAME           the domain name we are searching for.
 SLIST           a structure which describes the name servers and the
                 zone which the resolver is currently trying to query.
 
+DELEG-aware SLIST needs to be able to hold two types of information - delegations defined by NS records and also by DELEG records. DELEG and NS delegations can create cyclic dependencies and/or lead to duplicate entries which point onto the same server. Suitable limits MUST be enforced to limit damage EVEN IF SOMEONE HAS INCORRECTLY CONFIGURED SOME DATA.
+
+
 Modified description of Step 2. Find the best servers to ask follows:
 
 Step 2 looks for a name server to ask for the required data.
@@ -188,6 +191,28 @@ Further general strategy is to look for locally-available DELEG and NS RRsets, s
 Rest of the Step 2's description is not affected by this document.
 
 Please note the instructions to "Bound the amount of work" further down in the original text to apply. Suitable limits MUST be enforced to limit damage EVEN IF SOMEONE HAS INCORRECTLY CONFIGURED SOME DATA.
+
+### DELEG RRset Interpretation
+DELEG protocol introduces additional level of indirection and also redefines significance of address literals in delegation. This section clarifies how to deal with ambiguities.
+
+Each individual DELEG RR inside a DELEG RRset can cause addition of zero or more entries to SLIST.
+
+For each individual DELEG RR within DELEG RRset, processing MUST happen in this order:
+
+- If one or more addresses are present inside the DELEG RR, copy all these addresses into SLIST. Ignore any name indirection which might be (errorneously) present in the same RR. Stop processing this RR.
+
+- If DELEG DIRECT mode RR contains a name, resolve it into addresses, similarly as if the name was listed in NS record. Copy resolved addresses into SLIST. Stop processing this RR.
+
+- If DELEG INCLUDE mode RR contains a name, resolve it into SVCB record. Recursively process this new SVCB RRset as if it were DELEG RRset, using rules from this section.
+
+- If none of the above applies, SLIST is not modified by this particular RR.
+
+Resolver MAY process individual RRs within RRset in an arbitrary order.
+
+Resolver MAY implement lazy evaluation of SLIST. E.g. resolver can defer processing remaining RRs if it already has sufficiently large pool of addresses to contact.
+
+The algorithm to make use of SLIST is intentionally left undefined.
+
 
 ## Authoritative Servers
 DELEG-aware authoritative servers act differently when handling queries from DELEG-unaware clients (those with DE=0) and queries from DELEG-aware clients (those with DE=1).
