@@ -82,8 +82,19 @@ The DELEG record uses a new resource record type, whose contents are a list of k
 The list of key-value pairs is called "delegation information".
 See {{kv-iana}} for the IANA registry for the key-value pairs.
 
-The DELEGI record has the identical format as the DELEG record;
-however, as described below, the semantics of the DELEGI record are different in that the DELEG record creates a delegation and thus lives in the parent zone, and the DELEGI record only gives information about delegations and lives outside the parent zone.
+The DELEGI record has the identical format as the DELEG record.
+The use of the DELEGI record is different from the use of the DELEG record:
+the DELEG record creates a delegation and thus lives in the parent zone, and the DELEGI record gives information about delegation by being the target of the "indirect" keyword.
+
+Some key-value pairs are actions that a DELEG-aware resolver takes when it gets a DELEG or DELEGI record.
+The actions defined in this document are:
+
+* server-address4: a set of IPv4 addresses in 4-byte wire format
+* server-address6: a set of IPv6 addresses in 16-byte wire format
+* server-name: a full-qualified domain name in uncompressed wire format
+* indirect: a full-qualified domain name in uncompressed wire format
+
+Future documents might define additional actions, and might also define key-value pairs that modify actions.
 
 <!--
 ## Differences from SVCB
@@ -131,25 +142,25 @@ The DELEG record creates a zone cut similar to the NS record.
 
 If one or more DELEG records exist at a given delegation point, a DELEG-aware resolver MUST treat the name servers from those DELEG records as authoritative for the child zone. In such case, a DELEG-aware resolver MUST NOT use NS records even if they happen to be present in cache, even if resolution using DELEG records have failed for any reason. Such fallback from DELEG to NS would invalidate security guarantees of DELEG protocol.
 
-If no DELEG record exists at a given delegation point, DELEG-aware resolvers MUST use NS records as specified by RFC1034.
+If no DELEG record exists at a given delegation point, DELEG-aware resolvers MUST use NS records as specified by {{RFC1034}}.
 
 ### Parent-side types, QTYPE=DELEG
 
-Record types defined as authoritative on the parent side of zone cut (currently DS and DELEG types) retain the same special handling as before, i.e. {{!RFC4035}} section 2.6 applies.
+Record types defined as authoritative on the parent side of zone cut (currently DS and DELEG types) retain the same special handling as described in Section 2.6  of {{!RFC4035}}.
 
 Legacy resolvers can get different types of answers for QTYPE=DELEG queries based on the configuration of the server, such as whether it is DELEG-aware and whether it also is authoritative for subdomains.
 
-### Algorithm update
+### Algorithm for "Finding the Best Servers to Ask"
 
-This section updates instructions for step "2. Find the best servers to ask." of {{!RFC1034}} section 5.3.3 and {{!RFC6672}} section 3.4.1.
+This document updates instructions for finding the best servers to ask.
+That information currently is covered in Section 5.3.3 of {{!RFC1034}} and Section 3.4.1 of {{!RFC6672}} with the text "2. Find the best servers to ask."
+Section 3.1.4.1 of {{!RFC4035}} should have explicitly updated Section 5.3.3 of {{!RFC1034}} for the DS RR type, but failed to do so; this was remedied by {{RFC6672}}.
+This document simply extends this existing behavior to DELEG RRtype as well, and makes this special case explicit.
 
-There are two important details:
+When a DELEG RRset exists in a zone, DELEG-aware resolvers ignore the NS RRset for that zone.
+This means that the DELEG-aware resolver ignores the NS RRset in the zone's parent as well as any cached NS RRset that the resolver might have gotten by looking in the apex of the zone.
 
-- The algorithm description should explicitly describe RRtypes authoritative at the parent side of a zone cut. This is implied by {{!RFC4035}} section 3.1.4.1 for DS RR type, but the text in the algorithm description was not updated. This document simply extends this existing behavior to DELEG RRtype as well, and makes this special case explicit.
-
-- When a DELEG RRset exists, NS RRset is ignored on that particular zone cut by DELEG-aware resolvers.
-
-- DELEG and NS RR types can be used differently at each delegation level, and DELEB-awre resolvers MUST be able follow chains of delegations which combines both types in arbitrary ways.
+DELEG and NS RR types can be used differently at each delegation level, and DELEG-awre resolvers MUST be able follow chains of delegations which combines both types in arbitrary ways.
 
 An example of a valid delegation tree:
 
@@ -177,28 +188,34 @@ SLIST is a structure which describes the name servers and the zone which the res
 
 A DELEG-aware SLIST needs to be able to hold two types of information: delegations defined by NS records and delegations defined by DELEG records. DELEG and NS delegations can create cyclic dependencies and/or lead to duplicate entries which point to the same server. Resolvers need to enforce suitable limits to limit damage even if someone has incorrectly configured some of the data used to create an SLIST.
 
-Modified description of Step 2. Find the best servers to ask follows:
+This leads to a modified description of find the best servers to ask" from earlier documents for DELEG-aware resolvers.
+That description becomes:
 
-Step 2 looks for a name server to ask for the required data.
+1. Determine deepest possible zone cut which can potentially hold the answer for given (query name, type, class) combination:
 
-First determine deepest possible zone cut which can potentially hold the answer for given (query name, type, class) combination:
+    1. Start with SNAME equal to QNAME.
 
-- Start with SNAME equal to QNAME.
-- If QTYPE is a type authoritative at the parent side of a zone cut (DS or DELEG), remove leftmost label from SNAME. E.g. if QNAME is Test.Example. and QTYPE is DELEG or DS, set SNAME to Example.
-- TODO: what to do about ". DELEG" (or DS) query? That leaves zero labels left. That by definition does not exist ...
+    1. If QTYPE is a type that is authoritative at the parent side of a zone cut (currently, DS or DELEG), remove the leftmost label from SNAME.
+For example, if the QNAME is "test.example." and th eQTYPE is DELEG or DS, set SNAME to "example.".
 
-Further general strategy is to look for locally-available DELEG and NS RRsets, starting at current SNAME. If none are found, shorten SNAME by removing leftmost label and check again. This effectivelly finds the deepest known delegation point on the path between SNAME and the root:
+1. Look for locally-available DELEG and NS RRsets, starting at current SNAME.
 
-- For given SNAME first check existence of DELEG RRset. If it exists, resolver MUST use it's content to populate SLIST. If the DELEG RRset is known to exist but is unusable (e.g. it is found in DNSSEC BAD cache), resolver MUST NOT fallback to NS RRset, even if it is locally available. Resolver MUST treat this case as if no servers were available/reachable.
-- If a given SNAME is proven to not have a DELEG RRset but has NS RRset, resolver MUST copy it into SLIST.
-- If SLIST is populated, terminate walk up the DNS tree.
-- If SLIST is not populated, remove leftmost label from SNAME and inspect RR types for this new SNAME.
+    1. For given SNAME, check for existence of a DELEG RRset.
+If it exists, the resolver MUST use its content to populate SLIST.
+However, if the DELEG RRset is known to exist but is unusable (for example, if it is found in DNSSEC BAD cache), the resolver MUST NOT instead use an NS RRset, even if it is locally available; instead, the resolver MUST treat this case as if no servers were available.
 
-Rest of the Step 2's description is not affected by this document.
+    1. If a given SNAME is proven to not have a DELEG RRset but does have NS RRset, the resolver MUST copy the NS RRset into SLIST.
 
-Please note the instructions to "Bound the amount of work" further down in the original text to apply. Suitable limits MUST be enforced to limit damage EVEN IF SOMEONE HAS INCORRECTLY CONFIGURED SOME DATA.
+    1. If SLIST is now populated, stop walking up the DNS tree.
+However, if SLIST is not populated, remove leftmost label from SNAME and go back to the first step, using the new (shortened) SNAME.
+Do not go back to the first step if doing so would exceed the amount of work that the resolver is configured to do when processing names.
+
+The rest of the Step 2's description is not affected by this document.
+
+(TODO: Determine what to do about ". DELEG" or ". DS" queries, which by definition do not exist.)
 
 ### DELEG RRset Interpretation
+
 DELEG protocol introduces additional level of indirection and also redefines significance of address literals in delegation. This section clarifies how to deal with ambiguities.
 
 Each individual DELEG RR inside a DELEG RRset can cause addition of zero or more entries to SLIST.
