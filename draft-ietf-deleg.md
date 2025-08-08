@@ -92,7 +92,7 @@ The actions defined in this document are:
 * server-address4: a set of IPv4 addresses in 4-byte wire format
 * server-address6: a set of IPv6 addresses in 16-byte wire format
 * server-name: a full-qualified domain name in uncompressed wire format
-* indirect: a full-qualified domain name in uncompressed wire format
+* include-name: a full-qualified domain name in uncompressed wire format
 
 Future documents might define additional actions, and might also define key-value pairs that modify actions.
 
@@ -214,30 +214,48 @@ The rest of the Step 2's description is not affected by this document.
 
 (TODO: Determine what to do about ". DELEG" or ". DS" queries, which by definition do not exist.)
 
-### DELEG RRset Interpretation
+### Populating the SLIST from addresses in  DELEG and DELEGI Records
 
-DELEG protocol introduces additional level of indirection and also redefines significance of address literals in delegation. This section clarifies how to deal with ambiguities.
+As described above, the the DELEG and DELEGI records have four keys that describe actions the resolver takes.
+The purpose of these actions is to populate the SLIST with IP addresses of the nameservers for a zone.
+The actions defined in this document are:
 
-Each individual DELEG RR inside a DELEG RRset can cause addition of zero or more entries to SLIST.
+* server-address4: a set of IPv4 addresses in 4-byte wire format
+* server-address6: a set of IPv6 addresses in 16-byte wire format
+* server-name: a full-qualified domain name in uncompressed wire format
+* include-name: a full-qualified domain name in uncompressed wire format
 
-For each individual DELEG RR within DELEG RRset, processing MUST happen in this order:
+A DELEG or DELEGI record SHOULD have only one of the following:
 
-- If one or more addresses are present inside the DELEG RR, copy all these addresses into SLIST. Ignore any name indirection which might be (errorneously) present in the same RR. Stop processing this RR.
+- one server-address4 key
+- one server-address6 key
+- one server-address4 and one server-address6 key
+- one server-name key
+- one include-name key
 
-- If DELEG DIRECT mode RR contains a name, resolve it into addresses, similarly as if the name was listed in NS record. Copy resolved addresses into SLIST. Stop processing this RR.
+Each individual DELEG record inside a DELEG RRset, or each individual DELEGI record in a DELEGI RRset, can cause the addition of zero or more entries to SLIST.
 
-- If DELEG INCLUDE mode RR contains a name, resolve it into SVCB record. Recursively process this new SVCB RRset as if it were DELEG RRset, using rules from this section.
+A resolver processes each individual DELEG record within a DELEG RRset, or each individual DELEGI record in a DELEGI RRset, using the following steps:
 
-- If none of the above applies, SLIST is not modified by this particular RR.
+1. If one or more server-address4 or server-address6 actions are present inside the record, copy all the address values from either key into SLIST.
+Ignore any server-name or include-name keys that are (errorneously) present in the same record.
+Stop processing this record.
 
-Resolver MAY process individual RRs within RRset in an arbitrary order.
+1. If a server-name action is present in the record, resolve it into addresses from the resolver cache or using A and AAAA queries.
+Copy these addresses into SLIST.
+Ignore any include-name keys that are (erronenously) present in the same record.
+Stop processing this record.
 
-Resolver MAY implement lazy evaluation of SLIST. E.g. resolver can defer processing remaining RRs if it already has sufficiently large pool of addresses to contact.
+1. If a include-name action is present in the record, resolve it into a DELEGI RRset from the resolver cache or by sending queries for the domain name in the value of the include-name pair.
+Process the result of the DELEGI RRset received using these same steps.
+Do not Process the result of the DELEGI RRset received if doing so would exceed the amount of work that the resolver is configured to do when processing names.
 
-The algorithm to make use of SLIST is intentionally left undefined.
+1. If none of the above applies, SLIST is not modified by this particular RR.
 
+A DELEG-aware resolver MAY implement lazy filling of SLIST, such as by deferring processing remaining records if SLIST already has what the resolver considers a sufficiently large pool of addresses to contact.
 
 ## Authoritative Servers
+
 DELEG-aware authoritative servers act differently when handling queries from DELEG-unaware clients (those with DE=0) and queries from DELEG-aware clients (those with DE=1).
 
 The server MUST copy the value of the DE bit from the query into the response.
