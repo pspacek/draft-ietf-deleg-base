@@ -89,16 +89,16 @@ DELEGI records are not authoritative and are treated like regular non-authoritat
 Some delegation information key-value pairs are actions that a DELEG-aware resolver takes when it gets a DELEG or DELEGI record.
 The actions defined in this document are described briefly here, and more fully described in {{actions}}.
 
-* server-address4: a set of IPv4 addresses in 4-byte wire format
-* server-address6: a set of IPv6 addresses in 16-byte wire format
-* server-name: a fully-qualified domain name in uncompressed wire format
-* include-name: a fully-qualified domain name in uncompressed wire format
+* server-address4: a set of IPv4 addresses for nameservers of the given zone
+* server-address6: a set of IPv6 addresses for nameservers of the given zone
+* server-name: the domain name of a nameserver of the given zone; the addresses must be fetched
+* include-name: the domain name of a zone that has more information about the nameservers of the given zone
 
 Future documents might define additional delegation information that are actions, and might also define delegation information key-value pairs that modify actions.
 
 # Use of DELEG Records
 
-A DELEG RRset MAY be present at a delegation point.  The DELEG RRset MAY contain multiple records. DELEG RRsets MUST NOT appear at a zone's apex.
+A DELEG RRset MAY be present at a delegation point. The DELEG RRset MAY contain multiple records. DELEG RRsets MUST NOT appear at a zone's apex.
 
 A DELEG RRset MAY be present with or without NS or DS RRsets at the delegation point.
 
@@ -135,7 +135,7 @@ Record types defined as authoritative on the parent side of zone cut (currently 
 
 Legacy resolvers can get different types of answers for QTYPE=DELEG queries based on the configuration of the server, such as whether it is DELEG-aware and whether it also is authoritative for subdomains.
 
-### Algorithm for "Finding the Best Servers to Ask"
+### Algorithm for "Finding the Best Servers to Ask" {#finding-best}
 
 This document updates instructions for finding the best servers to ask.
 That information currently is covered in Section 5.3.3 of {{!RFC1034}} and Section 3.4.1 of {{!RFC6672}} with the text "2. Find the best servers to ask."
@@ -165,13 +165,15 @@ An example of a valid delegation tree:
     ; nssub.sld.test. zone with DELEG-only delegation
     delegsub.sub.sld.test. DELEG ...
 
+TODO: after the text below, refer back to this figure and show the order that a DELEG-aware resolver would take when there is a failure to find any good DELEG addresses at sub.sld.test, then any usable nameservers at sub.sld.test, and then maybe a good DELEG record at test.
+
 The terms SNAME and SLIST used here are defined in Section 5.3.2 of {{!RFC1034}}:
 
 SNAME is the domain name we are searching for.
 
 SLIST is a structure which describes the name servers and the zone which the resolver is currently trying to query.
 
-A DELEG-aware SLIST needs to be able to hold two types of information: delegations defined by NS records and delegations defined by DELEG records. DELEG and NS delegations can create cyclic dependencies and/or lead to duplicate entries which point to the same server. Resolvers need to enforce suitable limits to limit damage even if someone has incorrectly configured some of the data used to create an SLIST.
+A DELEG-aware SLIST needs to be able to hold two types of information: delegations defined by NS records and delegations defined by DELEG records. DELEG and NS delegations can create cyclic dependencies and/or lead to duplicate entries which point to the same server. Resolvers need to enforce suitable limits to prevent damage even if someone has incorrectly configured some of the data used to create an SLIST.
 
 This leads to a modified description of find the best servers to ask" from earlier documents for DELEG-aware resolvers.
 That description becomes:
@@ -193,7 +195,7 @@ However, if the DELEG RRset is known to exist but is unusable (for example, if i
 
     1. If SLIST is now populated, stop walking up the DNS tree.
 However, if SLIST is not populated, remove leftmost label from SNAME and go back to the first step, using the new (shortened) SNAME.
-Do not go back to the first step if doing so would exceed the amount of work that the resolver is configured to do when processing names.
+Do not go back to the first step if doing so would exceed the amount of work that the resolver is configured to do when processing names; see {{too-much-work}}.
 
 The rest of the Step 2's description is not affected by this document.
 
@@ -205,10 +207,10 @@ The DELEG and DELEGI records have four keys that describe actions the resolver t
 The purpose of these actions is to populate the SLIST with IP addresses of the nameservers for a zone.
 The actions defined in this document are:
 
-* server-address4: a set of IPv4 addresses in 4-byte wire format
-* server-address6: a set of IPv6 addresses in 16-byte wire format
-* server-name: a full-qualified domain name in uncompressed wire format
-* include-name: a full-qualified domain name in uncompressed wire format
+* server-address4: a set of IPv4 addresses for nameservers of the given zone
+* server-address6: a set of IPv6 addresses for nameservers of the given zone
+* server-name: the domain name of a nameserver of the given zone; the addresses must be fetched
+* include-name: the domain name of a zone that has more information about the nameservers of the given zone
 
 The presentation values for server-address4 and server-address6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
 The wire formats for server-address4 and server-address6 are a sequence of IP addresses in network byte order (for the respective address family).
@@ -216,7 +218,7 @@ The wire formats for server-address4 and server-address6 are a sequence of IP ad
 The presentation values for server-name and include-name are as full-qualified domain names.
 The wire formats are the same as the wire formats for domain names, and MUST NOT be compressed.
 
-If any of these four keys is used, it MUST have a value (that is, it cannot be a key with a zero-length value).
+If any of these keys are used, it MUST have a value (that is, it cannot be a key with a zero-length value).
 
 A DELEG or DELEGI record SHOULD have only one of the following:
 
@@ -242,10 +244,9 @@ Ignore any include-name keys that are (erroneously) present in the same record.
 Stop processing this record.
 
 1. If a include-name action is present in the record, resolve it into a DELEGI RRset from the resolver cache or by sending queries for the domain name in the value of the include-name pair.
-Process the result of the DELEGI RRset received using these same steps.
-Do not Process the result of the DELEGI RRset received if doing so would exceed the amount of work that the resolver is configured to do when processing names.
+Go through these same steps with the result of the DELEGI RRset, after checking that the maximum loop count described in {{too-much-work}} has not been reached.
 
-1. If none of the above applies, SLIST is not modified by this particular RR.
+1. If none of the above applies, SLIST is not modified by this particular record.
 
 A DELEG-aware resolver MAY implement lazy filling of SLIST, such as by deferring processing remaining records if SLIST already has what the resolver considers a sufficiently large pool of addresses to contact.
 
@@ -353,7 +354,24 @@ Without this check, an attacker could strip the DELEG RRset from a referral resp
 
 A Validating Stub Resolver that is DELEG-aware has to use a Security-Aware Resolver that is DELEG-aware and, if it is behind a forwarder, that forwarder has to be security-aware and DELEG-aware as well.
 
+# Security Considerations
+
+TODO: Add more here
+
+## Preventing Over-work Attacks {#too-much-work}
+
+Resolvers MUST prevent situations where accidental misconfiguration of zones or malicious attacks cause them to perform too much work when resolving.
+This document describes two sets of actions that, if not controlled, could lead to over-work attacks:
+
+- Names with many subdomains can cause walking up the tree to populate SLIST ({{finding-best}}) to be burdensome.
+To prevent this, the resolver SHOULD NOT walk up more than %%TODO: come up with a number%% labels in order to contribute to SLIST.
+
+- Long chains of include-name actions ({{actions}}), and those with circular chains if include-name actions, can be burdensome.
+To prevent this, the resolver SHOULD NOT follow more than 3 include-name chains in an RRset when populating SLIST.
+
 # IANA Considerations
+
+## Changes to Existing Registries
 
 IANA is requested to allocate the DELEG RR in the Resource Record (RR) TYPEs registry, with the meaning of "enhanced delegation information" and referencing this document.
 
