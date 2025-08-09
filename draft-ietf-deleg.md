@@ -84,7 +84,7 @@ A DELEG record is authoritative for the named zone, and creates a delegation and
 
 The DELEGI record has the identical format as the DELEG record.
 The use of the DELEGI record is different from the use of the DELEG record: it gives information about delegation.
-DELEGI records are not authoritive and are treated like regular non-authoritative records.
+DELEGI records are not authoritative and are treated like regular non-authoritative records.
 
 Some delegation information key-value pairs are actions that a DELEG-aware resolver takes when it gets a DELEG or DELEGI record.
 The actions defined in this document are described briefly here, and more fully described in {{actions}}.
@@ -145,7 +145,7 @@ This document simply extends this existing behavior to DELEG RRtype as well, and
 When a DELEG RRset exists in a zone, DELEG-aware resolvers ignore the NS RRset for that zone.
 This means that the DELEG-aware resolver ignores the NS RRset in the zone's parent as well as any cached NS RRset that the resolver might have gotten by looking in the apex of the zone.
 
-DELEG and NS RRtypes can be used differently at each delegation level, and DELEG-awre resolvers MUST be able follow chains of delegations which combines both types in arbitrary ways.
+DELEG and NS RRtypes can be used differently at each delegation level, and DELEG-aware resolvers MUST be able follow chains of delegations which combines both types in arbitrary ways.
 
 An example of a valid delegation tree:
 
@@ -213,7 +213,7 @@ The actions defined in this document are:
 The presentation values for server-address4 and server-address6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
 The wire formats for server-address4 and server-address6 are a sequence of IP addresses in network byte order (for the respective address family).
 
-The presentation values forserver-name and include-name are as full-qualified domain names.
+The presentation values for server-name and include-name are as full-qualified domain names.
 The wire formats are the same as the wire formats for domain names, and MUST NOT be compressed.
 
 If any of these four keys is used, it MUST have a value (that is, it cannot be a key with a zero-length value).
@@ -233,12 +233,12 @@ Each individual DELEG record inside a DELEG RRset, or each individual DELEGI rec
 A resolver processes each individual DELEG record within a DELEG RRset, or each individual DELEGI record in a DELEGI RRset, using the following steps:
 
 1. If one or more server-address4 or server-address6 actions are present inside the record, copy all the address values from either key into SLIST.
-Ignore any server-name or include-name keys that are (errorneously) present in the same record.
+Ignore any server-name or include-name keys that are (erroneously) present in the same record.
 Stop processing this record.
 
 1. If a server-name action is present in the record, resolve it into addresses from the resolver cache or using A and AAAA queries.
 Copy these addresses into SLIST.
-Ignore any include-name keys that are (erronenously) present in the same record.
+Ignore any include-name keys that are (erroneously) present in the same record.
 Stop processing this record.
 
 1. If a include-name action is present in the record, resolve it into a DELEGI RRset from the resolver cache or by sending queries for the domain name in the value of the include-name pair.
@@ -260,7 +260,7 @@ The server MUST copy the value of the DE bit from the query into the response.
 
 DELEG-unaware clients do not use DELEG records for delegation.
 When a DELEG-aware authoritative server responds to a DELEG-unaware client, any DELEG record in the response does not create zone cut, is not returned in referral responses, and is not considered authoritative on the parent side of a zone cut. Because of this, DELEG-aware authoritative servers MUST answer as if they are DELEG-unaware.
-Please note this instruction does not affect DNSSEC signing, i.e. no special handling for NSEC type bitmap is necessary and DELEG RRtype is accuratelly represented even for DELEG-unaware clients.
+Please note this instruction does not affect DNSSEC signing, i.e. no special handling for NSEC type bitmap is necessary and DELEG RRtype is accurately represented even for DELEG-unaware clients.
 
 Two specific cases of DELEG-aware authoritative responding in DELEG-unaware manner are described here.
 
@@ -285,7 +285,7 @@ When the client indicates that it is DELEG-aware by setting DE=1 in the query, D
 
 #### DELEG-aware Clients Requesting QTYPE=DELEG
 
-An explicit query for the DELEG RRtype at a delegation point behaves much like query for the DS RRtype: the server answers authortiatively from the parent zone. All previous specifications for special handling queries with QTYPE=DS apply equally to QTYPE=DELEG. In summary, server either provides an authoritative DELEG RRset or proves its non-existence.
+An explicit query for the DELEG RRtype at a delegation point behaves much like query for the DS RRtype: the server answers authoritatively from the parent zone. All previous specifications for special handling queries with QTYPE=DS apply equally to QTYPE=DELEG. In summary, server either provides an authoritative DELEG RRset or proves its non-existence.
 
 #### Delegation with DELEG
 
@@ -347,7 +347,7 @@ way that DS RRtypes are.
 
 When DNSKEY flag ADT is set to 1, a DELEG-aware validator MUST prove the absence of a DELEG RRset in referral responses for a zone.
 
-Without this check, an attacker could strip the DELEG RRset from a referral response and replace it with an unsigned (and potentially malicious) NS RRset. A referral response with an unsigned NS and signed DS RRsets does not require additional proofs of nonexistance according to pre-DELEG DNSSEC specification, and it would have been accepted as a delegation without DELEG RRset.
+Without this check, an attacker could strip the DELEG RRset from a referral response and replace it with an unsigned (and potentially malicious) NS RRset. A referral response with an unsigned NS and signed DS RRsets does not require additional proofs of nonexistence according to pre-DELEG DNSSEC specification, and it would have been accepted as a delegation without DELEG RRset.
 
 ### Chaining
 
