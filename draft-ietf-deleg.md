@@ -78,39 +78,25 @@ Terminology regarding the Domain Name System comes from {{?BCP219}}, with additi
 
 # DELEG and DELEGI Record Types
 
-The DELEG record uses a new resource record type, whose Rdata is a list of key-value pairs whose wire and display formats are the same as those in the SVCB record defined in {{?RFC9460}}.
+The DELEG record (whose RRtype is TBD) has Rdata is one field, a list of key-value pairs called "delegation information".
+The delegation information field has wire and display formats that are based on the rules in Appendix A of {{?RFC9460}}.
 A DELEG record is authoritative for the named zone, and creates a delegation and thus lives in the parent of the named zone.
 
 The DELEGI record has the identical format as the DELEG record.
 The use of the DELEGI record is different from the use of the DELEG record: it gives information about delegation.
 DELEGI records are not authoritive and are treated like regular non-authoritative records.
 
-Some key-value pairs are actions that a DELEG-aware resolver takes when it gets a DELEG or DELEGI record.
-The actions defined in this document are:
+Some delegation information key-value pairs are actions that a DELEG-aware resolver takes when it gets a DELEG or DELEGI record.
+The actions defined in this document are described briefly here, and more fully described in {{actions}}.
 
 * server-address4: a set of IPv4 addresses in 4-byte wire format
 * server-address6: a set of IPv6 addresses in 16-byte wire format
-* server-name: a full-qualified domain name in uncompressed wire format
-* include-name: a full-qualified domain name in uncompressed wire format
+* server-name: a fully-qualified domain name in uncompressed wire format
+* include-name: a fully-qualified domain name in uncompressed wire format
 
-Future documents might define additional actions, and might also define key-value pairs that modify actions.
+Future documents might define additional delegation information that are actions, and might also define delegation information key-value pairs that modify actions.
 
-<!--
-## Differences from SVCB
-
-* DELEG can only have two priorities 0 indicating INCLUDE and 1 indicating a DIRECT delegation. These terms MUST be used in the presentation format of the DELEG record.
-* INCLUDE and DIRECT delegation can be mixed within an RRSet.
-* The final INCLUDE target is an SVCB record, though there can be further indirection using CNAME or AliasMode SVCB records.
-* There can be multiple INCLUDE DELEG records, but further indirections through SVCB records have to comply with {{?RFC9460}} in that there can be only one AliasMode SVCB record per name.
-* In order to not allow unbounded indirection of DELEG records the maximum number of indirections, CNAME or AliasMode SVCB is 4.
-* The SVCB IPv4hint and IPv6hint parameters keep their key values of 4 and 6, but the presentation format with DELEG MUST be ipv4 and ipv6.
-* ipv4 and ipv6 records when present MUST be used to connect to the delegated name server.
-* The target of any DELEG record MUST NOT be '.'
-* The target of a DELEG INCLUDE record MUST be outside of the delegated domain.
-* The target of a DELEG DIRECT record MUST be a domain below the delegated domain.
--->
-
-# Use of DELEG record
+# Use of DELEG Records
 
 A DELEG RRset MAY be present at a delegation point.  The DELEG RRset MAY contain multiple records. DELEG RRsets MUST NOT appear at a zone's apex.
 
@@ -213,9 +199,9 @@ The rest of the Step 2's description is not affected by this document.
 
 (TODO: Determine what to do about ". DELEG" or ". DS" queries, which by definition do not exist.)
 
-### Populating the SLIST from addresses in  DELEG and DELEGI Records
+### Actions in Delegation Information {#actions}
 
-As described above, the the DELEG and DELEGI records have four keys that describe actions the resolver takes.
+The DELEG and DELEGI records have four keys that describe actions the resolver takes.
 The purpose of these actions is to populate the SLIST with IP addresses of the nameservers for a zone.
 The actions defined in this document are:
 
@@ -224,6 +210,14 @@ The actions defined in this document are:
 * server-name: a full-qualified domain name in uncompressed wire format
 * include-name: a full-qualified domain name in uncompressed wire format
 
+The presentation values for server-address4 and server-address6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
+The wire formats for server-address4 and server-address6 are a sequence of IP addresses in network byte order (for the respective address family).
+
+The presentation values forserver-name and include-name are as full-qualified domain names.
+The wire formats are the same as the wire formats for domain names, and MUST NOT be compressed.
+
+If any of these four keys is used, it MUST have a value (that is, it cannot be a key with a zero-length value).
+
 A DELEG or DELEGI record SHOULD have only one of the following:
 
 - one server-address4 key
@@ -231,6 +225,8 @@ A DELEG or DELEGI record SHOULD have only one of the following:
 - one server-address4 and one server-address6 key
 - one server-name key
 - one include-name key
+
+### Populating the SLIST from DELEG and DELEGI Records
 
 Each individual DELEG record inside a DELEG RRset, or each individual DELEGI record in a DELEGI RRset, can cause the addition of zero or more entries to SLIST.
 
@@ -367,9 +363,63 @@ IANA is requested to assign a bit from the EDNS Header Flags registry ({{!RFC689
 
 IANA is requested to assign a value from the Extended DNS Error Codes ({{!RFC8914}}), with the Purpose "New Delegation Only" and referencing this document.
 
-## Delegation Information {#kv-iana}
+## New Registry for Delegation Information
 
-+++++ Initial registrations will go here +++++
+IANA is requested to create the "DELEG Delegation Information" registry.
+This registry defines the namespace for delegation information keys, including string representations and numeric key values.
+
+### Procedure
+
+A registration MUST include the following fields:
+
+Number:  Wire-format numeric identifier (range 0-65535)
+Name:  Unique presentation name
+Meaning:  A short description
+Reference:  Location of specification or registration source
+Change Controller:  Person or entity, with contact information if appropriate
+
+The characters in the registered Name field entry MUST be lowercase alphanumeric or "-".
+The name MUST NOT start with "key".
+
+The registration policy for new entries is Expert Review ({{!RFC8126]}}).
+The designated expert MUST ensure that the reference is stable and publicly available and that it specifies how to convert the delegation information's presentation format to wire format.
+The reference MAY be any individual's Internet-Draft or a document from any other source with similar assurances of stability and availability.
+An entry MAY specify a reference of the form "Same as (other key name)" if it uses the same presentation and wire formats as an existing key.
+
+This arrangement supports the development of new parameters while ensuring that zone files can be made interoperable.
+
+### Initial Contents
+
+The "DELEG Delegation Information" registry should be populated with the following initial registrations:
+
+~~~
+Number:  1
+Name:  server-address4
+Meaning:  A set of IPv4 addresses of nameservers
+Reference:  {{actions}} of this document
+Change Controller:  IETF
+
+Number:  2
+Name:  server-address6
+Meaning:  A set of IPv6 addresses of nameservers
+Reference:  {{actions}} of this document
+Change Controller:  IETF
+
+Number:  3
+Name:  server-name
+Meaning:  The fully-qualified domain name of a nameserver
+Reference:  {{actions}} of this document
+Change Controller:  IETF
+
+Number:  4
+Name:  include-name
+Meaning:  The fully-qualified domain name of a zone that contains a DELEGI record
+Reference:  {{actions}} of this document
+Change Controller:  IETF
+
+The registration for number 0 is reserved.
+The registration for numbers 65280-65535 is reserved for private use.
+~~~
 
 --- back
 
@@ -379,10 +429,11 @@ The following example shows an excerpt from a signed root zone. It shows the del
 
 The "example." delegation has DELEG and NS records. The "test." delegation has DELEG but no NS records.
 
-    example.   300 IN DELEG DIRECT a.example. ipv4=192.0.2.1 (
-                            ipv6=2001:DB8::1 )
-    example.   300 IN DELEG INCLUDE ns2.example.net.
-    example.   300 IN DELEG INCLUDE ns3.example.org.
+TODO: Examples of using server-address4 and server-address6. Also, examples that show DELEGI records in ns2.example.net and ns3.example.org.
+
+    example.   300 IN DELEG server-name=a.example.
+    example.   300 IN DELEG include-name=ns2.example.net.
+    example.   300 IN DELEG include-name=ns3.example.org.
     example.   300 IN RRSIG DELEG 13 4 300 20250214164848 (
                             20250207134348 21261 . HyDHYVT5KcqWc7J..= )
     example.   300 IN NS    a.example.
@@ -399,7 +450,7 @@ The "example." delegation has DELEG and NS records. The "test." delegation has D
 
 The "test." delegation point has a DELEG record and no NS record.
 
-    test.      300 IN DELEG INCLUDE ns2.example.net
+    test.      300 IN DELEG include-name=ns2.example.net
     test.      300 IN RRSIG DELEG 13 4 300 20250214164848 (
                             20250207134348 21261 . 98Aac9f7A1Ac26Q..= )
     test.      300 IN NSEC  a.test. RRSIG NSEC DELEG
@@ -414,40 +465,40 @@ The following sections show referral examples:
 
 ### Query for foo.example
 
-;; Header: QR RCODE=0
-;;
-
-;; Question
-foo.example.  IN MX
-
-;; Answer
-;; (empty)
-
-;; Authority
-example.   300 IN NS    a.example.
-example.   300 IN NS    b.example.net.
-example.   300 IN NS    c.example.org.
-
-;; Additional
-a.example. 300 IN A     192.0.2.1
-a.example. 300 IN AAAA  2001:DB8::1
+    ;; Header: QR RCODE=0
+    ;;
+    
+    ;; Question
+    foo.example.  IN MX
+    
+    ;; Answer
+    ;; (empty)
+    
+    ;; Authority
+    example.   300 IN NS    a.example.
+    example.   300 IN NS    b.example.net.
+    example.   300 IN NS    c.example.org.
+    
+    ;; Additional
+    a.example. 300 IN A     192.0.2.1
+    a.example. 300 IN AAAA  2001:DB8::1
 
 ### Query for foo.test
 
-;; Header: QR AA RCODE=3
-;;
-
-;; Question
-foo.test.   IN MX
-
-;; Answer
-;; (empty)
-
-;; Authority
-.   300 IN SOA ...
-
-;; Additional
-;; OPT with Extended DNS Error: New Delegation Only
+    ;; Header: QR AA RCODE=3
+    ;;
+    
+    ;; Question
+    foo.test.   IN MX
+    
+    ;; Answer
+    ;; (empty)
+    
+    ;; Authority
+    .   300 IN SOA ...
+    
+    ;; Additional
+    ;; OPT with Extended DNS Error: New Delegation Only
 
 
 ## DO bit set, DE bit clear
@@ -516,10 +567,9 @@ foo.test.   IN MX
     ;; (empty)
 
     ;; Authority
-    example.   300 IN DELEG DIRECT a.example. ipv4=192.0.2.1 (
-                            ipv6=2001:DB8::1 )
-    example.   300 IN DELEG INCLUDE ns2.example.net.
-    example.   300 IN DELEG INCLUDE ns3.example.org.
+    example.   300 IN DELEG server-name=a.example.
+    example.   300 IN DELEG include-name=ns2.example.net.
+    example.   300 IN DELEG include-name=ns3.example.org.
 
     ;; Additional
     ;; (empty)
@@ -536,12 +586,10 @@ foo.test.   IN MX
     ;; (empty)
 
     ;; Authority
-    test.      300 IN DELEG INCLUDE ns2.example.net
+    test.      300 IN DELEG include-name=ns2.example.net
 
     ;; Additional
     ;; (empty)
-
-
 
 ## DO bit set, DE bit set
 
@@ -558,10 +606,9 @@ foo.test.   IN MX
 
     ;; Authority
 
-    example.   300 IN DELEG DIRECT a.example. ipv4=192.0.2.1 (
-                            ipv6=2001:DB8::1 )
-    example.   300 IN DELEG INCLUDE ns2.example.net.
-    example.   300 IN DELEG INCLUDE ns3.example.org.
+    example.   300 IN DELEG server-name=a.example.
+    example.   300 IN DELEG include-name=ns2.example.net.
+    example.   300 IN DELEG include-name=ns3.example.org.
     example.   300 IN RRSIG DELEG 13 4 300 20250214164848 (
                             20250207134348 21261 . HyDHYVT5KcqWc7J..= )
     example.   300 IN DS    65163 13 2 5F86F2F3AE2B02...
@@ -584,7 +631,7 @@ foo.test.   IN MX
     ;; (empty)
 
     ;; Authority
-    test.      300 IN DELEG INCLUDE ns2.example.net.
+    test.      300 IN DELEG include-name=ns2.example.net.
     test.      300 IN RRSIG DELEG 13 4 300 20250214164848 (
                             20250207134348 21261 . 98Aac9f7A1Ac26Q..= )
     test.      300 IN NSEC  a.test. RRSIG NSEC DELEG
