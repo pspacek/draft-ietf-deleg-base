@@ -96,6 +96,8 @@ The actions defined in this document are described briefly here, and more fully 
 
 Future documents might define additional delegation information that are actions, and might also define delegation information key-value pairs that modify actions.
 
+TODO: Add some introduction comparing how resolvers see legacy delegatation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-address4 and server-address6 keys)
+
 # Use of DELEG Records
 
 A DELEG RRset MAY be present at a delegation point. The DELEG RRset MAY contain multiple records. DELEG RRsets MUST NOT appear at a zone's apex.
