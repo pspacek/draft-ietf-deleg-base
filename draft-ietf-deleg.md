@@ -56,7 +56,7 @@ An NS record contains the hostname of the nameserver for the delegated namespace
 
 # Introduction
 
-In the Domain Name System {{!STD13}}, subdomains within the domain name hierarchy are indicated by delegations to servers which are authoritative for their portion of the namespace.  The DNS records that do this, called NS records, contain hostnames of nameservers, which resolve to addresses.  No other information is available to the resolver. It is limited to connect to the authoritative servers over UDP and TCP port 53. This limitation is a barrier for efficient introduction of new DNS technology.
+In the Domain Name System, subdomains within the domain name hierarchy are indicated by delegations to servers which are authoritative for their portion of the namespace.  The DNS records that do this, called NS records, contain hostnames of nameservers, which resolve to addresses.  No other information is available to the resolver. It is limited to connect to the authoritative servers over UDP and TCP port 53. This limitation is a barrier for efficient introduction of new DNS technology.
 
 The proposed DELEG and DELEGI record types remedy this problem by providing extensible parameters to indicate capabilities and additional information, such as addresses that a resolver may use for the delegated authority. The DELEG record is authoritative and thus signed in the parent side of the delegation making it possible to validate all delegation parameters with DNSSEC.
 
@@ -129,7 +129,7 @@ The DELEG record creates a zone cut similar to the NS record.
 
 If one or more DELEG records exist at a given delegation point, a DELEG-aware resolver MUST treat the name servers from those DELEG records as authoritative for the child zone. In such case, a DELEG-aware resolver MUST NOT use NS records even if they happen to be present in cache, even if resolution using DELEG records have failed for any reason. Such fallback from DELEG to NS would invalidate security guarantees of DELEG protocol.
 
-If no DELEG record exists at a given delegation point, DELEG-aware resolvers MUST use NS records as specified by {{RFC1034}}.
+If no DELEG record exists at a given delegation point, DELEG-aware resolvers MUST use NS records as specified by {{!RFC1034}}.
 
 ### Parent-side types, QTYPE=DELEG
 
@@ -401,7 +401,7 @@ Change Controller:  Person or entity, with contact information if appropriate
 The characters in the registered Name field entry MUST be lowercase alphanumeric or "-".
 The name MUST NOT start with "key".
 
-The registration policy for new entries is Expert Review ({{!RFC8126]}}).
+The registration policy for new entries is Expert Review ({{!RFC8126}}).
 The designated expert MUST ensure that the reference is stable and publicly available and that it specifies how to convert the delegation information's presentation format to wire format.
 The reference MAY be any individual's Internet-Draft or a document from any other source with similar assurances of stability and availability.
 An entry MAY specify a reference of the form "Same as (other key name)" if it uses the same presentation and wire formats as an existing key.
