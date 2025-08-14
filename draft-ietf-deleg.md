@@ -174,6 +174,7 @@ The terms SNAME and SLIST used here are defined in Section 5.3.2 of {{!RFC1034}}
 SNAME is the domain name we are searching for.
 
 SLIST is a structure which describes the name servers and the zone which the resolver is currently trying to query.
+Neither {{RFC1034}} nor this document define how a resolver uses SLIST; they only define how to populate it.
 
 A DELEG-aware SLIST needs to be able to hold two types of information: delegations defined by NS records and delegations defined by DELEG records. DELEG and NS delegations can create cyclic dependencies and/or lead to duplicate entries which point to the same server. Resolvers need to enforce suitable limits to prevent damage even if someone has incorrectly configured some of the data used to create an SLIST.
 
