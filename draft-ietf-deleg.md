@@ -89,14 +89,14 @@ DELEGI records are treated like regular authoritative records in their zone.
 Some delegation information key-value pairs are actions that a DELEG-aware resolver takes when it gets a DELEG or DELEGI record.
 The actions defined in this document are described briefly here, and more fully described in {{actions}}.
 
-* server-address4: a set of IPv4 addresses for nameservers of the given zone
-* server-address6: a set of IPv6 addresses for nameservers of the given zone
+* server-ip4: a set of IPv4 addresses for nameservers of the given zone
+* server-ip6: a set of IPv6 addresses for nameservers of the given zone
 * server-name: the domain name of a nameserver of the given zone; the addresses must be fetched
 * include-name: the domain name of a zone that has more information about the nameservers of the given zone
 
 Future documents might define additional delegation information that are actions, and might also define delegation information key-value pairs that modify actions.
 
-TODO: Add some introduction comparing how resolvers see legacy delegatation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-address4 and server-address6 keys)
+TODO: Add some introduction comparing how resolvers see legacy delegatation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-ip4 and server-ip6 keys)
 
 # Use of DELEG Records
 
@@ -209,13 +209,13 @@ The DELEG and DELEGI records have four keys that describe actions the resolver t
 The purpose of these actions is to populate the SLIST with IP addresses of the nameservers for a zone.
 The actions defined in this document are:
 
-* server-address4: a set of IPv4 addresses for nameservers of the given zone
-* server-address6: a set of IPv6 addresses for nameservers of the given zone
+* server-ip4: a set of IPv4 addresses for nameservers of the given zone
+* server-ip6: a set of IPv6 addresses for nameservers of the given zone
 * server-name: the domain name of a nameserver of the given zone; the addresses must be fetched
 * include-name: the domain name of a zone that has more information about the nameservers of the given zone
 
-The presentation values for server-address4 and server-address6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
-The wire formats for server-address4 and server-address6 are a sequence of IP addresses in network byte order (for the respective address family).
+The presentation values for server-ip4 and server-ip6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
+The wire formats for server-ip4 and server-ip6 are a sequence of IP addresses in network byte order (for the respective address family).
 
 The presentation values for server-name and include-name are as full-qualified domain names.
 The wire formats are the same as the wire formats for domain names, and MUST NOT be compressed.
@@ -224,9 +224,9 @@ If any of these keys are used, it MUST have a value (that is, it cannot be a key
 
 A DELEG or DELEGI record SHOULD have only one of the following:
 
-- one server-address4 key
-- one server-address6 key
-- one server-address4 and one server-address6 key
+- one server-ip4 key
+- one server-ip6 key
+- one server-ip4 and one server-ip6 key
 - one server-name key
 - one include-name key
 
@@ -236,7 +236,7 @@ Each individual DELEG record inside a DELEG RRset, or each individual DELEGI rec
 
 A resolver processes each individual DELEG record within a DELEG RRset, or each individual DELEGI record in a DELEGI RRset, using the following steps:
 
-1. If one or more server-address4 or server-address6 actions are present inside the record, copy all the address values from either key into SLIST.
+1. If one or more server-ip4 or server-ip6 actions are present inside the record, copy all the address values from either key into SLIST.
 Ignore any server-name or include-name keys that are (erroneously) present in the same record.
 Stop processing this record.
 
@@ -414,13 +414,13 @@ The "DELEG Delegation Information" registry should be populated with the followi
 
 ~~~
 Number:  1
-Name:  server-address4
+Name:  server-ip4
 Meaning:  A set of IPv4 addresses of nameservers
 Reference:  {{actions}} of this document
 Change Controller:  IETF
 
 Number:  2
-Name:  server-address6
+Name:  server-ip6
 Meaning:  A set of IPv6 addresses of nameservers
 Reference:  {{actions}} of this document
 Change Controller:  IETF
@@ -449,7 +449,7 @@ The following example shows an excerpt from a signed root zone. It shows the del
 
 The "example." delegation has DELEG and NS records. The "test." delegation has DELEG but no NS records.
 
-TODO: Examples of using server-address4 and server-address6. Also, examples that show DELEGI records in ns2.example.net and ns3.example.org.
+TODO: Examples of using server-ip4 and server-ip6. Also, examples that show DELEGI records in ns2.example.net and ns3.example.org.
 
     example.   300 IN DELEG server-name=a.example.
     example.   300 IN DELEG include-name=ns2.example.net.
