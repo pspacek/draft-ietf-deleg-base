@@ -84,7 +84,7 @@ A DELEG record is authoritative for the named zone, and creates a delegation and
 
 The DELEGI record has the identical format as the DELEG record.
 The use of the DELEGI record is different from the use of the DELEG record: it gives information about delegation.
-DELEGI records are not authoritative and are treated like regular non-authoritative records.
+DELEGI records are treated like regular authoritative records in their zone.
 
 Some delegation information key-value pairs are actions that a DELEG-aware resolver takes when it gets a DELEG or DELEGI record.
 The actions defined in this document are described briefly here, and more fully described in {{actions}}.
