@@ -371,6 +371,7 @@ To prevent this, the resolver SHOULD NOT walk up more than %%TODO: come up with 
 
 - Long chains of include-name actions ({{actions}}), and those with circular chains if include-name actions, can be burdensome.
 To prevent this, the resolver SHOULD NOT follow more than 3 include-name chains in an RRset when populating SLIST.
+Note that include-name chains can have CNAME steps in them; in such a case, a CNAME step is counted the same as a DELEGI step when determining when to stop following a chain.
 
 # IANA Considerations
 
