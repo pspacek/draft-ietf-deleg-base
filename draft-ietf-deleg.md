@@ -435,7 +435,7 @@ Change Controller:  IETF
 
 Number:  4
 Name:  include-name
-Meaning:  The fully-qualified domain name of a zone that contains a DELEGI record
+Meaning:  The fully-qualified domain of a DELEGI record
 Reference:  {{actions}} of this document
 Change Controller:  IETF
 
