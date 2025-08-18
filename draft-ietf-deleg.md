@@ -49,18 +49,28 @@ author:
     email: tale@dd.org
 
 --- abstract
-A delegation in the Domain Name System (DNS) is a mechanism that enables efficient and distributed management of the DNS namespace. It involves delegating authority over subdomains to specific DNS servers via NS records, allowing for a hierarchical structure and distributing the responsibility for maintaining DNS records.
+A delegation in the Domain Name System (DNS) is a mechanism that enables efficient and distributed management of the DNS namespace.
+It involves delegating authority over subdomains to specific DNS servers via NS records, allowing for a hierarchical structure and distributing the responsibility for maintaining DNS records.
 
-An NS record contains the hostname of the nameserver for the delegated namespace. Any facilities of that nameserver must be discovered through other mechanisms. This document proposes a new extensible DNS record type, DELEG, for delegation of the authority for a domain. Future documents then can use this mechanism to use additional information about the delegated namespace and the capabilities of authoritative nameservers for the delegated namespace.
+An NS record contains the hostname of the nameserver for the delegated namespace.
+Any facilities of that nameserver must be discovered through other mechanisms.
+This document proposes a new extensible DNS record type, DELEG, for delegation of the authority for a domain.
+Future documents then can use this mechanism to use additional information about the delegated namespace and the capabilities of authoritative nameservers for the delegated namespace.
 --- middle
 
 # Introduction
 
-In the Domain Name System, subdomains within the domain name hierarchy are indicated by delegations to servers which are authoritative for their portion of the namespace.  The DNS records that do this, called NS records, contain hostnames of nameservers, which resolve to addresses.  No other information is available to the resolver. It is limited to connect to the authoritative servers over UDP and TCP port 53. This limitation is a barrier for efficient introduction of new DNS technology.
+In the Domain Name System, subdomains within the domain name hierarchy are indicated by delegations to servers which are authoritative for their portion of the namespace.
+The DNS records that do this, called NS records, contain hostnames of nameservers, which resolve to addresses.
+No other information is available to the resolver.
+It is limited to connect to the authoritative servers over UDP and TCP port 53.
+This limitation is a barrier for efficient introduction of new DNS technology.
 
-The proposed DELEG and DELEGI record types remedy this problem by providing extensible parameters to indicate capabilities and additional information, such as addresses that a resolver may use for the delegated authority. The DELEG record is authoritative and thus signed in the parent side of the delegation making it possible to validate all delegation parameters with DNSSEC.
+The proposed DELEG and DELEGI record types remedy this problem by providing extensible parameters to indicate capabilities and additional information, such as addresses that a resolver may use for the delegated authority.
+The DELEG record is authoritative and thus signed in the parent side of the delegation making it possible to validate all delegation parameters with DNSSEC.
 
-This document only shows how a DELEG record can be used instead of or along side a NS record to create a delegation. Future documents can use the extensible mechanism for more advanced features like connecting to a name server with an encrypted transport.
+This document only shows how a DELEG record can be used instead of or along side a NS record to create a delegation.
+Future documents can use the extensible mechanism for more advanced features like connecting to a name server with an encrypted transport.
 
 ## Terminology
 
@@ -100,7 +110,9 @@ TODO: Add some introduction comparing how resolvers see legacy delegatation (set
 
 # Use of DELEG Records
 
-A DELEG RRset MAY be present at a delegation point. The DELEG RRset MAY contain multiple records. DELEG RRsets MUST NOT appear at a zone's apex.
+A DELEG RRset MAY be present at a delegation point.
+The DELEG RRset MAY contain multiple records.
+DELEG RRsets MUST NOT appear at a zone's apex.
 
 A DELEG RRset MAY be present with or without NS or DS RRsets at the delegation point.
 
@@ -110,7 +122,8 @@ A DELEG RRset MAY be present with or without NS or DS RRsets at the delegation p
 
 A resolver that is DELEG-aware MUST signal its support by sending the DE bit when iterating.
 
-This bit is referred to as the "DELEG" (DE) bit.  In the context of the EDNS0 OPT meta-RR, the DE bit is the TBD of the "extended RCODE and flags" portion of the EDNS0 OPT meta-RR, structured as follows (to be updated when assigned):
+This bit is referred to as the "DELEG" (DE) bit.
+In the context of the EDNS0 OPT meta-RR, the DE bit is the TBD of the "extended RCODE and flags" portion of the EDNS0 OPT meta-RR, structured as follows (to be updated when assigned):
 
                 +0 (MSB)                +1 (LSB)
          +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
@@ -119,15 +132,20 @@ This bit is referred to as the "DELEG" (DE) bit.  In the context of the EDNS0 OP
       2: |DO|CO|DE|              Z                       |
          +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 
-Setting the DE bit to one in a query indicates the resolver understands new DELEG semantics and does not need NS records to follow a referral. The DE bit cleared (set to zero) indicates the resolver is unprepared to handle DELEG and hence can only be served NS, DS and glue in a delegation response.
+Setting the DE bit to one in a query indicates the resolver understands new DELEG semantics and does not need NS records to follow a referral.
+The DE bit cleared (set to zero) indicates the resolver is unprepared to handle DELEG and hence can only be served NS, DS and glue in a delegation response.
 
-Motivation: For a long time there will be both DELEG and NS needed for delegation. As both methods should be configured to get to a proper resolution it is not necessary to send both in a referral response. We therefore purpose an EDNS flag to be use similar to the DO Bit for DNSSEC to be used to signal that the sender understands DELEG and does not need NS or glue information in the referral.
+Motivation: For a long time there will be both DELEG and NS needed for delegation.
+As both methods should be configured to get to a proper resolution it is not necessary to send both in a referral response.
+We therefore purpose an EDNS flag to be use similar to the DO Bit for DNSSEC to be used to signal that the sender understands DELEG and does not need NS or glue information in the referral.
 
 ### Referral
 
 The DELEG record creates a zone cut similar to the NS record.
 
-If one or more DELEG records exist at a given delegation point, a DELEG-aware resolver MUST treat the name servers from those DELEG records as authoritative for the child zone. In such case, a DELEG-aware resolver MUST NOT use NS records even if they happen to be present in cache, even if resolution using DELEG records have failed for any reason. Such fallback from DELEG to NS would invalidate security guarantees of DELEG protocol.
+If one or more DELEG records exist at a given delegation point, a DELEG-aware resolver MUST treat the name servers from those DELEG records as authoritative for the child zone.
+In such case, a DELEG-aware resolver MUST NOT use NS records even if they happen to be present in cache, even if resolution using DELEG records have failed for any reason.
+Such fallback from DELEG to NS would invalidate security guarantees of DELEG protocol.
 
 If no DELEG record exists at a given delegation point, DELEG-aware resolvers MUST use NS records as specified by {{!RFC1034}}.
 
@@ -176,7 +194,9 @@ SNAME is the domain name we are searching for.
 SLIST is a structure which describes the name servers and the zone which the resolver is currently trying to query.
 Neither {{RFC1034}} nor this document define how a resolver uses SLIST; they only define how to populate it.
 
-A DELEG-aware SLIST needs to be able to hold two types of information: delegations defined by NS records and delegations defined by DELEG records. DELEG and NS delegations can create cyclic dependencies and/or lead to duplicate entries which point to the same server. Resolvers need to enforce suitable limits to prevent damage even if someone has incorrectly configured some of the data used to create an SLIST.
+A DELEG-aware SLIST needs to be able to hold two types of information: delegations defined by NS records and delegations defined by DELEG records.
+DELEG and NS delegations can create cyclic dependencies and/or lead to duplicate entries which point to the same server.
+Resolvers need to enforce suitable limits to prevent damage even if someone has incorrectly configured some of the data used to create an SLIST.
 
 This leads to a modified description of find the best servers to ask" from earlier documents for DELEG-aware resolvers.
 That description becomes:
@@ -263,7 +283,8 @@ The server MUST copy the value of the DE bit from the query into the response.
 ### DELEG-unaware Clients
 
 DELEG-unaware clients do not use DELEG records for delegation.
-When a DELEG-aware authoritative server responds to a DELEG-unaware client, any DELEG record in the response does not create zone cut, is not returned in referral responses, and is not considered authoritative on the parent side of a zone cut. Because of this, DELEG-aware authoritative servers MUST answer as if they are DELEG-unaware.
+When a DELEG-aware authoritative server responds to a DELEG-unaware client, any DELEG record in the response does not create zone cut, is not returned in referral responses, and is not considered authoritative on the parent side of a zone cut.
+Because of this, DELEG-aware authoritative servers MUST answer as if they are DELEG-unaware.
 Please note this instruction does not affect DNSSEC signing, i.e. no special handling for NSEC type bitmap is necessary and DELEG RRtype is accurately represented even for DELEG-unaware clients.
 
 Two specific cases of DELEG-aware authoritative responding in DELEG-unaware manner are described here.
@@ -275,9 +296,12 @@ Thus, queries with DE=0 and QTYPE=DELEG MUST result in a legacy referral respons
 
 #### DELEG-unaware Clients with DELEG RRs Present but No NS RRs
 
-DELEG-unaware clients might ask for a name which belongs to a zone delegated only with DELEG RRs (that is, without any NS RRs). Such zone is, by definition, not resolvable for DELEG-unaware clients. In this case, the DELEG record itself cannot create a zone cut, and the DELEG-aware authoritative server MUST return a legacy response.
+DELEG-unaware clients might ask for a name which belongs to a zone delegated only with DELEG RRs (that is, without any NS RRs).
+Such zone is, by definition, not resolvable for DELEG-unaware clients.
+In this case, the DELEG record itself cannot create a zone cut, and the DELEG-aware authoritative server MUST return a legacy response.
 
-The legacy response might be confusing for subdomains of zones which actually exist because DELEG-aware clients would get a different answer, namely a delegation. An example of a legacy response is in {{legacynxdomain}}.
+The legacy response might be confusing for subdomains of zones which actually exist because DELEG-aware clients would get a different answer, namely a delegation.
+An example of a legacy response is in {{legacynxdomain}}.
 
 The authoritative server is RECOMMENDED to supplement these responses to DELEG-unaware resolvers with Extended DNS Error "New Delegation Only".
 
@@ -285,29 +309,39 @@ TODO: debate if WG wants to do explicit SERVFAIL for this case instead of 'just'
 
 ### DELEG-aware Clients
 
-When the client indicates that it is DELEG-aware by setting DE=1 in the query, DELEG-aware authoritative servers treat DELEG records as zone cuts, and the servers are authoritative on parent side of zone cut. This new zone cut has priority over legacy delegation with NS RRset.
+When the client indicates that it is DELEG-aware by setting DE=1 in the query, DELEG-aware authoritative servers treat DELEG records as zone cuts, and the servers are authoritative on parent side of zone cut.
+This new zone cut has priority over legacy delegation with NS RRset.
 
 #### DELEG-aware Clients Requesting QTYPE=DELEG
 
-An explicit query for the DELEG RRtype at a delegation point behaves much like query for the DS RRtype: the server answers authoritatively from the parent zone. All previous specifications for special handling queries with QTYPE=DS apply equally to QTYPE=DELEG. In summary, server either provides an authoritative DELEG RRset or proves its non-existence.
+An explicit query for the DELEG RRtype at a delegation point behaves much like query for the DS RRtype: the server answers authoritatively from the parent zone.
+All previous specifications for special handling queries with QTYPE=DS apply equally to QTYPE=DELEG.
+In summary, server either provides an authoritative DELEG RRset or proves its non-existence.
 
 #### Delegation with DELEG
 
-If the delegation has a DELEG RRset, the authoritative server MUST put the DELEG RRset into the Authority section of the referral. In this case, the server MUST NOT include the NS RRset into the Authority section. Presence of the covering RRSIG follows the normal DNSSEC specification for answers with authoritative zone data.
+If the delegation has a DELEG RRset, the authoritative server MUST put the DELEG RRset into the Authority section of the referral.
+In this case, the server MUST NOT include the NS RRset into the Authority section.
+Presence of the covering RRSIG follows the normal DNSSEC specification for answers with authoritative zone data.
 
 Similarly, rules for DS RRset inclusion into referrals apply as specified by DNSSEC protocol.
 
 #### DELEG-aware Clients with NS RRs Present but No DELEG RRs
 
-If the delegation does not have a DELEG RRset, the authoritative server MUST put the NS RRset into the authority section of the referral. Absence of DELEG RRset must be proven as specified by DNSSEC protocol for authoritative data.
+If the delegation does not have a DELEG RRset, the authoritative server MUST put the NS RRset into the authority section of the referral.
+Absence of DELEG RRset must be proven as specified by DNSSEC protocol for authoritative data.
 
-Similarly, rules for DS RRset inclusion into referrals apply as specified by the DNSSEC protocol. Please note in practice the same process and records are used to prove non-existence of DELEG and DS RRsets.
+Similarly, rules for DS RRset inclusion into referrals apply as specified by the DNSSEC protocol.
+Please note in practice the same process and records are used to prove non-existence of DELEG and DS RRsets.
 
 ## DNSSEC Signers
 
-The DELEG record is authoritative on the parent side of a zone cut and needs to be signed as such. Existing rules from DNSSEC specification apply. In summary: for DNSSEC signing, treat the DELEG RRtype the same way as the DS RRtype.
+The DELEG record is authoritative on the parent side of a zone cut and needs to be signed as such.
+Existing rules from DNSSEC specification apply.
+In summary: for DNSSEC signing, treat the DELEG RRtype the same way as the DS RRtype.
 
-In order to protect validators from downgrade attacks this draft introduces a new DNSKEY flag ADT (Authoritative Delegation Types). In zones which contain a DELEG RRset, this flag MUST be set to 1 in at least one of the DNSKEY records published in the zone.
+In order to protect validators from downgrade attacks this draft introduces a new DNSKEY flag ADT (Authoritative Delegation Types).
+In zones which contain a DELEG RRset, this flag MUST be set to 1 in at least one of the DNSKEY records published in the zone.
 
 ## DNSSEC Validators
 
@@ -315,7 +349,8 @@ DELEG awareness introduces additional requirements on validators.
 
 ### Clarifications on Nonexistence Proofs
 
-This document updates Section 4.1 of {{!RFC6840}} to include "NS or DELEG" types in type bitmap as indication of a delegation point, and generalizes applicability of ancestor delegation proof to all RRtypes that are authoritative at the parent (that is, both DS and DELEG). The text in that section is updated as follows:
+This document updates Section 4.1 of {{!RFC6840}} to include "NS or DELEG" types in type bitmap as indication of a delegation point, and generalizes applicability of ancestor delegation proof to all RRtypes that are authoritative at the parent (that is, both DS and DELEG).
+The text in that section is updated as follows:
 
 An "ancestor delegation" NSEC RR (or NSEC3 RR) is one with:
 
@@ -339,11 +374,13 @@ The first paragraph of that section is updated to read:
 
 Section 5.2 of {{!RFC4035}} specifies that a validator, when proving a
 delegation is not secure, needs to check for the absence of the DS
-and SOA bits in the NSEC (or NSEC3) type bitmap.  The validator also
+and SOA bits in the NSEC (or NSEC3) type bitmap.
+The validator also
 MUST check for the presence of the NS or the DELEG bit in the matching NSEC (or
 NSEC3) RR (proving that there is, indeed, a delegation).
 Alternately, the validator must make sure that the delegation with NS record is covered by an NSEC3
-RR with the Opt-Out flag set. Opt-Out is not applicable to DELEG RRtype
+RR with the Opt-Out flag set.
+Opt-Out is not applicable to DELEG RRtype
 because DELEG records are authoritative at the parent side of a zone cut in the same
 way that DS RRtypes are.
 
@@ -351,7 +388,8 @@ way that DS RRtypes are.
 
 When DNSKEY flag ADT is set to 1, a DELEG-aware validator MUST prove the absence of a DELEG RRset in referral responses for a zone.
 
-Without this check, an attacker could strip the DELEG RRset from a referral response and replace it with an unsigned (and potentially malicious) NS RRset. A referral response with an unsigned NS and signed DS RRsets does not require additional proofs of nonexistence according to pre-DELEG DNSSEC specification, and it would have been accepted as a delegation without DELEG RRset.
+Without this check, an attacker could strip the DELEG RRset from a referral response and replace it with an unsigned (and potentially malicious) NS RRset.
+A referral response with an unsigned NS and signed DS RRsets does not require additional proofs of nonexistence according to pre-DELEG DNSSEC specification, and it would have been accepted as a delegation without DELEG RRset.
 
 ### Chaining
 
@@ -379,7 +417,9 @@ Note that include-name chains can have CNAME steps in them; in such a case, a CN
 
 IANA is requested to allocate the DELEG RR in the Resource Record (RR) TYPEs registry, with the meaning of "enhanced delegation information" and referencing this document.
 
-IANA is requested to assign a new bit in the DNSKEY RR Flags registry ({{!RFC4034}}) for the ADT bit (N), with the description "Authoritative Delegation Types" and referencing this document. For compatibility reasons we request the bit 14 to be used. This value has been proven to work whereas bit 0 was proven to break in practical deployments (because of bugs).
+IANA is requested to assign a new bit in the DNSKEY RR Flags registry ({{!RFC4034}}) for the ADT bit (N), with the description "Authoritative Delegation Types" and referencing this document.
+For compatibility reasons we request the bit 14 to be used.
+This value has been proven to work whereas bit 0 was proven to break in practical deployments (because of bugs).
 
 IANA is requested to assign a bit from the EDNS Header Flags registry ({{!RFC6891}}), with the abbreviation DE, the description "DELEG enabled" and referencing this document.
 
@@ -447,11 +487,14 @@ The registration for numbers 65280-65535 is reserved for private use.
 
 #  Examples
 
-The following example shows an excerpt from a signed root zone. It shows the delegation point for "example." and "test."
+The following example shows an excerpt from a signed root zone.
+It shows the delegation point for "example." and "test."
 
-The "example." delegation has DELEG and NS records. The "test." delegation has DELEG but no NS records.
+The "example." delegation has DELEG and NS records.
+The "test." delegation has DELEG but no NS records.
 
-TODO: Examples of using server-ip4 and server-ip6. Also, examples that show DELEGI records in ns2.example.net and ns3.example.org.
+TODO: Examples of using server-ip4 and server-ip6.
+Also, examples that show DELEGI records in ns2.example.net and ns3.example.org.
 
     example.   300 IN DELEG server-name=a.example.
     example.   300 IN DELEG include-name=ns2.example.net.
@@ -670,7 +713,8 @@ This document is heavily based on past work done by Tim April in
 {{?I-D.tapril-ns2}} and thus extends the thanks to the people helping on this which are:
 John Levine, Erik Nygren, Jon Reed, Ben Kaduk, Mashooq Muhaimen, Jason Moreau, Jerrod Wiesman, Billy Tiemann, Gordon Marx and Brian Wellington.
 
-Work on DELEG protocol has started at IETF 118 hackaton. Hackaton participants: Christian Elmerot, David Blacka, David Lawrence, Edward Lewis, Erik Nygren, George Michaelson, Jan Včelák, Klaus Darilion, Libor Peltan, Manu Bretelle, Peter van Dijk, Petr Špaček, Philip Homburg, Ralf Weber, Roy Arends, Shane Kerr, Shumon Huque, Vandan Adhvaryu, Vladimír Čunát.
+Work on DELEG protocol has started at IETF 118 hackaton.
+Hackaton participants: Christian Elmerot, David Blacka, David Lawrence, Edward Lewis, Erik Nygren, George Michaelson, Jan Včelák, Klaus Darilion, Libor Peltan, Manu Bretelle, Peter van Dijk, Petr Špaček, Philip Homburg, Ralf Weber, Roy Arends, Shane Kerr, Shumon Huque, Vandan Adhvaryu, Vladimír Čunát.
 
 Other people joined the effort after the initial hackaton: Ben Schwartz, Bob Halley, Paul Hoffman, ...
 
