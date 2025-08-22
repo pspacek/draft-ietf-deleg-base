@@ -68,6 +68,7 @@ This limitation is a barrier for efficient introduction of new DNS technology.
 
 The proposed DELEG and DELEGI record types remedy this problem by providing extensible parameters to indicate capabilities and additional information, such as addresses that a resolver may use for the delegated authority.
 The DELEG record is authoritative and thus signed in the parent side of the delegation making it possible to validate all delegation parameters with DNSSEC.
+The DELEGI record gives information about delegation; they are treated like regular authoritative records in their zone.
 
 This document only shows how a DELEG record can be used instead of or along side a NS record to create a delegation.
 Future documents can use the extensible mechanism for more advanced features like connecting to a name server with an encrypted transport.
@@ -88,7 +89,7 @@ Terminology regarding the Domain Name System comes from {{?BCP219}}, with additi
 
 # DELEG and DELEGI Record Types
 
-The DELEG record (whose RRtype is TBD) has Rdata is one field, a list of key-value pairs called "delegation information".
+The DELEG record (whose RRtype is TBD) has Rdata which is one field, a list of key-value pairs called "delegation information".
 The delegation information field has wire and display formats that are based on the rules in Appendix A of {{?RFC9460}}.
 A DELEG record is authoritative for the named zone, and creates a delegation and thus lives in the parent of the named zone.
 
@@ -206,7 +207,7 @@ That description becomes:
     1. Start with SNAME equal to QNAME.
 
     1. If QTYPE is a type that is authoritative at the parent side of a zone cut (currently, DS or DELEG), remove the leftmost label from SNAME.
-For example, if the QNAME is "test.example." and th eQTYPE is DELEG or DS, set SNAME to "example.".
+For example, if the QNAME is "test.example." and the QTYPE is DELEG or DS, set SNAME to "example.".
 
 1. Look for locally-available DELEG and NS RRsets, starting at current SNAME.
 
@@ -713,8 +714,8 @@ This document is heavily based on past work done by Tim April in
 {{?I-D.tapril-ns2}} and thus extends the thanks to the people helping on this which are:
 John Levine, Erik Nygren, Jon Reed, Ben Kaduk, Mashooq Muhaimen, Jason Moreau, Jerrod Wiesman, Billy Tiemann, Gordon Marx and Brian Wellington.
 
-Work on DELEG protocol has started at IETF 118 hackathon.
-Hackaton participants: Christian Elmerot, David Blacka, David Lawrence, Edward Lewis, Erik Nygren, George Michaelson, Jan Včelák, Klaus Darilion, Libor Peltan, Manu Bretelle, Peter van Dijk, Petr Špaček, Philip Homburg, Ralf Weber, Roy Arends, Shane Kerr, Shumon Huque, Vandan Adhvaryu, Vladimír Čunát.
+Work on DELEG protocol has started at IETF 118 hackaton.
+Hackaton participants: Christian Elmerot, David Blacka, David Lawrence, Edward Lewis, Erik Nygren, George Michaelson, Jan Včelák, Klaus Darilion, Libor Peltan, Manu Bretelle, Peter van Dijk, Petr Špaček, Philip Homburg, Ralf Weber, Roy Arends, Shane Kerr, Shumon Huque, Vandan Adhvaryu, Vladimír Čunát, Andreas Schulze.
 
 Other people joined the effort after the initial hackaton: Ben Schwartz, Bob Halley, Paul Hoffman, ...
 
@@ -725,7 +726,7 @@ RFC EDITOR:
 : PLEASE REMOVE THE THIS SECTION PRIOR TO PUBLICATION.
 
 * Write a security considerations section
-* Change the parameters form temporary to permanent once IANA assigned. Temporary use:
+* Change the parameters from temporary to permanent once IANA assigned. Temporary use:
   * DELEG QType code is 65432
   * DELEG EDNS Flag Bit is 3
   * DELEG DNSKEY Flag Bit is 14
