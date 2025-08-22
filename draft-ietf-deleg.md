@@ -107,7 +107,7 @@ The actions defined in this document are described briefly here, and more fully 
 
 Future documents might define additional delegation information that are actions, and might also define delegation information key-value pairs that modify actions.
 
-TODO: Add some introduction comparing how resolvers see legacy delegatation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-ip4 and server-ip6 keys)
+TODO: Add some introduction comparing how resolvers see legacy delegation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-ip4 and server-ip6 keys)
 
 # Use of DELEG Records
 
@@ -138,7 +138,7 @@ The DE bit cleared (set to zero) indicates the resolver is unprepared to handle 
 
 Motivation: For a long time there will be both DELEG and NS needed for delegation.
 As both methods should be configured to get to a proper resolution it is not necessary to send both in a referral response.
-We therefore purpose an EDNS flag to be use similar to the DO Bit for DNSSEC to be used to signal that the sender understands DELEG and does not need NS or glue information in the referral.
+We therefore propose an EDNS flag to be used similar to the DO Bit for DNSSEC to be used to signal that the sender understands DELEG and does not need NS or glue information in the referral.
 
 ### Referral
 
@@ -244,11 +244,11 @@ The wire formats are the same as the wire formats for domain names, and MUST NOT
 
 If any of these keys are used, it MUST have a value (that is, it cannot be a key with a zero-length value).
 
-A DELEG or DELEGI record SHOULD have only one of the following:
+A DELEG or DELEGI record SHOULD carry exactly one set of server information, chosen from the following:
 
 - one server-ip4 key
 - one server-ip6 key
-- one server-ip4 and one server-ip6 key
+- a pair consisting of one server-ip4 and one server-ip6
 - one server-name key
 - one include-name key
 
@@ -729,4 +729,4 @@ RFC EDITOR:
 * Change the parameters from temporary to permanent once IANA assigned. Temporary use:
   * DELEG QType code is 65432
   * DELEG EDNS Flag Bit is 3
-  * DELEG DNSKEY Flag Bit is 0
+  * DELEG DNSKEY Flag Bit is 14
