@@ -279,7 +279,6 @@ A DELEG-aware resolver MAY implement lazy filling of SLIST, such as by deferring
 DELEG-aware authoritative servers act differently when handling queries from DELEG-unaware clients (those with DE=0) than from DELEG-aware clients (those with DE=1).
 
 The server MUST copy the value of the DE bit from the query into the response.
-(TODO: not really necessary protocol-wise, but might be nice for monitoring the deployment?)
 
 ### DELEG-unaware Clients
 
