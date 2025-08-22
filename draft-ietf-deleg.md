@@ -102,7 +102,7 @@ The actions defined in this document are described briefly here, and more fully 
 
 * server-ip4: a set of IPv4 addresses for nameservers of the given zone
 * server-ip6: a set of IPv6 addresses for nameservers of the given zone
-* server-name: the domain name of a nameserver of the given zone; the addresses must be fetched
+* server-name: the domain name of a nameserver of the given zone. The addresses must be fetched using normal resolution which means the server-name MUST NOT be inside the delegated domain when used with DELEG.
 * include-name: the domain name of a zone that has more information about the nameservers of the given zone
 
 Future documents might define additional delegation information that are actions, and might also define delegation information key-value pairs that modify actions.
