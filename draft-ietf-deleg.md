@@ -54,8 +54,7 @@ It involves delegating authority over subdomains to specific DNS servers via NS 
 
 An NS record contains the hostname of the nameserver for the delegated namespace.
 Any facilities of that nameserver must be discovered through other mechanisms.
-This document proposes a new extensible DNS record type, DELEG, for delegation of the authority for a domain.
-Future documents then can use this mechanism to use additional information about the delegated namespace and the capabilities of authoritative nameservers for the delegated namespace.
+This document proposes a new method for delegation of the authority for a domain.
 --- middle
 
 # Introduction
