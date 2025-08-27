@@ -127,6 +127,10 @@ A DELEG RRset MAY be present with or without NS or DS RRsets at the delegation p
 
 ### Signaling DELEG support
 
+There will be both DELEG and NS needed for delegation for a long time.
+Because both methods should be configured to get to a proper resolution, it is not necessary to send both in a referral response.
+Given this motivation, this document defines an EDNS flag to be used similar to the DO Bit for DNSSEC to be used to signal that the sender understands DELEG and does not need NS or glue information in the referral.
+
 A resolver that is DELEG-aware MUST signal its support by sending the DE bit when iterating.
 
 This bit is referred to as the "DELEG" (DE) bit.
@@ -141,10 +145,6 @@ In the context of the EDNS0 OPT meta-RR, the DE bit is the TBD of the "extended 
 
 Setting the DE bit to one in a query indicates the resolver understands new DELEG semantics and does not need NS records to follow a referral.
 The DE bit cleared (set to zero) indicates the resolver is unprepared to handle DELEG and hence can only be served NS, DS and glue in a delegation response.
-
-Motivation: For a long time there will be both DELEG and NS needed for delegation.
-As both methods should be configured to get to a proper resolution it is not necessary to send both in a referral response.
-We therefore propose an EDNS flag to be used similar to the DO Bit for DNSSEC to be used to signal that the sender understands DELEG and does not need NS or glue information in the referral.
 
 ### Referral
 
