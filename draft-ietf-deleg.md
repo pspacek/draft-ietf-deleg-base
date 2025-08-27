@@ -92,9 +92,13 @@ The DELEG record (whose RRtype is TBD) Rdata contains a list of key-value pairs 
 The delegation information has wire and display formats that are based on the rules in Appendix A of {{?RFC9460}}.
 A DELEG record is authoritative for the named zone, and creates a delegation and thus lives in the parent of the named zone.
 
-The DELEGI record has the identical format as the DELEG record.
-The use of the DELEGI record is different from the use of the DELEG record: it gives information about delegation.
-DELEGI records are treated like regular authoritative records in their zone.
+The DELEGI record uses the same format as the DELEG record, but rather than defining a delegation,
+a DELEGI is used as the target of the "include" mechanism.
+Also unlike DELEG records, DELEGI records can live in any part of the DNS namespace unrelated to the delegating domain.
+
+When a resolver encounters an "include-name" key-value pair in a DELEG record, it queries for a DELEGI record.
+Because a DELEGI record can itself contain an "include-name" key-value pair,
+a resolver must be prepared to follow the "include-name" chain by making additional DELEGI queries.
 
 Some delegation information key-value pairs are actions that a DELEG-aware resolver takes when it gets a DELEG or DELEGI record.
 The actions defined in this document are described briefly here, and more fully described in {{actions}}.
