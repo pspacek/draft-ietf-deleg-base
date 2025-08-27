@@ -108,8 +108,6 @@ The actions defined in this document are described briefly here, and more fully 
 * server-name: the domain name of a nameserver of the given zone. The addresses must be fetched using normal resolution which means the server-name MUST NOT be inside the delegated domain when used with DELEG.
 * include-name: the domain name of a zone that has more information about the nameservers of the given zone
 
-Future documents might define additional delegation information that are actions, and might also define delegation information key-value pairs that modify actions.
-
 TODO: Add some introduction comparing how resolvers see legacy delegation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-ip4 and server-ip6 keys)
 
 # Use of DELEG Records
