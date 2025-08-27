@@ -172,7 +172,7 @@ This document simply extends this existing behavior to DELEG RRtype as well, and
 When a DELEG RRset exists in a zone, DELEG-aware resolvers ignore the NS RRset for that zone.
 This means that the DELEG-aware resolver ignores the NS RRset in the zone's parent as well as any cached NS RRset that the resolver might have gotten by looking in the apex of the zone.
 
-DELEG and NS RRtypes can be used differently at each delegation level, and DELEG-aware resolvers MUST be able follow chains of delegations which combines both types in arbitrary ways.
+DELEG and NS RRtypes can be used differently at each delegation level, and DELEG-aware resolvers MUST be able to follow chains of delegations which combines both types in arbitrary ways.
 
 An example of a valid delegation tree:
 
