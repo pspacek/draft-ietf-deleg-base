@@ -248,7 +248,7 @@ The wire formats for server-ip4 and server-ip6 are a sequence of IP addresses in
 The presentation values for server-name and include-name are as full-qualified domain names.
 The wire formats are the same as the wire formats for domain names, and MUST NOT be compressed.
 
-If any of these keys are used, it MUST have a value (that is, it cannot be a key with a zero-length value).
+If any one of these keys is used, it MUST have a value (that is, it cannot be a key with a zero-length value).
 
 A DELEG or DELEGI record SHOULD carry exactly one set of server information, chosen from the following:
 
