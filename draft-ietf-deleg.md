@@ -290,7 +290,7 @@ The server MUST copy the value of the DE bit from the query into the response.
 ### DELEG-unaware Clients
 
 DELEG-unaware clients do not use DELEG records for delegation.
-When a DELEG-aware authoritative server responds to a DELEG-unaware client, any DELEG record in the response does not create zone cut, is not returned in referral responses, and is not considered authoritative on the parent side of a zone cut.
+When a DELEG-aware authoritative server responds to a DELEG-unaware client, any DELEG record in the response does not create a zone cut, is not returned in referral responses, and is not considered authoritative on the parent side of a zone cut.
 Because of this, DELEG-aware authoritative servers MUST answer as if they are DELEG-unaware.
 Please note this instruction does not affect DNSSEC signing, i.e. no special handling for NSEC type bitmap is necessary and DELEG RRtype is accurately represented even for DELEG-unaware clients.
 
