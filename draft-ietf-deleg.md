@@ -424,7 +424,7 @@ Note that include-name chains can have CNAME steps in them; in such a case, a CN
 
 ## Changes to Existing Registries
 
-IANA is requested to allocate the DELEG RR in the Resource Record (RR) TYPEs registry, with the meaning of "enhanced delegation information" and referencing this document.
+IANA is requested to allocate the DELEG RR and the DELEGI RR in the Resource Record (RR) TYPEs registry, with the meaning of "enhanced delegation information" and referencing this document.
 
 IANA is requested to assign a new bit in the DNSKEY RR Flags registry ({{!RFC4034}}) for the ADT bit (N), with the description "Authoritative Delegation Types" and referencing this document.
 For compatibility reasons we request the bit 14 to be used.
