@@ -88,8 +88,8 @@ Terminology regarding the Domain Name System comes from {{?BCP219}}, with additi
 
 # DELEG and DELEGI Record Types
 
-The DELEG record (whose RRtype is TBD) has Rdata which is one field, a list of key-value pairs called "delegation information".
-The delegation information field has wire and display formats that are based on the rules in Appendix A of {{?RFC9460}}.
+The DELEG record (whose RRtype is TBD) Rdata contains a list of key-value pairs called "delegation information".
+The delegation information has wire and display formats that are based on the rules in Appendix A of {{?RFC9460}}.
 A DELEG record is authoritative for the named zone, and creates a delegation and thus lives in the parent of the named zone.
 
 The DELEGI record has the identical format as the DELEG record.
