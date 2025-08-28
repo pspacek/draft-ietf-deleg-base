@@ -541,18 +541,18 @@ The following sections show referral examples:
 
     ;; Header: QR RCODE=0
     ;;
-    
+
     ;; Question
     foo.example.  IN MX
-    
+
     ;; Answer
     ;; (empty)
-    
+
     ;; Authority
     example.   300 IN NS    a.example.
     example.   300 IN NS    b.example.net.
     example.   300 IN NS    c.example.org.
-    
+
     ;; Additional
     a.example. 300 IN A     192.0.2.1
     a.example. 300 IN AAAA  2001:DB8::1
@@ -561,16 +561,16 @@ The following sections show referral examples:
 
     ;; Header: QR AA RCODE=3
     ;;
-    
+
     ;; Question
     foo.test.   IN MX
-    
+
     ;; Answer
     ;; (empty)
-    
+
     ;; Authority
     .   300 IN SOA ...
-    
+
     ;; Additional
     ;; OPT with Extended DNS Error: New Delegation Only
 
