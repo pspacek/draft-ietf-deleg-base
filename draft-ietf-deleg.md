@@ -52,7 +52,8 @@ author:
 This document proposes a new extensible method for delegation of the authority for a domain in Domain Name System (DNS) based in DELEG and DELEGI records.
 
 A delegation in the DNS is a mechanism that enables efficient and distributed management of the DNS namespace.
-The traiditional DNS delegation is based on NS records which contain only hostname of a server and no other parameters. New delegation records are extensible, can be secured with DNSSEC, and eliminate parent-child duplication from the DNS.
+The traiditional DNS delegation is based on NS records which contain only hostname of a server and no other parameters.
+New delegation records are extensible, can be secured with DNSSEC, and eliminate parent-child duplication from the DNS.
 
 --- middle
 
@@ -62,17 +63,22 @@ In the Domain Name System, responsibility for each subdomain within the domain n
 
 The original DNS record that does this, called NS record, contains only hostname of a single nameserver and no other parameters.
 The resolver needs to resolve these names into usable addresses and infer other required parameters, such as transport protocol and any other protocol features.
-Moreover the NS record exists in two copies, at the delegation point, and in the child zone. DNS Security Extension (DNSSEC) protect only one copy, in the child zone.
+Moreover the NS record exists in two copies, at the delegation point, and in the child zone.
+DNS Security Extension (DNSSEC) protect only one copy, in the child zone.
 
 These properties of NS records limit resolvers to unencrypted UDP and TCP port 53, and this initial contact cannot be protected with DNSSEC.
 Even if these two problems were somehow solved, NS record does not offer extensiblity for any other parameters.
 This limitation is a barrier for efficient introduction of new DNS technology.
 
 The proposed DELEG and DELEGI record types remedy this problem by providing extensible parameters to indicate server capabilities and additional information, such as addresses that a resolver may use to reach the server.
-The DELEG record creates a new delegation. It is authoritative in the parent side of delegation and thus signed. This makes it possible to validate all delegation parameters with DNSSEC, including all future extensions.
-The DELEGI record is an auxilitary record which does not create delegation by itself, but can be used to share the same delegation information across any number of zones. DELEGI is treated like regular authoritative records in their zone.
+The DELEG record creates a new delegation.
+It is authoritative in the parent side of delegation and thus signed.
+This makes it possible to validate all delegation parameters with DNSSEC, including all future extensions.
+The DELEGI record is an auxilitary record which does not create delegation by itself, but can be used to share the same delegation information across any number of zones.
+DELEGI is treated like regular authoritative records in their zone.
 
-DELEG record can be used instead of or along side a NS record to create a delegation. Combination of DELEG+NS is fully compatible with old resolvers.
+DELEG record can be used instead of or along side a NS record to create a delegation.
+Combination of DELEG+NS is fully compatible with old resolvers.
 
 Future documents can use the extensible mechanism for more advanced features like connecting to a name server with an encrypted transport.
 
@@ -122,7 +128,9 @@ DELEG RRsets MUST NOT appear at a zone's apex.
 <!-- From the mailing list: Can we give advice on what an authoritative server should do if it encounters this
 situation? Should it fail to load the zone? I can see that this is trying to say that
 DELEGs do not follow the same model as legacy delegations with the NS RRSet in both
-locations. If so, perhaps it should just say that. Regardless, I think a "MUST NOT" should
+locations.
+If so, perhaps it should just say that.
+Regardless, I think a "MUST NOT" should
 explain the consequences of not complying. -->
 
 A DELEG RRset MAY be present with or without NS or DS RRsets at the delegation point.
