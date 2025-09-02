@@ -6,11 +6,11 @@ deleg                                                           T. April
 Internet-Draft                                               Google, LLC
 Updates: 1034, 1035, 6672, 6840 (if approved)                  P. Špaček
 Intended status: Standards Track                                     ISC
-Expires: 5 March 2026                                           R. Weber
+Expires: 6 March 2026                                           R. Weber
                                                      Akamai Technologies
                                                              D. Lawrence
                                                               Salesforce
-                                                        1 September 2025
+                                                        2 September 2025
 
 
                      Extensible Delegation for DNS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 March 2026.
+   This Internet-Draft will expire on 6 March 2026.
 
 Copyright Notice
 
@@ -130,8 +130,8 @@ Table of Contents
 1.  Introduction
 
    In the Domain Name System, responsibility for each subdomain within
-   the domain name hierarchy can delegated to different servers, which
-   makes them authoritative for their portion of the namespace.
+   the domain name hierarchy can be delegated to different servers,
+   which makes them authoritative for their portion of the namespace.
 
    The original DNS record that do this, called NS record, contain only
    hostname of a single nameserver and no other parameters.  The
