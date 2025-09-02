@@ -1352,7 +1352,7 @@ The traiditional DNS delegation is based on NS records which contain only hostna
 The resolver needs to resolve these names into usable addresses and infer other required parameters, such as transport protocol and any other protocol features.
 Moreover the NS record exists in two copies, at the delegation point, and in the child zone. DNS Security Extension (DNSSEC) protect only one copy, in the child zone.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">These properties of NS records limit resolvers to unencrypted UDP and TCP port 53, and this initial contact cannot be protected with DNSSEC.
-Even if these two problems were somehow solved, NS record does not offer extensiblity for any other parameters which might be needed in future.
+Even if these two problems were somehow solved, NS record does not offer extensiblity for any other parameters.
 This limitation is a barrier for efficient introduction of new DNS technology.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">The proposed DELEG and DELEGI record types remedy this problem by providing extensible parameters to indicate server capabilities and additional information, such as addresses that a resolver may use to reach the server.
 The DELEG record creates a new delegation. It is authoritative in the parent side of delegation and thus signed. This makes it possible to validate all delegation parameters with DNSSEC, including all future extensions.

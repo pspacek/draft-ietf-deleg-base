@@ -144,9 +144,9 @@ Table of Contents
    These properties of NS records limit resolvers to unencrypted UDP and
    TCP port 53, and this initial contact cannot be protected with
    DNSSEC.  Even if these two problems were somehow solved, NS record
-   does not offer extensiblity for any other parameters which might be
-   needed in future.  This limitation is a barrier for efficient
-   introduction of new DNS technology.
+   does not offer extensiblity for any other parameters.  This
+   limitation is a barrier for efficient introduction of new DNS
+   technology.
 
    The proposed DELEG and DELEGI record types remedy this problem by
    providing extensible parameters to indicate server capabilities and
