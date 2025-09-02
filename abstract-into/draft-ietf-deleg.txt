@@ -133,8 +133,8 @@ Table of Contents
    the domain name hierarchy can be delegated to different servers,
    which makes them authoritative for their portion of the namespace.
 
-   The original DNS record that do this, called NS record, contain only
-   hostname of a single nameserver and no other parameters.  The
+   The original DNS record that does this, called NS record, contains
+   only hostname of a single nameserver and no other parameters.  The
    resolver needs to resolve these names into usable addresses and infer
    other required parameters, such as transport protocol and any other
    protocol features.  Moreover the NS record exists in two copies, at
