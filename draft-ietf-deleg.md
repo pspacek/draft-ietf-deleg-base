@@ -259,8 +259,9 @@ The types of information defined in this document are:
 The presentation values for server-ip4 and server-ip6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
 The wire formats for server-ip4 and server-ip6 are a sequence of IP addresses in network byte order (for the respective address family).
 
-The presentation values for server-name and include-name are as full-qualified domain names.
-The wire formats are the same as the wire formats for domain names, and MUST NOT be compressed.
+The presentation values for server-name and include-name are as sets of full-qualified domain names, separated by commas.
+The wire format for server-name and include-name are each a concatenated set of a wire-format domain names.
+The names in the wire format MUST NOT be compressed.
 
 TODO: Are they? Are we going to forbid normal zone file expansion where names without trailing . get current origin appended to them?
 
@@ -274,8 +275,8 @@ A DELEG or DELEGI record SHOULD carry exactly one set of server information, cho
 - one server-name key
 - one include-name key
 
-When using server-name, the addresses must be fetched using normal DNS resolution.
-This means the value of the server-name key MUST NOT be inside the delegated domain.
+When using server-name, the addresses for all the names in the set must be fetched using normal DNS resolution.
+This means the names in the value of the server-name key MUST NOT be inside the delegated domain.
 
 ### Populating the SLIST from DELEG and DELEGI Records
 
@@ -287,12 +288,12 @@ A resolver processes each individual DELEG record within a DELEG RRset, or each 
 Ignore any server-name or include-name keys that are (erroneously) present in the same record.
 Stop processing this record.
 
-1. If a server-name key is present in the record, resolve it into addresses.
+1. If a server-name key is present in the record, resolve each name in the value into addresses.
 Copy these addresses into SLIST.
 Ignore any include-name keys that are (erroneously) present in the same record.
 Stop processing this record.
 
-1. If a include-name key is present in the record, resolve it into a DELEGI RRset.
+1. If a include-name key is present in the record, resolve each name in the value into a DELEGI RRset.
 Recursively apply the algorithm described in this section, after checking that the maximum loop count described in {{too-much-work}} has not been reached.
 
 1. If none of the above applies, SLIST is not modified by this particular record.
@@ -498,13 +499,13 @@ Change Controller:  IETF
 
 Number:  3
 Name:  server-name
-Meaning:  The fully-qualified domain name of a nameserver
+Meaning:  A set of fully-qualified domain names of a nameserver
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
 Number:  4
 Name:  include-name
-Meaning:  The fully-qualified domain of a DELEGI record
+Meaning:  A set of fully-qualified domain names that contain DELEGI RRsets
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
