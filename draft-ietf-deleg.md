@@ -487,14 +487,8 @@ The "DELEG Delegation Information" registry should be populated with the followi
 
 ~~~
 Number:  1
-Name:  server-ip4
-Meaning:  A set of IPv4 addresses of nameservers
-Reference:  {{nameserver-info}} of this document
-Change Controller:  IETF
-
-Number:  2
-Name:  server-ip6
-Meaning:  A set of IPv6 addresses of nameservers
+Name:  server-address
+Meaning:  A set of IP addresses of nameservers
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
@@ -518,16 +512,17 @@ The registration for numbers 65280-65535 is reserved for private use.
 
 #  Examples
 
-TODO: Add examples that have server-name and include-name being sets of more than one name.
-
 The following example shows an excerpt from a signed root zone.
 It shows the delegation point for "example." and "test."
 
 The "example." delegation has DELEG and NS records.
 The "test." delegation has DELEG but no NS records.
 
-TODO: Examples of using server-ip4 and server-ip6.
-Also, examples that show DELEGI records in ns2.example.net and ns3.example.org.
+TODO: Add examples that have server-name and include-name being sets of more than one name.
+
+TODO: Examples of using server-address.
+
+TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
 
     example.   300 IN DELEG server-name=a.example.
     example.   300 IN DELEG include-name=ns2.example.net.
