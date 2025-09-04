@@ -104,7 +104,7 @@ The DELEG record (whose RRtype is TBD) Rdata contains a list of key-value pairs 
 The delegation information has wire and display formats that are based on the rules in Appendix A of {{?RFC9460}}.
 A DELEG record is authoritative for the zone in its owner name, and creates a delegation and thus lives in the parent of that zone.
 
-The DELEGI record uses the same format as the DELEG record, but rather than defining a delegation,
+The DELEGI record (whose RRtype is TBD, but different than that of DELEG) uses the same format as the DELEG record, but rather than defining a delegation,
 a DELEGI is used as the target of the "include" mechanism.
 Also unlike DELEG records, DELEGI records can live in any part of the DNS namespace.
 
