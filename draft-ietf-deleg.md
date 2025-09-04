@@ -517,6 +517,8 @@ The registration for numbers 65280-65535 is reserved for private use.
 
 #  Examples
 
+TODO: Add examples that have server-name and include-name being sets of more than one name.
+
 The following example shows an excerpt from a signed root zone.
 It shows the delegation point for "example." and "test."
 
