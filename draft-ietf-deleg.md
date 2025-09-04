@@ -141,7 +141,7 @@ A DELEG RRset MAY be present with or without NS or DS RRsets at the delegation p
 ### Signaling DELEG Support
 
 There will be both DELEG and NS needed for delegation for a long time.
-Both legacy delegation (using NS records) and the DELEG protocol enable recursive resolution.
+Both legacy delegation and the DELEG protocol enable recursive resolution.
 This document defines a new EDNS flag to signal that a resolver is DELEG-aware and therefore does not need NS records or glue information in a referral response.
 
 A resolver that is DELEG-aware MUST signal that it supports the DELEG protocol by sending the DE bit when sending queries.
@@ -316,7 +316,7 @@ Two specific cases of DELEG-aware authoritative responding in DELEG-unaware mann
 #### DELEG-unaware Clients Requesting QTYPE=DELEG
 
 In DELEG-unaware clients, records with the DELEG RRtype are not authoritative on the parent side.
-Thus, queries with DE=0 and QTYPE=DELEG MUST result in a normal legacy response, such as a legacy delegation if there are NS records.
+Thus, queries with DE=0 and QTYPE=DELEG MUST result in a normal legacy response, such as a legacy referral response if there are NS records.
 
 TODO: Should we have an example with auth having parent+child zone at the same time, and DE=0 QTYPE=DELEG query?
 
@@ -324,12 +324,12 @@ TODO: Should we have an example with auth having parent+child zone at the same t
 
 DELEG-unaware clients might ask for a name which belongs to a zone delegated only with DELEG RRs (that is, without any NS RRs).
 Such zone is, by definition, not resolvable for DELEG-unaware clients.
-In this case, the DELEG record itself cannot create a zone cut, and the DELEG-aware authoritative server MUST return a legacy response.
+In this case, the DELEG record itself cannot create a zone cut, and the DELEG-aware authoritative server MUST return a legacy referral response.
 
-<!-- From the mailing list: What is a "legacy response" when there are no NS RRs present? NXDOMAIN? Can this be spelled out? -->
+<!-- From the mailing list: What is a "legacy referral response" when there are no NS RRs present? NXDOMAIN? Can this be spelled out? -->
 
-The legacy response might be confusing for subdomains of zones which actually exist because DELEG-aware clients would get a different answer, namely a delegation.
-An example of a legacy response is in {{legacynxdomain}}.
+The legacy referral response might be confusing for subdomains of zones which actually exist because DELEG-aware clients would get a different answer, namely a delegation.
+An example of a legacy referral response is in {{legacynxdomain}}.
 
 The authoritative server is RECOMMENDED to supplement these responses to DELEG-unaware resolvers with Extended DNS Error "New Delegation Only".
 
