@@ -117,8 +117,8 @@ The keys defined in this document are described briefly here, and more fully des
 
 * server-ip4: a set of IPv4 addresses for nameservers
 * server-ip6: a set of IPv6 addresses for nameservers
-* server-name: the domain name of a nameserver
-* include-name: the domain name of a zone that has more information about the nameservers
+* server-name: a set of domain names of nameservers of the given zone
+* include-name: a set of domain names of a zone that have more information about the nameservers
 
 TODO: Add some introduction comparing how resolvers see legacy delegation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-ip4 and server-ip6 keys)
 
@@ -253,8 +253,8 @@ The types of information defined in this document are:
 
 * server-ip4: a set of IPv4 addresses for nameservers
 * server-ip6: a set of IPv6 addresses for nameservers
-* server-name: the domain name of a nameserver; the addresses must be fetched
-* include-name: the domain name that points to a DELEGI RRset, which in turn has more information about the nameservers
+* server-name: a set of domain names of nameservers of the given zone
+* include-name: a set of domain names of a zone that have more information about the nameservers
 
 The presentation values for server-ip4 and server-ip6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
 The wire formats for server-ip4 and server-ip6 are a sequence of IP addresses in network byte order (for the respective address family).
