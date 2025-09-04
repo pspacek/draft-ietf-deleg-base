@@ -96,6 +96,7 @@ Terminology regarding the Domain Name System comes from {{?BCP219}}, with additi
 * legacy referral response: A response with an NS RRset in the AUTHORITY section, plus all relevant DNSSEC records
 * legacy resolver: A resolver which does not follow the DELEG protocol
 * DELEG-aware: An authoritative server or resolver that follows the protocol defined in this document
+* DELEG-unaware: An authoritative server or resolver that does not (yet) follow the protocol defined in this document
 
 # DELEG and DELEGI Record Types
 
