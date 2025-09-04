@@ -267,13 +267,13 @@ TODO: Are they? Are we going to forbid normal zone file expansion where names wi
 
 If any one of these keys is used, it MUST have a value (that is, it cannot be a key with a zero-length value).
 
-A DELEG or DELEGI record SHOULD carry exactly one set of server information, chosen from the following:
+A DELEG or DELEGI record MUST NOT have more than one set of server information, chosen from the following:
 
-- one server-ip4 key
-- one server-ip6 key
-- a pair consisting of one server-ip4 and one server-ip6
+- one server-address key
 - one server-name key
 - one include-name key
+
+This restriction only applies to a single DELEG or DELEGI record; a DELEG or DELEGI RRset can have records with different server information keys.
 
 When using server-name, the addresses for all the names in the set must be fetched using normal DNS resolution.
 This means the names in the value of the server-name key MUST NOT be inside the delegated domain.
@@ -284,13 +284,14 @@ Each individual DELEG record inside a DELEG RRset, or each individual DELEGI rec
 
 A resolver processes each individual DELEG record within a DELEG RRset, or each individual DELEGI record in a DELEGI RRset, using the following steps:
 
-1. If one or more server-ip4 or server-ip6 keys are present inside the record, copy all the address values from the record into SLIST.
-Ignore any server-name or include-name keys that are (erroneously) present in the same record.
+1. If a record has more than one type of server information keys, or has multiple server information keys of the same type, that record is malformed.
+Stop processing this record.
+
+1. If a server-address key is present inside the record, copy all the address values from the record into SLIST.
 Stop processing this record.
 
 1. If a server-name key is present in the record, resolve each name in the value into addresses.
 Copy these addresses into SLIST.
-Ignore any include-name keys that are (erroneously) present in the same record.
 Stop processing this record.
 
 1. If a include-name key is present in the record, resolve each name in the value into a DELEGI RRset.
