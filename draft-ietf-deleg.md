@@ -115,11 +115,12 @@ a resolver must be prepared to follow the "include-name" chain by making additio
 Some delegation information key-value pairs are information about nameservers that a DELEG-aware resolver uses when it gets a DELEG or DELEGI record.
 The keys defined in this document are described briefly here, and more fully described in {{nameserver-info}}.
 
-* server-address: a set of IPv4 and/or IPv6 addresses for nameservers
+* server-ip4: a set of IPv4 addresses for nameservers
+* server-ip6: a set of IPv6 addresses for nameservers
 * server-name: a set of domain names of nameservers of the given zone
 * include-name: a set of domain names of a zone that have more information about the nameservers
 
-TODO: Add some introduction comparing how resolvers see legacy delegation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-address keys)
+TODO: Add some introduction comparing how resolvers see legacy delegation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-ip4 and server-ip6 keys)
 
 # Use of DELEG Records
 
@@ -250,14 +251,13 @@ The DELEG and DELEGI records have four keys that describe information about name
 The purpose of this information is to populate the SLIST with IP addresses of the nameservers for a zone.
 The types of information defined in this document are:
 
-* server-address: a set of IPv4 and/or IPv6 addresses for nameservers
+* server-ip4: a set of IPv4 addresses for nameservers
+* server-ip6: a set of IPv6 addresses for nameservers
 * server-name: a set of domain names of nameservers of the given zone
 * include-name: a set of domain names of a zone that have more information about the nameservers
 
-The presentation values for server-address is a comma-separated list of one or more IP addresses in standard textual format {{?RFC5952}} {{?RFC4001}}.
-The wire formats for server-address is a sequence of IP addresses in network byte order (for the respective address family), where each address in the sequence is prepended with a single byte that gives the length of the address (currently only 4 or 16).
-For example, a server-address value of `198.51.100.114,203.0.113.114,201:db8:afaf::114` has two IPv4 and one IPv6 addresses.
-The wire format for the value would be `0x04c633647204cb007172100db8afaf000000000000000000000114`.
+The presentation values for server-ip4 and server-ip6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
+The wire formats for server-ip4 and server-ip6 are a sequence of IP addresses in network byte order (for the respective address family).
 
 The presentation values for server-name and include-name are as sets of full-qualified domain names, separated by commas.
 The wire format for server-name and include-name are each a concatenated set of a wire-format domain names.
