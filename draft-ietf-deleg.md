@@ -92,8 +92,9 @@ all capitals, as shown here.
 
 Terminology regarding the Domain Name System comes from {{?BCP219}}, with addition terms defined here:
 
-* legacy name servers: An authoritative server that does not support the DELEG record
-* legacy resolvers: A resolver that does not support the DELEG record
+* legacy delegation: A delegation that is done with an NS RRset
+* legacy referral response: A response with an NS RRset in the AUTHORITY section, plus all relevant DNSSEC records
+* legacy resolver: A resolver which does not follow the DELEG protocol
 * DELEG-aware: An authoritative server or resolver that follows the protocol defined in this document
 
 # DELEG and DELEGI Record Types
