@@ -281,7 +281,7 @@ Each individual DELEG record inside a DELEG RRset, or each individual DELEGI rec
 
 A resolver processes each individual DELEG record within a DELEG RRset, or each individual DELEGI record in a DELEGI RRset, using the following steps:
 
-1. If one or more server-ip4 or server-ip6 keys are present inside the record, copy all the address values from either key into SLIST.
+1. If one or more server-ip4 or server-ip6 keys are present inside the record, copy all the address values from the record into SLIST.
 Ignore any server-name or include-name keys that are (erroneously) present in the same record.
 Stop processing this record.
 
