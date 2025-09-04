@@ -178,7 +178,7 @@ DELEG-unaware resolvers can get different types of answers for QTYPE=DELEG queri
 
 This document updates instructions for finding the best servers to ask.
 That information currently is covered in Section 5.3.3 of {{!RFC1034}} and Section 3.4.1 of {{!RFC6672}} with the text "2. Find the best servers to ask."
-Section 3.1.4.1 of {{!RFC4035}} should have explicitly updated Section 5.3.3 of {{!RFC1034}} for the DS RRtype, but failed to do so; this was partially remedied by {{RFC6672}}.
+Section 3.1.4.1 of {{!RFC4035}} should have explicitly updated Section 5.3.3 of {{!RFC1034}} for the DS RRtype, but failed to do so.
 This document simply extends this existing behavior to DELEG RRtype as well, and makes this special case explicit.
 
 When a DELEG RRset exists in a zone, DELEG-aware resolvers ignore the NS RRset for that zone.
