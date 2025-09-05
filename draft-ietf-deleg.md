@@ -296,7 +296,7 @@ Stop processing this record.
 Copy these addresses into SLIST.
 Stop processing this record.
 
-1. If a include-name key is present in the record, resolve each name in the value into a DELEGI RRset.
+1. If a include-name key is present in the record, resolve each name in the value using the DELEGI RRtype.
 Recursively apply the algorithm described in this section, after checking that the maximum loop count described in {{too-much-work}} has not been reached.
 
 1. If none of the above applies, SLIST is not modified by this particular record.
