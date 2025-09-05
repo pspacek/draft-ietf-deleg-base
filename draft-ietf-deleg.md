@@ -278,7 +278,7 @@ A DELEG or DELEGI record MUST NOT have more than one set of server information, 
 This restriction only applies to a single DELEG or DELEGI record; a DELEG or DELEGI RRset can have records with different server information keys.
 
 When using server-name, the addresses for all the names in the set must be fetched using normal DNS resolution.
-This means the names in the value of the server-name key MUST NOT be inside the delegated domain.
+This means the names in the value of the server-name key or the include-name key MUST NOT be inside the delegated domain.
 
 ### Populating the SLIST from DELEG and DELEGI Records
 
