@@ -515,7 +515,8 @@ The registration for numbers 65280-65535 is reserved for private use.
 This section gives the values that can be used for interoperability testing before IANA makes permanent assignments.
 The section will be removed when IANA makes permanent assignments.
 
-  * DELEG QType code is 65432
+  * DELEG RRtype code is 65432
+  * DELEGI RRtype code is 65433
   * DELEG EDNS Flag Bit is 3
   * DELEG DNSKEY Flag Bit is 14
 
