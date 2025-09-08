@@ -329,12 +329,12 @@ TODO: Should we have an example with auth having parent+child zone at the same t
 
 DELEG-unaware clients might ask for a name which belongs to a zone delegated only with DELEG RRs (that is, without any NS RRs).
 Such zone is, by definition, not resolvable for DELEG-unaware clients.
-In this case, the DELEG record itself cannot create a zone cut, and the DELEG-aware authoritative server MUST return a legacy referral response.
+In this case, the DELEG record itself cannot create a zone cut, and the DELEG-aware authoritative server MUST return a legacy response.
 
-<!-- From the mailing list: What is a "legacy referral response" when there are no NS RRs present? NXDOMAIN? Can this be spelled out? -->
+<!-- From the mailing list: What is a "legacy response" when there are no NS RRs present? NXDOMAIN? Can this be spelled out? -->
 
-The legacy referral response might be confusing for subdomains of zones which actually exist because DELEG-aware clients would get a different answer, namely a delegation.
-An example of a legacy referral response is in {{legacynxdomain}}.
+The legacy response might be confusing for subdomains of zones which actually exist because DELEG-aware clients would get a different answer, namely a delegation.
+An example of a legacy response is in {{legacynxdomain}}.
 
 The authoritative server is RECOMMENDED to supplement these responses to DELEG-unaware resolvers with Extended DNS Error "New Delegation Only".
 
