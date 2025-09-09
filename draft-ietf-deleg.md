@@ -117,11 +117,12 @@ a resolver must be prepared to follow the "include-name" chain by making additio
 Some delegation information key-value pairs are information about nameservers that a DELEG-aware resolver uses when it gets a DELEG or DELEGI record.
 The keys defined in this document are described briefly here, and more fully described in {{nameserver-info}}.
 
-* server-address: a set of IPv4 and/or IPv6 addresses for nameservers
-* server-name: a set of domain names of nameservers of the given zone
-* include-name: a set of domain names of a zone that have more information about the nameservers
+* server-ip4: a set of IPv4 addresses for nameservers
+* server-ip6: a set of IPv6 addresses for nameservers
+* server-name: the domain name of a nameserver
+* include-name: the domain name of a zone that has more information about the nameservers
 
-TODO: Add some introduction comparing how resolvers see legacy delegation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-address keys)
+TODO: Add some introduction comparing how resolvers see legacy delegation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-ip4 and server-ip6 keys)
 
 # Use of DELEG Records
 
@@ -252,14 +253,13 @@ The DELEG and DELEGI records have four keys that describe information about name
 The purpose of this information is to populate the SLIST with IP addresses of the nameservers for a zone.
 The types of information defined in this document are:
 
-* server-address: a set of IPv4 and/or IPv6 addresses for nameservers
-* server-name: a set of domain names of nameservers of the given zone
-* include-name: a set of domain names of a zone that have more information about the nameservers
+* server-ip4: a set of IPv4 addresses for nameservers
+* server-ip6: a set of IPv6 addresses for nameservers
+* server-name: the domain name of a nameserver; the addresses must be fetched
+* include-name: the domain name that points to a DELEGI RRset, which in turn has more information about the nameservers
 
-The presentation values for server-address is a comma-separated list of one or more IP addresses in standard textual format {{?RFC5952}} {{?RFC4001}}.
-The wire formats for server-address is a sequence of IP addresses in network byte order (for the respective address family), where each address in the sequence is prepended with a single byte that gives the length of the address (currently only 4 or 16).
-For example, a server-address value of `198.51.100.114,203.0.113.114,201:db8:afaf::114` has two IPv4 and one IPv6 addresses.
-The wire format for the value would be `0x04c633647204cb007172100db8afaf000000000000000000000114`.
+The presentation values for server-ip4 and server-ip6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
+The wire formats for server-ip4 and server-ip6 are a sequence of IP addresses in network byte order (for the respective address family).
 
 The presentation values for server-name and include-name are as sets of full-qualified domain names, separated by commas.
 The wire format for server-name and include-name are each a concatenated set of a wire-format domain names.
@@ -271,7 +271,9 @@ If any one of these keys is used, it MUST have a value (that is, it cannot be a 
 
 A DELEG or DELEGI record MUST NOT have more than one set of server information, chosen from the following:
 
-- one server-address key
+- one server-ip4 key
+- one server-ip6 key
+- a pair consisting of one server-ip4 and one server-ip6
 - one server-name key
 - one include-name key
 
@@ -289,7 +291,7 @@ A resolver processes each individual DELEG record within a DELEG RRset, or each 
 1. If a record has more than one type of server information keys, or has multiple server information keys of the same type, that record is malformed.
 Stop processing this record.
 
-1. If a server-address key is present inside the record, copy all the address values from the record into SLIST.
+1. If one or more server-ip4 or server-ip6 keys are present inside the record, copy all the address values from the record into SLIST.
 Stop processing this record.
 
 1. If a server-name key is present in the record, resolve each name in the value into addresses.
@@ -489,20 +491,26 @@ The "DELEG Delegation Information" registry should be populated with the followi
 
 ~~~
 Number:  1
-Name:  server-address
-Meaning:  A set of IP addresses of nameservers
+Name:  server-ip4
+Meaning:  A set of IPv4 addresses of nameservers
+Reference:  {{nameserver-info}} of this document
+Change Controller:  IETF
+
+Number:  2
+Name:  server-ip6
+Meaning:  A set of IPv6 addresses of nameservers
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
 Number:  3
 Name:  server-name
-Meaning:  A set of fully-qualified domain names of a nameserver
+Meaning:  The fully-qualified domain name of a nameserver
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
 Number:  4
 Name:  include-name
-Meaning:  A set of fully-qualified domain names that contain DELEGI RRsets
+Meaning:  The fully-qualified domain of a DELEGI record
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
