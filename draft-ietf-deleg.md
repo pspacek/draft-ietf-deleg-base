@@ -291,7 +291,7 @@ A resolver processes each individual DELEG record within a DELEG RRset, or each 
 1. If a record has more than one type of server information keys, or has multiple server information keys of the same type, that record is malformed.
 Stop processing this record.
 
-1. If one or more server-ip4 or server-ip6 keys are present inside the record, copy all the address values from the record into SLIST.
+1. If one or more server-ip4 or server-ip6 keys are present inside the record, copy all the address values from the server-ip4 or server-ip6 fields in the record into SLIST.
 Stop processing this record.
 
 1. If a server-name key is present in the record, resolve each name in the value into addresses.
