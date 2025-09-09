@@ -1420,33 +1420,32 @@ all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 <p id="section-2-1">The DELEG record (whose RRtype is TBD1) and the DELEGI record (whose RRtype is TBD2, different than that of DELEG) have the same wire and presentation formats,
 but their semantics are different.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">TODO: Decide about class: IN or class independent? SVCB is IN-specific.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">TODO: I'm tempted to do ASCII art diagram for the structure, but at the same time I don't want to risk divergence from SVCB. Shame SVCB did not have any ASCII art in it!<a href="#section-2-3" class="pilcrow">¶</a></p>
-<p id="section-2-4">The record format is based on the extensible key=value list that was originally describe for "SvcParams" for the SVCB record type <span>[<a href="#RFC9460" class="cite xref">RFC9460</a>]</span>.
+<p id="section-2-3">The record format is based on the extensible key=value list that was originally describe for "SvcParams" for the SVCB record type <span>[<a href="#RFC9460" class="cite xref">RFC9460</a>]</span>.
 The keys in the DELEG protocol are different than those used in SVCB.
-To avoid confusion between the two protocols, the list of key=value parameters used by the DELEG protocol are called DelegInfos.<a href="#section-2-4" class="pilcrow">¶</a></p>
-<p id="section-2-5">The following rules are adapted from SVCB, but with changed names:<a href="#section-2-5" class="pilcrow">¶</a></p>
+To avoid confusion between the two protocols, the list of key=value parameters used by the DELEG protocol are called DelegInfos.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">The following rules are adapted from SVCB, but with changed names:<a href="#section-2-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-2-6.1">
-          <p id="section-2-6.1.1">The whole RDATA consists of a single list called "DelegInfos".<a href="#section-2-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-2-5.1">
+          <p id="section-2-5.1.1">The whole RDATA consists of a single list called "DelegInfos".<a href="#section-2-5.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-2-6.2">
-          <p id="section-2-6.2.1">DelegInfos consists of individual DelegInfo key=value pairs.<a href="#section-2-6.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-2-5.2">
+          <p id="section-2-5.2.1">DelegInfos consists of individual DelegInfo key=value pairs.<a href="#section-2-5.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-2-6.3">
-          <p id="section-2-6.3.1">Each DelegInfo pair has DelegInfoKey and a (possibly optional) DelegInfoValue.<a href="#section-2-6.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-2-5.3">
+          <p id="section-2-5.3.1">Each DelegInfo pair has DelegInfoKey and a (possibly optional) DelegInfoValue.<a href="#section-2-5.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-2-6.4">
-          <p id="section-2-6.4.1">Each DelegInfo has a specified presentation format and wire encoding.<a href="#section-2-6.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-2-5.4">
+          <p id="section-2-5.4.1">Each DelegInfo has a specified presentation format and wire encoding.<a href="#section-2-5.4.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-2-6.5">
-          <p id="section-2-6.5.1">Each DelegInfoKey has a presentation name and a registered key number.<a href="#section-2-6.5.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-2-5.5">
+          <p id="section-2-5.5.1">Each DelegInfoKey has a presentation name and a registered key number.<a href="#section-2-5.5.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-2-6.6">
-          <p id="section-2-6.6.1">Each DelegInfoValue is in a format specific to its DelegInfoKey.<a href="#section-2-6.6.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-2-5.6">
+          <p id="section-2-5.6.1">Each DelegInfoValue is in a format specific to its DelegInfoKey.<a href="#section-2-5.6.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-7">Implementations can reuse the same code to parse SvcParams and DelegInfos and only plug in a different list of key=value pairs for SVCB/HTTPS and DELEG/DELEGI record families.<a href="#section-2-7" class="pilcrow">¶</a></p>
-<p id="section-2-8">The initial set of DelegInfoKeys and their formats are defined in <a href="#nameserver-info" class="auto internal xref">Section 3.1.5</a>.<a href="#section-2-8" class="pilcrow">¶</a></p>
+<p id="section-2-6">Implementations can reuse the same code to parse SvcParams and DelegInfos and only plug in a different list of key=value pairs for SVCB/HTTPS and DELEG/DELEGI record families.<a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-7">The initial set of DelegInfoKeys and their formats are defined in <a href="#nameserver-info" class="auto internal xref">Section 3.1.5</a>.<a href="#section-2-7" class="pilcrow">¶</a></p>
 <div id="presentation-format">
 <section id="section-2.1">
         <h3 id="name-presentation-format">

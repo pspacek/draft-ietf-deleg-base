@@ -205,10 +205,6 @@ Table of Contents
    TODO: Decide about class: IN or class independent?  SVCB is IN-
    specific.
 
-   TODO: I'm tempted to do ASCII art diagram for the structure, but at
-   the same time I don't want to risk divergence from SVCB.  Shame SVCB
-   did not have any ASCII art in it!
-
    The record format is based on the extensible key=value list that was
    originally describe for "SvcParams" for the SVCB record type
    [RFC9460].  The keys in the DELEG protocol are different than those
