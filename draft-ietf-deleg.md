@@ -100,74 +100,70 @@ Terminology regarding the Domain Name System comes from {{?BCP219}}, with additi
 
 # DELEG and DELEGI Record Types
 
-The DELEG record (whose RRtype is TBD1) and the DELEGI record (whose RRtype is TBD2, different than that of DELEG) use the exactly same wire and presentation formats,
+The DELEG record (whose RRtype is TBD1) and the DELEGI record (whose RRtype is TBD2, different than that of DELEG) have the same wire and presentation formats,
 but their semantics are different.
 
 TODO: Decide about class: IN or class independent? SVCB is IN-specific.
 
-TOOD: I'm tempted to do ASCII art diagram for the structure, but at the same time I don't want to risk divergence from SVCB. Shame SVCB did not have any ASCII art in it!
+TODO: I'm tempted to do ASCII art diagram for the structure, but at the same time I don't want to risk divergence from SVCB. Shame SVCB did not have any ASCII art in it!
 
-Record format is based on extensible key=value list, which is defined under name SvcParams for SVCB record type {{?RFC9460}}.
-The set of allowed keys is disjoint from SVCB.
-To avoid confusion, the list of key=value parameters used by this protocol is named DelegInfos, albeit it follows the same rules as SvcParams.
+The record format is based on the extensible key=value list that was originally describe for "SvcParams" for the SVCB record type {{?RFC9460}}.
+The keys in the DELEG protocol are different than those used in SVCB.
+To avoid confusion between the two protocols, the list of key=value parameters used by the DELEG protocol are called DelegInfos.
 
+The following rules are adapted from SVCB, but with changed names:
 
-For avoidance of doubt we reproduce most important parts of SvcParams definion here, just with names changed:
-
-- Whole RDATA consists of a single list called DelegInfos, which consist of individual DelegInfo pairs.
+- The whole RDATA consists of a single list called "DelegInfos".
+- DelegInfos consists of individual DelegInfo key=value pairs.
 - Each DelegInfo pair has DelegInfoKey and a (possibly optional) DelegInfoValue.
 - Each DelegInfo has a specified presentation format and wire encoding.
-- Each DelegInfoKey has a presentation name and a registered number.
-- Set of DelegInfoKeys is different than set of SvcParamKeys defined for {{?RFC9460}}.
-- DelegInfoValues are in a format specific to the DelegInfoKey.
+- Each DelegInfoKey has a presentation name and a registered key number.
+- Each DelegInfoValue is in a format specific to its DelegInfoKey.
 
-Implementations can reuse the same code to parse SvcParams and DelegInfos and only plug in a different list of keys for SVCB/HTTPS and DELEG/DELEGI record families.
+Implementations can reuse the same code to parse SvcParams and DelegInfos and only plug in a different list of key=value pairs for SVCB/HTTPS and DELEG/DELEGI record families.
 
 The initial set of DelegInfoKeys and their formats are defined in {{nameserver-info}}.
 
 ## Presentation Format
-The RDATA presentation format of the record consists of a single list:
+The RDATA presentation format of the record consists of a single list: DelegInfos
 
-DelegInfos
+The DelegInfos presentation format is defined exactly same as "SvcParams" defined in Section 2.1 of {{?RFC9460}}. The following rules are adapted from SVCB, but with changed names:
 
-The DelegInfos presentation format is defined exactly same as "SvcParams" defined in Section 2.1 of {{?RFC9460}}.
-For avoidance of doubt we reproduce most important parts of SvcParams definion here, just with names changed:
-
-DelegInfos is a whitespace-separated list with each DelegInfo consisting of a DelegInfoKey=DelegInfoValue pair or a standalone DelegInfoKey.
-
-Individual element definitions are equivalent to {{?RFC9460}}:
-
-- DelegInfo syntax is the same as SvcParam, but it references DelegInfo elements instead of SvcParam elements.
-- DelegInfoKey syntax is the same as SvcParamKey. Syntax for unknown keys in Section 2.1 of {{?RFC9460}} applies.
-- DelegInfoValue syntax is the same as SvcParamValue. Appendix A of {{?RFC9460}} applies.
-
-All requirements in Section 2.1 of {{?RFC9460}} apply.
+- DelegInfos is a whitespace-separated list with each DelegInfo consisting of a DelegInfoKey=DelegInfoValue pair, or a standalone DelegInfoKey.
+- Individual element definitions are the same as {{?RFC9460}}:
+  - The DelegInfo syntax is the same as SvcParam, but it references DelegInfo elements instead of SvcParam elements.
+  - DelegInfoKey syntax is the same as SvcParamKey.
+  - The syntax for unknown keys in Section 2.1 of {{?RFC9460}} applies.
+  - The DelegInfoValue syntax is the same as SvcParamValue.
+  - The rules from Appendix A of {{?RFC9460}} apply.
+- All the requirements in Section 2.1 of {{?RFC9460}} apply.
 
 TODO: SVCB allows an empty list. I guess it is not a problem, it is small and will be simply ignored?
 
-
 ## RDATA Wire Format
+
 The format of the DelegInfos list is identical to SvcParams format defined in Section 2.2 {{?RFC9460}},
-including the requirement for strictly increasing numeric order of keys.
+including the requirements for strictly increasing numeric order of keys and duplicate keys not being allowed.
 
-All requirements in Section 2.2 of {{?RFC9460}} apply.
+All the requirements in Section 2.2 of {{?RFC9460}} apply.
 
-## DELEG vs. DELEGI Type Differences
-Brief summary of semantic differences between the two types follows. This is NOT exhaustive definition of the DELEG protocol.
+## Overview of Differences between DELEG and DELEGI Semantics
 
-- DELEG creates a delegation for it's owner name, similarly to NS RR type.
-- DELEG and NS RR types can coexist on the same owner name.
-- DELEG is authoritative in the parent zone of the delegated zone, similarly to DS RR type (and unlike NS RR type).
-- DELEG is signed by the parent zone of the delegated zone, similarly to DS RR type (and unlike NS RR type).
-- DELEG is cannot be preset at apex of a child side of the delegation, similarly to DS RR type (and unlike NS RR type).
-- DELEG has unique rules for inclusion in answers, read this document in full :-)
+The following is a brief summary of semantic differences between the DELEG and DELEGI types.
+
+- DELEG creates a delegation for its owner name, similar to the NS RRtype.
+- DELEG and NS RRtypes can coexist at the same owner name.
+- DELEG is authoritative in the parent zone of the delegated zone, similar to the DS RRtype (but unlike the NS RRtype).
+- DELEG is signed by the parent zone of the delegated zone, similar to the DS RRtype (and unlike the NS RRtype).
+- DELEG is cannot be present at the apex of a child side of the delegation, similar to the DS RRtype (and unlike the NS RRtype).
+- DELEG has unique rules for inclusion in answers, as described in many parts of this specification.
 
 
-- DELEGI is an ordinary type, similarly to TXT.
-- DELEGI does NOT create delegation for it's owner name, similarly to TXT RR type.
-- DELEGI cannot coexist at the same owner name with DELEG or NS RR types, similary to TXT RR type.
-- DELEGI DNSSEC signing and record placement rules are the same as for any ordinary RR type, e.g. TXT RR type.
-- DELEGI is used as the target of the "include" mechanism, see section {{slist}} for details.
+- DELEGI is an ordinary RRtype, similar to the TXT RRtype.
+- DELEGI does not create a delegation for its owner name, similar to the TXT RRtype.
+- DELEGI cannot coexist at the same owner name with DELEG or NS RRtypes, similar to the TXT RRtype.
+- DELEGI DNSSEC signing and record placement rules are the same as for any ordinary RRtype, such as the TXT RRtype.
+- DELEGI is used as the target of the DELEG protocol's "include" mechanism (see section {{slist}} for details).
 
 TODO: Add some introduction comparing how resolvers see legacy delegation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-ip4 and server-ip6 keys)
 
