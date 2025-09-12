@@ -586,7 +586,7 @@ The section will be removed when IANA makes permanent assignments.
   * DELEG RRtype code is 65432
   * DELEGI RRtype code is 65433
   * DELEG EDNS Flag Bit is 3
-  * DELEG DNSKEY Flag Bit is 14
+  * DNSKEY flag ADT (Authoritative Delegation Types) is 14
 
 --- back
 
