@@ -93,6 +93,7 @@ all capitals, as shown here.
 Terminology regarding the Domain Name System comes from {{?BCP219}}, with addition terms defined here:
 
 * legacy delegation: A delegation that is done with an NS RRset
+* legacy response: A response which does not take (new) special semantics of DELEG RRtype into account
 * legacy referral response: A response with an NS RRset in the AUTHORITY section, plus all relevant DNSSEC records
 * legacy resolver: A resolver which does not follow the DELEG protocol
 * DELEG-aware: An authoritative server or resolver that follows the protocol defined in this document
@@ -362,9 +363,9 @@ Please note this instruction does not affect DNSSEC signing, i.e. no special han
 Two specific cases of DELEG-aware authoritative responding in DELEG-unaware manner are described here.
 
 #### DELEG-unaware Clients Requesting QTYPE=DELEG
-
-In DELEG-unaware clients, records with the DELEG RRtype are not authoritative on the parent side.
-Thus, queries with DE=0 and QTYPE=DELEG MUST result in a normal legacy response, such as a legacy referral response if there are NS records.
+From the perspective of DELEG-unaware clients, DELEG RRtype does not have special semantics and should behave like an old ordinary RR type, e.g. TXT.
+Thus, queries with DE=0 and QTYPE=DELEG MUST result in a normal legacy response.
+This would be a legacy referral response if there are NS records, or the actual DELEG RR type if the owner name does not have NS records.
 
 TODO: Should we have an example with auth having parent+child zone at the same time, and DE=0 QTYPE=DELEG query?
 
