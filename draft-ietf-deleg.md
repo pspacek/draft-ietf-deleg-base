@@ -74,8 +74,10 @@ The proposed DELEG and DELEGI record types remedy this problem by providing exte
 The DELEG record creates a new delegation.
 It is authoritative in the parent side of delegation and thus signed.
 This makes it possible to validate all delegation parameters with DNSSEC, including all future extensions.
-The DELEGI record is an auxiliary record which does not create delegation by itself, but can be used to share the same delegation information across any number of zones.
-DELEGI is treated like regular authoritative records in their zone.
+
+The DELEGI record is an auxiliary record which does not create delegation by itself but provides an optional layer of indirection.
+It can be used to share the same delegation information across any number of zones.
+DELEGI is treated like regular authoritative record.
 
 DELEG record can be used instead of or along side a NS record to create a delegation.
 Combination of DELEG+NS is fully compatible with old resolvers.
