@@ -655,7 +655,7 @@ The following sections show referral examples:
 
 ### Query for foo.example
 
-    ;; Header: QR RCODE=0
+    ;; Header: QR RCODE=NOERROR
     ;;
 
     ;; Question
@@ -675,7 +675,7 @@ The following sections show referral examples:
 
 ### Query for foo.test
 
-    ;; Header: QR AA RCODE=3
+    ;; Header: QR AA RCODE=NXDOMAIN
     ;;
 
     ;; Question
@@ -696,7 +696,7 @@ The following sections show referral examples:
 ### Query for foo.example
 
 
-    ;; Header: QR DO RCODE=0
+    ;; Header: QR DO RCODE=NOERROR
     ;;
 
     ;; Question
@@ -720,7 +720,7 @@ The following sections show referral examples:
 
 ### Query for foo.test {#legacynxdomain}
 
-    ;; Header: QR DO AA RCODE=3
+    ;; Header: QR DO AA RCODE=NXDOMAIN
     ;;
 
     ;; Question
@@ -747,7 +747,7 @@ The following sections show referral examples:
 ### Query for foo.example
 
 
-    ;; Header: QR DE RCODE=0
+    ;; Header: QR DE RCODE=NOERROR
     ;;
 
     ;; Question
@@ -766,7 +766,7 @@ The following sections show referral examples:
 
 ### Query for foo.test
 
-    ;; Header: QR AA RCODE=0
+    ;; Header: QR AA RCODE=NOERROR
     ;;
 
     ;; Question
@@ -785,7 +785,7 @@ The following sections show referral examples:
 
 ### Query for foo.example
 
-    ;; Header: QR DO DE RCODE=0
+    ;; Header: QR DO DE RCODE=NOERROR
     ;;
 
     ;; Question
@@ -811,7 +811,7 @@ The following sections show referral examples:
 
 ### Query for foo.test
 
-    ;; Header: QR DO DE AA RCODE=0
+    ;; Header: QR DO DE AA RCODE=NOERROR
     ;;
 
     ;; Question
