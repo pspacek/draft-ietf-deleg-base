@@ -574,8 +574,8 @@ Meaning:  The fully-qualified domain of a DELEGI record
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
-The registration for number 0 is reserved.
-The registration for numbers 65280-65535 is reserved for private use.
+The registration for numbers 65280-65534 is reserved for private use.
+The registration for number 65535 is reserved.
 ~~~
 
 ## Temporary Assignments
