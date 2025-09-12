@@ -640,10 +640,10 @@ The "test." delegation point has a DELEG record and no NS or DS records.
 
     test.      DELEG server-name=ns2.example.net.
     test.      RRSIG DELEG 13 4 300 20260101000000 (
-                            20250101000000 33333 . 98Aac9f7A1Ac26Q..= )
+                            20250101000000 33333 . SigTestDELEG )
     test.      NSEC  . RRSIG NSEC DELEG
-    test.      RRSIG NSEC 13 4 300  20260101000000 (
-                            20250101000000 33333 . kj7YY5tr9h7UqlK..= )
+    test.      RRSIG NSEC 13 4 300 20260101000000 (
+                            20250101000000 33333 . SigTestNSEC/ )
 
 ## Responses
 
@@ -731,8 +731,8 @@ The following sections show referral examples:
     .          SOA ...
     .          RRSIG SOA ...
     test.      NSEC  . RRSIG NSEC DELEG
-    test.      RRSIG NSEC 13 4 300  20260101000000 (
-                            20250101000000 33333 . aBFYask;djf7UqlK..= )
+    test.      RRSIG NSEC 13 4 300 20260101000000 (
+                            20250101000000 33333 . SigTestNSEC/ )
 
     ;; Additional
     ;; OPT with Extended DNS Error: New Delegation Only
@@ -816,10 +816,10 @@ The following sections show referral examples:
     ;; Authority
     test.      DELEG server-name=ns2.example.net.
     test.      RRSIG DELEG 13 4 300 20260101000000 (
-                            20250101000000 33333 . 98Aac9f7A1Ac26Q..= )
+                            20250101000000 33333 . SigTestDELEG )
     test.      NSEC  . RRSIG NSEC DELEG
-    test.      RRSIG NSEC 13 4 300  20260101000000 (
-                            20250101000000 33333 . kj7YY5tr9h7UqlK..= )
+    test.      RRSIG NSEC 13 4 300 20260101000000 (
+                            20250101000000 33333 . SigTestNSEC/ )
 
     ;; Additional
     ;; (empty)
