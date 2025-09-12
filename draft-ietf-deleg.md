@@ -583,7 +583,7 @@ The registration for number 65535 is reserved.
 This section gives the values that can be used for interoperability testing before IANA makes permanent assignments.
 The section will be removed when IANA makes permanent assignments.
 
-  * DELEG RRtype code is 65432
+  * DELEG RRtype code is 61440
   * DELEGI RRtype code is 65433
   * DELEG EDNS DE Flag Bit is 3
   * DNSKEY flag ADT (Authoritative Delegation Types) is 14
