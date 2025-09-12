@@ -803,7 +803,7 @@ Table of Contents
       number%% labels in order to contribute to SLIST.
 
    *  Long chains of include-delegi information (Section 3.1.5), and
-      those with circular chains if include-delegi information, can be
+      those with circular chains of include-delegi information, can be
       burdensome.  To prevent this, the resolver SHOULD NOT follow more
       than 3 include-delegi chains in an RRset when populating SLIST.
       Note that include-delegi chains can have CNAME steps in them; in

@@ -1988,7 +1988,7 @@ This document describes two sets of actions that, if not controlled, could lead 
 To prevent this, the resolver SHOULD NOT walk up more than %%TODO: come up with a number%% labels in order to contribute to SLIST.<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.1-2.2">
-            <p id="section-4.1-2.2.1">Long chains of include-delegi information (<a href="#nameserver-info" class="auto internal xref">Section 3.1.5</a>), and those with circular chains if include-delegi information, can be burdensome.
+            <p id="section-4.1-2.2.1">Long chains of include-delegi information (<a href="#nameserver-info" class="auto internal xref">Section 3.1.5</a>), and those with circular chains of include-delegi information, can be burdensome.
 To prevent this, the resolver SHOULD NOT follow more than 3 include-delegi chains in an RRset when populating SLIST.
 Note that include-delegi chains can have CNAME steps in them; in such a case, a CNAME step is counted the same as a DELEGI step when determining when to stop following a chain.<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
