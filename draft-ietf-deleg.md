@@ -626,7 +626,7 @@ TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
     example.   NS    a.example.
     example.   NS    b.example.net.
     example.   NS    c.example.org.
-    example.   DS    65163 13 2 5F86F2F3AE2B02...
+    example.   DS    44444 13 2 ABCDEF01234567...
     example.   RRSIG DS 13 4 300 20260101000000 (
                             20250101000000 33333 . O0k558jHhyrC21J..= )
     example.   NSEC  net. NS DS RRSIG NSEC DELEG
@@ -708,7 +708,7 @@ The following sections show referral examples:
     example.   NS    a.example.
     example.   NS    b.example.net.
     example.   NS    c.example.org.
-    example.   DS    65163 13 2 5F86F2F3AE2B02...
+    example.   DS    44444 13 2 ABCDEF01234567...
     example.   RRSIG DS 13 4 300 20260101000000 (
                             20250101000000 33333 . O0k558jHhyrC21J..= )
     ;; Additional
@@ -794,7 +794,7 @@ The following sections show referral examples:
     example.   DELEG server-name=ns2.example.net.,ns3.example.org.
     example.   RRSIG DELEG 13 4 300 20260101000000 (
                             20250101000000 33333 . HyDHYVT5KcqWc7J..= )
-    example.   DS    65163 13 2 5F86F2F3AE2B02...
+    example.   DS    44444 13 2 ABCDEF01234567...
     example.   RRSIG DS 13 4 300 20260101000000 (
                             20250101000000 33333 . O0k558jHhyrC21J..= )
 
