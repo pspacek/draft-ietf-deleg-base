@@ -621,31 +621,31 @@ TODO: Examples of using server-address.
 
 TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
 
-    example.   300 IN DELEG server-name=a.example.
-    example.   300 IN DELEG include-delegi=ns2.example.net.
-    example.   300 IN DELEG include-delegi=ns3.example.org.
-    example.   300 IN RRSIG DELEG 13 4 300 20250214164848 (
-                            20250207134348 21261 . HyDHYVT5KcqWc7J..= )
-    example.   300 IN NS    a.example.
-    example.   300 IN NS    b.example.net.
-    example.   300 IN NS    c.example.org.
-    example.   300 IN DS    65163 13 2 5F86F2F3AE2B02...
-    example.   300 IN RRSIG DS 13 4 300 20250214164848 (
-                            20250207134348 21261 . O0k558jHhyrC21J..= )
-    example.   300 IN NSEC  a.example. NS DS RRSIG NSEC DELEG
-    example.   300 IN RRSIG NSEC 13 4 300 20250214164848 (
-                            20250207134348 21261 . 1Kl8vab96gG21Aa..= )
-    a.example. 300 IN A     192.0.2.1
-    a.example. 300 IN AAAA  2001:DB8::1
+    example.   DELEG server-name=a.example.
+    example.   DELEG include-delegi=ns2.example.net.
+    example.   DELEG include-delegi=ns3.example.org.
+    example.   RRSIG DELEG 13 4 300 20260101000000 (
+                            20250101000000 21261 . HyDHYVT5KcqWc7J..= )
+    example.   NS    a.example.
+    example.   NS    b.example.net.
+    example.   NS    c.example.org.
+    example.   DS    65163 13 2 5F86F2F3AE2B02...
+    example.   RRSIG DS 13 4 300 20260101000000 (
+                            20250101000000 21261 . O0k558jHhyrC21J..= )
+    example.   NSEC  a.example. NS DS RRSIG NSEC DELEG
+    example.   RRSIG NSEC 13 4 300 20260101000000 (
+                            20250101000000 21261 . 1Kl8vab96gG21Aa..= )
+    a.example. A     192.0.2.1
+    a.example. AAAA  2001:DB8::1
 
 The "test." delegation point has a DELEG record and no NS record.
 
-    test.      300 IN DELEG include-delegi=ns2.example.net
-    test.      300 IN RRSIG DELEG 13 4 300 20250214164848 (
-                            20250207134348 21261 . 98Aac9f7A1Ac26Q..= )
-    test.      300 IN NSEC  a.test. RRSIG NSEC DELEG
-    test.      300 IN RRSIG NSEC 13 4 300  20250214164848 (
-                            20250207134348 21261 . kj7YY5tr9h7UqlK..= )
+    test.      DELEG include-delegi=ns2.example.net
+    test.      RRSIG DELEG 13 4 300 20260101000000 (
+                            20250101000000 21261 . 98Aac9f7A1Ac26Q..= )
+    test.      NSEC  a.test. RRSIG NSEC DELEG
+    test.      RRSIG NSEC 13 4 300  20260101000000 (
+                            20250101000000 21261 . kj7YY5tr9h7UqlK..= )
 
 ## Responses
 
@@ -665,13 +665,13 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    example.   300 IN NS    a.example.
-    example.   300 IN NS    b.example.net.
-    example.   300 IN NS    c.example.org.
+    example.   NS    a.example.
+    example.   NS    b.example.net.
+    example.   NS    c.example.org.
 
     ;; Additional
-    a.example. 300 IN A     192.0.2.1
-    a.example. 300 IN AAAA  2001:DB8::1
+    a.example. A     192.0.2.1
+    a.example. AAAA  2001:DB8::1
 
 ### Query for foo.test
 
@@ -685,7 +685,7 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    .   300 IN SOA ...
+    .   SOA ...
 
     ;; Additional
     ;; OPT with Extended DNS Error: New Delegation Only
@@ -707,15 +707,15 @@ The following sections show referral examples:
 
     ;; Authority
 
-    example.   300 IN NS    a.example.
-    example.   300 IN NS    b.example.net.
-    example.   300 IN NS    c.example.org.
-    example.   300 IN DS    65163 13 2 5F86F2F3AE2B02...
-    example.   300 IN RRSIG DS 13 4 300 20250214164848 (
-                            20250207134348 21261 . O0k558jHhyrC21J..= )
+    example.   NS    a.example.
+    example.   NS    b.example.net.
+    example.   NS    c.example.org.
+    example.   DS    65163 13 2 5F86F2F3AE2B02...
+    example.   RRSIG DS 13 4 300 20260101000000 (
+                            20250101000000 21261 . O0k558jHhyrC21J..= )
     ;; Additional
-    a.example. 300 IN A     192.0.2.1
-    a.example. 300 IN AAAA  2001:DB8::1
+    a.example. A     192.0.2.1
+    a.example. AAAA  2001:DB8::1
 
 
 ### Query for foo.test {#legacynxdomain}
@@ -730,13 +730,13 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    .          300 IN SOA ...
-    .          300 IN RRSIG SOA ...
-    .          300 IN NSEC  aaa NS SOA RRSIG NSEC DNSKEY ZONEMD
-    .          300 IN RRSIG NSEC 13 4 300
-    test.      300 IN NSEC  a.test. RRSIG NSEC DELEG
-    test.      300 IN RRSIG NSEC 13 4 300  20250214164848 (
-                            20250207134348 21261 . aBFYask;djf7UqlK..= )
+    .          SOA ...
+    .          RRSIG SOA ...
+    .          NSEC  aaa NS SOA RRSIG NSEC DNSKEY ZONEMD
+    .          RRSIG NSEC 13 4 300
+    test.      NSEC  a.test. RRSIG NSEC DELEG
+    test.      RRSIG NSEC 13 4 300  20260101000000 (
+                            20250101000000 21261 . aBFYask;djf7UqlK..= )
 
     ;; Additional
     ;; OPT with Extended DNS Error: New Delegation Only
@@ -757,9 +757,9 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    example.   300 IN DELEG server-name=a.example.
-    example.   300 IN DELEG include-delegi=ns2.example.net.
-    example.   300 IN DELEG include-delegi=ns3.example.org.
+    example.   DELEG server-name=a.example.
+    example.   DELEG include-delegi=ns2.example.net.
+    example.   DELEG include-delegi=ns3.example.org.
 
     ;; Additional
     ;; (empty)
@@ -776,7 +776,7 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    test.      300 IN DELEG include-delegi=ns2.example.net
+    test.      DELEG include-delegi=ns2.example.net
 
     ;; Additional
     ;; (empty)
@@ -796,18 +796,18 @@ The following sections show referral examples:
 
     ;; Authority
 
-    example.   300 IN DELEG server-name=a.example.
-    example.   300 IN DELEG include-delegi=ns2.example.net.
-    example.   300 IN DELEG include-delegi=ns3.example.org.
-    example.   300 IN RRSIG DELEG 13 4 300 20250214164848 (
-                            20250207134348 21261 . HyDHYVT5KcqWc7J..= )
-    example.   300 IN DS    65163 13 2 5F86F2F3AE2B02...
-    example.   300 IN RRSIG DS 13 4 300 20250214164848 (
-                            20250207134348 21261 . O0k558jHhyrC21J..= )
+    example.   DELEG server-name=a.example.
+    example.   DELEG include-delegi=ns2.example.net.
+    example.   DELEG include-delegi=ns3.example.org.
+    example.   RRSIG DELEG 13 4 300 20260101000000 (
+                            20250101000000 21261 . HyDHYVT5KcqWc7J..= )
+    example.   DS    65163 13 2 5F86F2F3AE2B02...
+    example.   RRSIG DS 13 4 300 20260101000000 (
+                            20250101000000 21261 . O0k558jHhyrC21J..= )
 
     ;; Additional
-    a.example. 300 IN A     192.0.2.1
-    a.example. 300 IN AAAA  2001:DB8::1
+    a.example. A     192.0.2.1
+    a.example. AAAA  2001:DB8::1
 
 ### Query for foo.test
 
@@ -821,12 +821,12 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    test.      300 IN DELEG include-delegi=ns2.example.net.
-    test.      300 IN RRSIG DELEG 13 4 300 20250214164848 (
-                            20250207134348 21261 . 98Aac9f7A1Ac26Q..= )
-    test.      300 IN NSEC  a.test. RRSIG NSEC DELEG
-    test.      300 IN RRSIG NSEC 13 4 300  20250214164848 (
-                            20250207134348 21261 . kj7YY5tr9h7UqlK..= )
+    test.      DELEG include-delegi=ns2.example.net.
+    test.      RRSIG DELEG 13 4 300 20260101000000 (
+                            20250101000000 21261 . 98Aac9f7A1Ac26Q..= )
+    test.      NSEC  a.test. RRSIG NSEC DELEG
+    test.      RRSIG NSEC 13 4 300  20260101000000 (
+                            20250101000000 21261 . kj7YY5tr9h7UqlK..= )
 
     ;; Additional
     ;; (empty)
