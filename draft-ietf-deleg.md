@@ -93,6 +93,7 @@ all capitals, as shown here.
 Terminology regarding the Domain Name System comes from {{?BCP219}}, with addition terms defined here:
 
 * legacy delegation: A delegation that is done with an NS RRset
+* legacy response: A response which does not take (new) special semantics of DELEG RRtype into account
 * legacy referral response: A response with an NS RRset in the AUTHORITY section, plus all relevant DNSSEC records
 * legacy resolver: A resolver which does not follow the DELEG protocol
 * DELEG-aware: An authoritative server or resolver that follows the protocol defined in this document
@@ -105,7 +106,8 @@ but their semantics are different.
 
 TODO: Decide about class: IN or class independent? SVCB is IN-specific.
 
-The record format is based on the extensible key=value list that was originally describe for "SvcParams" for the SVCB record type {{?RFC9460}}.
+The record format is based on the extensible key=value list that was originally defined for "SvcParams" for the SVCB record type {{?RFC9460}}.
+Unlike SVCB, DELEG protocol does not have "SvcPriority" and "TargetName" fields.
 The keys in the DELEG protocol are different than those used in SVCB.
 To avoid confusion between the two protocols, the list of key=value parameters used by the DELEG protocol are called DelegInfos.
 
@@ -156,11 +158,10 @@ The following is a brief summary of semantic differences between the DELEG and D
 - DELEG is cannot be present at the apex of a child side of the delegation, similar to the DS RRtype (and unlike the NS RRtype).
 - DELEG has unique rules for inclusion in answers, as described in many parts of this specification.
 
-
-- DELEGI is an ordinary RRtype, similar to the TXT RRtype.
-- DELEGI does not create a delegation for its owner name, similar to the TXT RRtype.
-- DELEGI cannot coexist at the same owner name with DELEG or NS RRtypes, similar to the TXT RRtype.
-- DELEGI DNSSEC signing and record placement rules are the same as for any ordinary RRtype, such as the TXT RRtype.
+- DELEGI is like any normal RR, as is doesn't require any special processing.
+- DELEGI does not create a delegation for its owner name.
+- DELEGI cannot coexist at the same owner name with DELEG or NS RRtypes.
+- DELEGI DNSSEC signing and record placement rules are the same as for any ordinary RRtype.
 - DELEGI is used as the target of the DELEG protocol's "include" mechanism (see section {{slist}} for details).
 
 TODO: Add some introduction comparing how resolvers see legacy delegation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-ip4 and server-ip6 keys)
@@ -362,9 +363,9 @@ Please note this instruction does not affect DNSSEC signing, i.e. no special han
 Two specific cases of DELEG-aware authoritative responding in DELEG-unaware manner are described here.
 
 #### DELEG-unaware Clients Requesting QTYPE=DELEG
-
-In DELEG-unaware clients, records with the DELEG RRtype are not authoritative on the parent side.
-Thus, queries with DE=0 and QTYPE=DELEG MUST result in a normal legacy response, such as a legacy referral response if there are NS records.
+From the perspective of DELEG-unaware clients, DELEG RRtype does not have special semantics and should behave like an old ordinary RR type, e.g. TXT.
+Thus, queries with DE=0 and QTYPE=DELEG MUST result in a normal legacy response.
+This would be a legacy referral response if there are NS records, or the actual DELEG RR type if the owner name does not have NS records.
 
 TODO: Should we have an example with auth having parent+child zone at the same time, and DE=0 QTYPE=DELEG query?
 
@@ -822,4 +823,4 @@ John Levine, Erik Nygren, Jon Reed, Ben Kaduk, Mashooq Muhaimen, Jason Moreau, J
 Work on DELEG protocol has started at IETF 118 Hackaton.
 Hackaton participants: Christian Elmerot, David Blacka, David Lawrence, Edward Lewis, Erik Nygren, George Michaelson, Jan Včelák, Klaus Darilion, Libor Peltan, Manu Bretelle, Peter van Dijk, Petr Špaček, Philip Homburg, Ralf Weber, Roy Arends, Shane Kerr, Shumon Huque, Vandan Adhvaryu, Vladimír Čunát, Andreas Schulze.
 
-Other people joined the effort after the initial hackaton: Ben Schwartz, Bob Halley, Paul Hoffman, ...
+Other people joined the effort after the initial hackaton: Ben Schwartz, Bob Halley, Paul Hoffman, Miek Gieben ...
