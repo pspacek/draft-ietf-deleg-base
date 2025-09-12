@@ -551,8 +551,9 @@ Meaning:  A short description
 Reference:  Location of specification or registration source
 Change Controller:  Person or entity, with contact information if appropriate
 
+To enable code reuse from SVCB parsers, the requirements for registered Name exactly copy requirements set by {{!RFC9460}} section 14.3.1:
 The characters in the registered Name field entry MUST be lowercase alphanumeric or "-".
-The name MUST NOT start with "key".
+The name MUST NOT start with "key" or "invalid".
 
 The registration policy for new entries is Expert Review ({{!RFC8126}}).
 The designated expert MUST ensure that the reference is stable and publicly available and that it specifies how to convert the delegation information's presentation format to wire format.
