@@ -607,8 +607,9 @@ The section will be removed when IANA makes permanent assignments.
 
 --- back
 
-#  Examples
+# Examples
 
+## Root zone file
 The following example shows an excerpt from a signed root zone.
 It shows the delegation point for "example." and "test."
 
@@ -642,7 +643,7 @@ TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
 
 The "test." delegation point has a DELEG record and no NS or DS records.
 
-    test.      DELEG server-name=ns2.example.net.
+    test.      DELEG include-delegi=cfg.example.org.
     test.      RRSIG DELEG 13 4 300 20260101000000 (
                             20250101000000 33333 . SigTestDELEG )
 
@@ -654,9 +655,9 @@ The "test." delegation point has a DELEG record and no NS or DS records.
 
 The following sections show referral examples:
 
-## DO bit clear, DE bit clear
+### DO bit clear, DE bit clear
 
-### Query for foo.example
+#### Query for foo.example
 
     ;; Header: QR RCODE=NOERROR
     ;;
@@ -676,7 +677,7 @@ The following sections show referral examples:
     a.example. A     192.0.2.1
     a.example. AAAA  2001:DB8::1
 
-### Query for foo.test
+#### Query for foo.test
 
     ;; Header: QR AA RCODE=NXDOMAIN
     ;;
@@ -694,9 +695,9 @@ The following sections show referral examples:
     ;; OPT with Extended DNS Error: New Delegation Only
 
 
-## DO bit set, DE bit clear
+### DO bit set, DE bit clear
 
-### Query for foo.example
+#### Query for foo.example
 
 
     ;; Header: QR DO RCODE=NOERROR
@@ -721,7 +722,7 @@ The following sections show referral examples:
     a.example. AAAA  2001:DB8::1
 
 
-### Query for foo.test {#legacynxdomain}
+#### Query for foo.test {#legacynxdomain}
 
     ;; Header: QR DO AA RCODE=NXDOMAIN
     ;;
@@ -743,9 +744,9 @@ The following sections show referral examples:
     ;; OPT with Extended DNS Error: New Delegation Only
 
 
-## DO bit clear, DE bit set
+### DO bit clear, DE bit set
 
-### Query for foo.example
+#### Query for foo.example
 
 
     ;; Header: QR DE RCODE=NOERROR
@@ -764,7 +765,7 @@ The following sections show referral examples:
     ;; Additional
     ;; (empty)
 
-### Query for foo.test
+#### Query for foo.test
 
     ;; Header: QR AA RCODE=NOERROR
     ;;
@@ -781,9 +782,9 @@ The following sections show referral examples:
     ;; Additional
     ;; (empty)
 
-## DO bit set, DE bit set
+### DO bit set, DE bit set
 
-### Query for foo.example
+#### Query for foo.example
 
     ;; Header: QR DO DE RCODE=NOERROR
     ;;
@@ -807,7 +808,7 @@ The following sections show referral examples:
     a.example. A     192.0.2.1
     a.example. AAAA  2001:DB8::1
 
-### Query for foo.test
+#### Query for foo.test
 
     ;; Header: QR DO DE AA RCODE=NOERROR
     ;;
