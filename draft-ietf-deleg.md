@@ -166,7 +166,7 @@ The following is a brief summary of semantic differences between the DELEG and D
 - DELEGI DNSSEC signing and record placement rules are the same as for any ordinary RRtype.
 - DELEGI is used as the target of the DELEG protocol's "include" mechanism (see section {{slist}} for details).
 
-TODO: Add some introduction comparing how resolvers see legacy delegation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-ip4 and server-ip6 keys)
+TODO: Add some introduction comparing how resolvers see legacy delegation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-ipv4 and server-ipv6 keys)
 
 # Use of DELEG Records
 
@@ -297,13 +297,13 @@ The DELEG and DELEGI records have four keys that describe information about name
 The purpose of this information is to populate the SLIST with IP addresses of the nameservers for a zone.
 The types of information defined in this document are:
 
-* server-ip4: a set of IPv4 addresses for nameservers
-* server-ip6: a set of IPv6 addresses for nameservers
+* server-ipv4: a set of IPv4 addresses for nameservers
+* server-ipv6: a set of IPv6 addresses for nameservers
 * server-name: the domain name of a nameserver; the addresses must be fetched
 * include-delegi: the domain name that points to a DELEGI RRset, which in turn has more information about the nameservers
 
-The presentation values for server-ip4 and server-ip6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
-The wire formats for server-ip4 and server-ip6 are a sequence of IP addresses in network byte order (for the respective address family).
+The presentation values for server-ipv4 and server-ipv6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
+The wire formats for server-ipv4 and server-ipv6 are a sequence of IP addresses in network byte order (for the respective address family).
 
 The presentation values for server-name and include-delegi are as sets of full-qualified domain names, separated by commas.
 The wire format for server-name and include-delegi are each a concatenated set of a wire-format domain names.
@@ -315,9 +315,9 @@ If any one of these keys is used, it MUST have a value (that is, it cannot be a 
 
 A DELEG or DELEGI record MUST NOT have more than one set of server information, chosen from the following:
 
-- one server-ip4 key
-- one server-ip6 key
-- a pair consisting of one server-ip4 and one server-ip6
+- one server-ipv4 key
+- one server-ipv6 key
+- a pair consisting of one server-ipv4 and one server-ipv6
 - one server-name key
 - one include-delegi key
 
@@ -335,7 +335,7 @@ A resolver processes each individual DELEG record within a DELEG RRset, or each 
 1. If a record has more than one type of server information keys, or has multiple server information keys of the same type, that record is malformed.
 Stop processing this record.
 
-1. If one or more server-ip4 or server-ip6 keys are present inside the record, copy all the address values from the server-ip4 or server-ip6 fields in the record into SLIST.
+1. If one or more server-ipv4 or server-ipv6 keys are present inside the record, copy all the address values from the server-ipv4 or server-ipv6 fields in the record into SLIST.
 Stop processing this record.
 
 1. If a server-name key is present in the record, resolve each name in the value into addresses.
@@ -551,13 +551,13 @@ The "DELEG Delegation Information" registry should be populated with the followi
 
 ~~~
 Number:  1
-Name:  server-ip4
+Name:  server-ipv4
 Meaning:  A set of IPv4 addresses of nameservers
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
 Number:  2
-Name:  server-ip6
+Name:  server-ipv6
 Meaning:  A set of IPv6 addresses of nameservers
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
