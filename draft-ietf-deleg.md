@@ -192,18 +192,12 @@ TODO: Add some introduction comparing how resolvers see legacy delegation (set o
 
 # Use of DELEG Records
 
-A DELEG RRset MAY be present at a delegation point.
-The DELEG RRset MAY contain multiple records.
-DELEG RRsets MUST NOT appear at a zone's apex.
-<!-- From the mailing list: Can we give advice on what an authoritative server should do if it encounters this
-situation? Should it fail to load the zone? I can see that this is trying to say that
-DELEGs do not follow the same model as legacy delegations with the NS RRSet in both
-locations.
-If so, perhaps it should just say that.
-Regardless, I think a "MUST NOT" should
-explain the consequences of not complying. -->
-
 A DELEG RRset MAY be present with or without NS or DS RRsets at the delegation point.
+The DELEG RRset MAY contain multiple records.
+
+DELEG RRsets MUST NOT appear at a zone's apex.
+Errorneous inclusion of DELEG RRset at zone's apex will cause DNSSEC validation failures.
+Servers MAY refuse to load such an invalid zone, similarly to DS RRtype.
 
 ## Resolvers
 
