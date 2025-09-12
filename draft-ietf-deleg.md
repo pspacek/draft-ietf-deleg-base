@@ -646,6 +646,7 @@ The "test." delegation point has a DELEG record and no NS or DS records.
 Please note:
 This is an example of unnecessairly complicated setup to demonstrate capabilities of DELEG and DELEGI RRtypes.
 
+    test.      DELEG server-ipv6=3fff::33
     test.      DELEG include-delegi=Acfg.example.org.
     test.      DELEG include-delegi=config2.example.net.
     test.      RRSIG DELEG 13 4 300 20260101000000 (
@@ -802,10 +803,14 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    test.      DELEG include-delegi=cfg.example.org.
+    test.      DELEG server-ipv6=3fff::33
+    test.      DELEG include-delegi=Acfg.example.org.
+    test.      DELEG include-delegi=config2.example.net.
 
     ;; Additional
     ;; (empty)
+
+Follow-up example in {{delegi-example}} explains ultimate meaning of this response.
 
 ### DO bit set, DE bit set
 
@@ -845,7 +850,9 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    test.      DELEG include-delegi=cfg.example.org.
+    test.      DELEG server-ipv6=3fff::33
+    test.      DELEG include-delegi=Acfg.example.org.
+    test.      DELEG include-delegi=config2.example.net.
     test.      RRSIG DELEG 13 4 300 20260101000000 (
                             20250101000000 33333 . SigTestDELEG )
     test.      NSEC  . RRSIG NSEC DELEG
@@ -854,6 +861,24 @@ The following sections show referral examples:
 
     ;; Additional
     ;; (empty)
+
+Follow-up example in {{delegi-example}} explains ultimate meaning of this response.
+
+## DELEGI Interpretation {#delegi-example}
+
+In the examples above, test. DELEG record uses indirection and points to other domain names with DELEGI, A, and AAAA records.
+During resolution, a resolver will gradually build set of nameservers to contact, as defined in {{slist}}.
+
+To vizualize end result of this process we represent full set of nameservers in form of a 'virtual' DELEG RRset.
+
+    test. DELEG server-ipv4=198.51.100.1
+    test. DELEG server-ipv4=203.0.113.1
+    test. DELEG server-ipv6=2001:DB8::6666
+    test. DELEG server-ipv6=3fff::2
+    ; IPv6 address 3fff::33 was de-duplicated (input RRsets listed it twice)
+    test. DELEG server-ipv6=3fff::33
+
+Implementations are free to use arbitrary representation for this data as it is not directly exposed via DNS protocol.
 
 
 # Acknowledgments
