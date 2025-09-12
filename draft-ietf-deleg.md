@@ -144,10 +144,32 @@ TODO: SVCB allows an empty list. I guess it is not a problem, it is small and wi
 
 ## RDATA Wire Format
 
-The format of the DelegInfos list is identical to SvcParams format defined in Section 2.2 {{?RFC9460}},
+RDATA portion of RRtypes is variable length and entirely consists of "DelegInfos" element:
+
+        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+        /                         DelegInfos                            /
+        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+The format of the DelegInfos is identical to SvcParams format defined in Section 2.2 {{?RFC9460}},
 including the requirements for strictly increasing numeric order of keys and duplicate keys not being allowed.
 
 All the requirements in Section 2.2 of {{?RFC9460}} apply.
+
+DelegInfos is a (possibly empty) sequence of individual DelegInfo elements.
+Wire format of an individual DelegInfo element is the same as SvcParam,
+but it references DelegInfo elements instead of SvcParam elements:
+
+                    +0 (MSB)                            +1 (LSB)
+        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    0:  |                          DelegInfoKey                         |
+        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    2:  |                length of DelegInfoValue                       |
+        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    4:  /                          DelegInfoValue ...                   /
+        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+Permissible lengths depend on DelegInfoKey value.
+Some future keys can use zero length DelegInfoValue.
 
 ## Overview of Differences between DELEG and DELEGI Semantics
 
@@ -299,8 +321,8 @@ The types of information defined in this document are:
 
 * server-ipv4: a set of IPv4 addresses for nameservers
 * server-ipv6: a set of IPv6 addresses for nameservers
-* server-name: the domain name of a nameserver; the addresses must be fetched
-* include-delegi: the domain name that points to a DELEGI RRset, which in turn has more information about the nameservers
+* server-name: a set of hostnames of nameservers; the addresses must be fetched
+* include-delegi: a set of domain names that point to a DELEGI RRsets, which in turn have more information about the delegation
 
 The presentation values for server-ipv4 and server-ipv6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
 The wire formats for server-ipv4 and server-ipv6 are a sequence of IP addresses in network byte order (for the respective address family).
@@ -486,7 +508,7 @@ This document describes two sets of actions that, if not controlled, could lead 
 - Names with many subdomains can cause walking up the tree to populate SLIST ({{finding-best}}) to be burdensome.
 To prevent this, the resolver SHOULD NOT walk up more than %%TODO: come up with a number%% labels in order to contribute to SLIST.
 
-- Long chains of include-delegi information ({{nameserver-info}}), and those with circular chains if include-delegi information, can be burdensome.
+- Long chains of include-delegi information ({{nameserver-info}}), and those with circular chains of include-delegi information, can be burdensome.
 To prevent this, the resolver SHOULD NOT follow more than 3 include-delegi chains in an RRset when populating SLIST.
 Note that include-delegi chains can have CNAME steps in them; in such a case, a CNAME step is counted the same as a DELEGI step when determining when to stop following a chain.
 
@@ -564,18 +586,18 @@ Change Controller:  IETF
 
 Number:  3
 Name:  server-name
-Meaning:  The fully-qualified domain name of a nameserver
+Meaning:  A set of hostnames of nameservers
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
 Number:  4
 Name:  include-delegi
-Meaning:  The fully-qualified domain of a DELEGI record
+Meaning:  A set of domain names of DELEGI records
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
-The registration for number 0 is reserved.
-The registration for numbers 65280-65535 is reserved for private use.
+The registration for numbers 65280-65534 is reserved for private use.
+The registration for number 65535 is reserved.
 ~~~
 
 ## Temporary Assignments
@@ -583,10 +605,10 @@ The registration for numbers 65280-65535 is reserved for private use.
 This section gives the values that can be used for interoperability testing before IANA makes permanent assignments.
 The section will be removed when IANA makes permanent assignments.
 
-  * DELEG RRtype code is 65432
+  * DELEG RRtype code is 61440
   * DELEGI RRtype code is 65433
-  * DELEG EDNS Flag Bit is 3
-  * DELEG DNSKEY Flag Bit is 14
+  * DELEG EDNS DE Flag Bit is 3
+  * DNSKEY flag ADT (Authoritative Delegation Types) is 14
 
 --- back
 
