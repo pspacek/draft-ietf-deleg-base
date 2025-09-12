@@ -643,13 +643,38 @@ TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
 
 The "test." delegation point has a DELEG record and no NS or DS records.
 
-    test.      DELEG include-delegi=cfg.example.org.
+Please note:
+This is an example of unnecessairly complicated setup to demonstrate capabilities of DELEG and DELEGI RRtypes.
+
+    test.      DELEG include-delegi=Acfg.example.org.
+    test.      DELEG include-delegi=config2.example.net.
     test.      RRSIG DELEG 13 4 300 20260101000000 (
                             20250101000000 33333 . SigTestDELEG )
 
     test.      NSEC  . RRSIG NSEC DELEG
     test.      RRSIG NSEC 13 4 300 20260101000000 (
                             20250101000000 33333 . SigTestNSEC/ )
+
+Delegations to org and net zones omitted for brevity.
+
+## Example.org zone file
+The following example shows an excerpt from an unsigned example.org zone.
+
+    Acfg.example.org.    DELEGI server-ipv6=2001:DB8::6666
+    Acfg.example.org.    DELEGI server-name=c.example.org.
+    Acfg.example.org.    DELEGI include-delegi=subcfg.example.org.
+
+    c.example.org.       AAAA   3fff::33
+
+    subcfg.example.org.  DELEGI server-ipv4=203.0.113.1 server-ipv6=3fff::2
+
+## Example.net zone file
+The following example shows an excerpt from an unsigned example.net zone.
+
+    b.example.net.       A      198.51.100.1
+
+    config2.example.net. DELEGI server-name=b.example.org.
+
 
 ## Responses
 
@@ -777,7 +802,7 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    test.      DELEG server-name=ns2.example.net.
+    test.      DELEG include-delegi=cfg.example.org.
 
     ;; Additional
     ;; (empty)
@@ -820,7 +845,7 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    test.      DELEG server-name=ns2.example.net.
+    test.      DELEG include-delegi=cfg.example.org.
     test.      RRSIG DELEG 13 4 300 20260101000000 (
                             20250101000000 33333 . SigTestDELEG )
     test.      NSEC  . RRSIG NSEC DELEG
