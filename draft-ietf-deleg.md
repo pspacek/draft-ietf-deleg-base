@@ -321,7 +321,7 @@ The types of information defined in this document are:
 
 * server-ipv4: a set of IPv4 addresses for nameservers
 * server-ipv6: a set of IPv6 addresses for nameservers
-* server-name: a set of hostnames of a nameservers; the addresses must be fetched
+* server-name: a set of hostnames of nameservers; the addresses must be fetched
 * include-delegi: a set of domain names that point to a DELEGI RRsets, which in turn have more information about the delegation
 
 The presentation values for server-ipv4 and server-ipv6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
