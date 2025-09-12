@@ -74,8 +74,10 @@ The proposed DELEG and DELEGI record types remedy this problem by providing exte
 The DELEG record creates a new delegation.
 It is authoritative in the parent side of delegation and thus signed.
 This makes it possible to validate all delegation parameters with DNSSEC, including all future extensions.
-The DELEGI record is an auxiliary record which does not create delegation by itself, but can be used to share the same delegation information across any number of zones.
-DELEGI is treated like regular authoritative records in their zone.
+
+The DELEGI record is an auxiliary record which does not create delegation by itself but provides an optional layer of indirection.
+It can be used to share the same delegation information across any number of zones.
+DELEGI is treated like regular authoritative record.
 
 DELEG record can be used instead of or along side a NS record to create a delegation.
 Combination of DELEG+NS is fully compatible with old resolvers.
@@ -164,7 +166,7 @@ The following is a brief summary of semantic differences between the DELEG and D
 - DELEGI DNSSEC signing and record placement rules are the same as for any ordinary RRtype.
 - DELEGI is used as the target of the DELEG protocol's "include" mechanism (see section {{slist}} for details).
 
-TODO: Add some introduction comparing how resolvers see legacy delegation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-ip4 and server-ip6 keys)
+TODO: Add some introduction comparing how resolvers see legacy delegation (set of NS and A/AAAA records) and DELEG delegation (DELEG and DELEGI records with server-ipv4 and server-ipv6 keys)
 
 # Use of DELEG Records
 
@@ -295,16 +297,16 @@ The DELEG and DELEGI records have four keys that describe information about name
 The purpose of this information is to populate the SLIST with IP addresses of the nameservers for a zone.
 The types of information defined in this document are:
 
-* server-ip4: a set of IPv4 addresses for nameservers
-* server-ip6: a set of IPv6 addresses for nameservers
+* server-ipv4: a set of IPv4 addresses for nameservers
+* server-ipv6: a set of IPv6 addresses for nameservers
 * server-name: the domain name of a nameserver; the addresses must be fetched
-* include-name: the domain name that points to a DELEGI RRset, which in turn has more information about the nameservers
+* include-delegi: the domain name that points to a DELEGI RRset, which in turn has more information about the nameservers
 
-The presentation values for server-ip4 and server-ip6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
-The wire formats for server-ip4 and server-ip6 are a sequence of IP addresses in network byte order (for the respective address family).
+The presentation values for server-ipv4 and server-ipv6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
+The wire formats for server-ipv4 and server-ipv6 are a sequence of IP addresses in network byte order (for the respective address family).
 
-The presentation values for server-name and include-name are as sets of full-qualified domain names, separated by commas.
-The wire format for server-name and include-name are each a concatenated set of a wire-format domain names.
+The presentation values for server-name and include-delegi are as sets of full-qualified domain names, separated by commas.
+The wire format for server-name and include-delegi are each a concatenated set of a wire-format domain names.
 The names in the wire format MUST NOT be compressed.
 
 TODO: Are they? Are we going to forbid normal zone file expansion where names without trailing . get current origin appended to them?
@@ -313,16 +315,16 @@ If any one of these keys is used, it MUST have a value (that is, it cannot be a 
 
 A DELEG or DELEGI record MUST NOT have more than one set of server information, chosen from the following:
 
-- one server-ip4 key
-- one server-ip6 key
-- a pair consisting of one server-ip4 and one server-ip6
+- one server-ipv4 key
+- one server-ipv6 key
+- a pair consisting of one server-ipv4 and one server-ipv6
 - one server-name key
-- one include-name key
+- one include-delegi key
 
 This restriction only applies to a single DELEG or DELEGI record; a DELEG or DELEGI RRset can have records with different server information keys.
 
 When using server-name, the addresses for all the names in the set must be fetched using normal DNS resolution.
-This means the names in the value of the server-name key or the include-name key MUST NOT be inside the delegated domain.
+This means the names in the value of the server-name key or the include-delegi key MUST NOT be inside the delegated domain.
 
 ### Populating the SLIST from DELEG and DELEGI Records {#slist}
 
@@ -333,14 +335,14 @@ A resolver processes each individual DELEG record within a DELEG RRset, or each 
 1. If a record has more than one type of server information keys, or has multiple server information keys of the same type, that record is malformed.
 Stop processing this record.
 
-1. If one or more server-ip4 or server-ip6 keys are present inside the record, copy all the address values from the server-ip4 or server-ip6 fields in the record into SLIST.
+1. If one or more server-ipv4 or server-ipv6 keys are present inside the record, copy all the address values from the server-ipv4 or server-ipv6 fields in the record into SLIST.
 Stop processing this record.
 
 1. If a server-name key is present in the record, resolve each name in the value into addresses.
 Copy these addresses into SLIST.
 Stop processing this record.
 
-1. If a include-name key is present in the record, resolve each name in the value using the DELEGI RRtype.
+1. If a include-delegi key is present in the record, resolve each name in the value using the DELEGI RRtype.
 Recursively apply the algorithm described in this section, after checking that the maximum loop count described in {{too-much-work}} has not been reached.
 
 1. If none of the above applies, SLIST is not modified by this particular record.
@@ -484,9 +486,9 @@ This document describes two sets of actions that, if not controlled, could lead 
 - Names with many subdomains can cause walking up the tree to populate SLIST ({{finding-best}}) to be burdensome.
 To prevent this, the resolver SHOULD NOT walk up more than %%TODO: come up with a number%% labels in order to contribute to SLIST.
 
-- Long chains of include-name information ({{nameserver-info}}), and those with circular chains if include-name information, can be burdensome.
-To prevent this, the resolver SHOULD NOT follow more than 3 include-name chains in an RRset when populating SLIST.
-Note that include-name chains can have CNAME steps in them; in such a case, a CNAME step is counted the same as a DELEGI step when determining when to stop following a chain.
+- Long chains of include-delegi information ({{nameserver-info}}), and those with circular chains if include-delegi information, can be burdensome.
+To prevent this, the resolver SHOULD NOT follow more than 3 include-delegi chains in an RRset when populating SLIST.
+Note that include-delegi chains can have CNAME steps in them; in such a case, a CNAME step is counted the same as a DELEGI step when determining when to stop following a chain.
 
 ## Preventing Downgrade Attacks
 
@@ -549,13 +551,13 @@ The "DELEG Delegation Information" registry should be populated with the followi
 
 ~~~
 Number:  1
-Name:  server-ip4
+Name:  server-ipv4
 Meaning:  A set of IPv4 addresses of nameservers
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
 Number:  2
-Name:  server-ip6
+Name:  server-ipv6
 Meaning:  A set of IPv6 addresses of nameservers
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
@@ -567,7 +569,7 @@ Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
 Number:  4
-Name:  include-name
+Name:  include-delegi
 Meaning:  The fully-qualified domain of a DELEGI record
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
@@ -596,15 +598,15 @@ It shows the delegation point for "example." and "test."
 The "example." delegation has DELEG and NS records.
 The "test." delegation has DELEG but no NS records.
 
-TODO: Add examples that have server-name and include-name being sets of more than one name.
+TODO: Add examples that have server-name and include-delegi being sets of more than one name.
 
 TODO: Examples of using server-address.
 
 TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
 
     example.   300 IN DELEG server-name=a.example.
-    example.   300 IN DELEG include-name=ns2.example.net.
-    example.   300 IN DELEG include-name=ns3.example.org.
+    example.   300 IN DELEG include-delegi=ns2.example.net.
+    example.   300 IN DELEG include-delegi=ns3.example.org.
     example.   300 IN RRSIG DELEG 13 4 300 20250214164848 (
                             20250207134348 21261 . HyDHYVT5KcqWc7J..= )
     example.   300 IN NS    a.example.
@@ -621,7 +623,7 @@ TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
 
 The "test." delegation point has a DELEG record and no NS record.
 
-    test.      300 IN DELEG include-name=ns2.example.net
+    test.      300 IN DELEG include-delegi=ns2.example.net
     test.      300 IN RRSIG DELEG 13 4 300 20250214164848 (
                             20250207134348 21261 . 98Aac9f7A1Ac26Q..= )
     test.      300 IN NSEC  a.test. RRSIG NSEC DELEG
@@ -739,8 +741,8 @@ The following sections show referral examples:
 
     ;; Authority
     example.   300 IN DELEG server-name=a.example.
-    example.   300 IN DELEG include-name=ns2.example.net.
-    example.   300 IN DELEG include-name=ns3.example.org.
+    example.   300 IN DELEG include-delegi=ns2.example.net.
+    example.   300 IN DELEG include-delegi=ns3.example.org.
 
     ;; Additional
     ;; (empty)
@@ -757,7 +759,7 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    test.      300 IN DELEG include-name=ns2.example.net
+    test.      300 IN DELEG include-delegi=ns2.example.net
 
     ;; Additional
     ;; (empty)
@@ -778,8 +780,8 @@ The following sections show referral examples:
     ;; Authority
 
     example.   300 IN DELEG server-name=a.example.
-    example.   300 IN DELEG include-name=ns2.example.net.
-    example.   300 IN DELEG include-name=ns3.example.org.
+    example.   300 IN DELEG include-delegi=ns2.example.net.
+    example.   300 IN DELEG include-delegi=ns3.example.org.
     example.   300 IN RRSIG DELEG 13 4 300 20250214164848 (
                             20250207134348 21261 . HyDHYVT5KcqWc7J..= )
     example.   300 IN DS    65163 13 2 5F86F2F3AE2B02...
@@ -802,7 +804,7 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    test.      300 IN DELEG include-name=ns2.example.net.
+    test.      300 IN DELEG include-delegi=ns2.example.net.
     test.      300 IN RRSIG DELEG 13 4 300 20250214164848 (
                             20250207134348 21261 . 98Aac9f7A1Ac26Q..= )
     test.      300 IN NSEC  a.test. RRSIG NSEC DELEG
