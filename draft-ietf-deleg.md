@@ -144,10 +144,32 @@ TODO: SVCB allows an empty list. I guess it is not a problem, it is small and wi
 
 ## RDATA Wire Format
 
-The format of the DelegInfos list is identical to SvcParams format defined in Section 2.2 {{?RFC9460}},
+RDATA portion of RRtypes is variable length and entirely consists of "DelegInfos" element:
+
+        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+        /                         DelegInfos                            /
+        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+The format of the DelegInfos is identical to SvcParams format defined in Section 2.2 {{?RFC9460}},
 including the requirements for strictly increasing numeric order of keys and duplicate keys not being allowed.
 
 All the requirements in Section 2.2 of {{?RFC9460}} apply.
+
+DelegInfos is a (possibly empty) sequence of individual DelegInfo elements.
+Wire format of an individual DelegInfo element is the same as SvcParam,
+but it references DelegInfo elements instead of SvcParam elements:
+
+                    +0 (MSB)                            +1 (LSB)
+        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    0:  |                          DelegInfoKey                         |
+        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    2:  |                length of DelegInfoValue                       |
+        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    4:  /                          DelegInfoValue ...                   /
+        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+Permissible lengths depend on DelegInfoKey value.
+Some future keys can use zero length DelegInfoValue.
 
 ## Overview of Differences between DELEG and DELEGI Semantics
 
