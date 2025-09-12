@@ -327,7 +327,7 @@ The names in the wire format MUST NOT be compressed.
 
 TODO: Are they? Are we going to forbid normal zone file expansion where names without trailing . get current origin appended to them?
 
-If any one of these keys is used, it MUST have a value (that is, it cannot be a key with a zero-length value).
+If any one of these keys is used, they MUST have a value (that is, they cannot be a key with a zero-length value).
 
 A DELEG or DELEGI record MUST NOT have more than one set of server information, chosen from the following:
 
