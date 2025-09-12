@@ -638,7 +638,7 @@ TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
 
 The "test." delegation point has a DELEG record and no NS record.
 
-    test.      DELEG server-name=ns2.example.net
+    test.      DELEG server-name=ns2.example.net.
     test.      RRSIG DELEG 13 4 300 20260101000000 (
                             20250101000000 21261 . 98Aac9f7A1Ac26Q..= )
     test.      NSEC  a.test. RRSIG NSEC DELEG
@@ -773,7 +773,7 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    test.      DELEG include-delegi=ns2.example.net
+    test.      DELEG server-name=ns2.example.net.
 
     ;; Additional
     ;; (empty)
@@ -816,7 +816,7 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    test.      DELEG include-delegi=ns2.example.net.
+    test.      DELEG server-name=ns2.example.net.
     test.      RRSIG DELEG 13 4 300 20260101000000 (
                             20250101000000 21261 . 98Aac9f7A1Ac26Q..= )
     test.      NSEC  a.test. RRSIG NSEC DELEG
