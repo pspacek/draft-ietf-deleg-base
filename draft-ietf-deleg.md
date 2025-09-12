@@ -602,13 +602,14 @@ The section will be removed when IANA makes permanent assignments.
 
   * DELEG RRtype code is 61440
   * DELEGI RRtype code is 65433
-  * DELEG EDNS DE Flag Bit is 3
-  * DNSKEY flag ADT (Authoritative Delegation Types) is 14
+  * DELEG EDNS DE flag bit is 3
+  * DNSKEY ADT (Authoritative Delegation Types) flag bit is 14
 
 --- back
 
-#  Examples
+# Examples
 
+## Root zone file
 The following example shows an excerpt from a signed root zone.
 It shows the delegation point for "example." and "test."
 
@@ -617,45 +618,74 @@ The "test." delegation has DELEG but no NS records.
 
 TODO: Add examples that have server-name and include-delegi being sets of more than one name.
 
-TODO: Examples of using server-address.
-
 TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
 
-    example.   300 IN DELEG server-name=a.example.
-    example.   300 IN DELEG include-delegi=ns2.example.net.
-    example.   300 IN DELEG include-delegi=ns3.example.org.
-    example.   300 IN RRSIG DELEG 13 4 300 20250214164848 (
-                            20250207134348 21261 . HyDHYVT5KcqWc7J..= )
-    example.   300 IN NS    a.example.
-    example.   300 IN NS    b.example.net.
-    example.   300 IN NS    c.example.org.
-    example.   300 IN DS    65163 13 2 5F86F2F3AE2B02...
-    example.   300 IN RRSIG DS 13 4 300 20250214164848 (
-                            20250207134348 21261 . O0k558jHhyrC21J..= )
-    example.   300 IN NSEC  a.example. NS DS RRSIG NSEC DELEG
-    example.   300 IN RRSIG NSEC 13 4 300 20250214164848 (
-                            20250207134348 21261 . 1Kl8vab96gG21Aa..= )
-    a.example. 300 IN A     192.0.2.1
-    a.example. 300 IN AAAA  2001:DB8::1
+    example.   DELEG server-ipv4=192.0.2.1 server-ipv6=2001:DB8::1
+    example.   DELEG server-name=ns2.example.net.,ns3.example.org.
+    example.   RRSIG DELEG 13 4 300 20260101000000 (
+                            20250101000000 33333 . SigExampleDELEG/ )
 
-The "test." delegation point has a DELEG record and no NS record.
+    example.   NS    a.example.
+    example.   NS    b.example.net.
+    example.   NS    c.example.org.
 
-    test.      300 IN DELEG include-delegi=ns2.example.net
-    test.      300 IN RRSIG DELEG 13 4 300 20250214164848 (
-                            20250207134348 21261 . 98Aac9f7A1Ac26Q..= )
-    test.      300 IN NSEC  a.test. RRSIG NSEC DELEG
-    test.      300 IN RRSIG NSEC 13 4 300  20250214164848 (
-                            20250207134348 21261 . kj7YY5tr9h7UqlK..= )
+    example.   DS    44444 13 2 ABCDEF01234567...
+    example.   RRSIG DS 13 4 300 20260101000000 (
+                            20250101000000 33333 . SigExampleDS )
+
+    example.   NSEC  net. NS DS RRSIG NSEC DELEG
+    example.   RRSIG NSEC 13 4 300 20260101000000 (
+                            20250101000000 33333 . SigExampleNSEC+/ )
+
+    ; unsigned glue for legacy (NS) delegation
+    a.example. A     192.0.2.1
+    a.example. AAAA  2001:DB8::1
+
+The "test." delegation point has a DELEG record and no NS or DS records.
+
+Please note:
+This is an example of unnecessairly complicated setup to demonstrate capabilities of DELEG and DELEGI RRtypes.
+
+    test.      DELEG server-ipv6=3fff::33
+    test.      DELEG include-delegi=Acfg.example.org.
+    test.      DELEG include-delegi=config2.example.net.
+    test.      RRSIG DELEG 13 4 300 20260101000000 (
+                            20250101000000 33333 . SigTestDELEG )
+
+    test.      NSEC  . RRSIG NSEC DELEG
+    test.      RRSIG NSEC 13 4 300 20260101000000 (
+                            20250101000000 33333 . SigTestNSEC/ )
+
+Delegations to org and net zones omitted for brevity.
+
+## Example.org zone file
+The following example shows an excerpt from an unsigned example.org zone.
+
+    Acfg.example.org.    DELEGI server-ipv6=2001:DB8::6666
+    Acfg.example.org.    DELEGI server-name=c.example.org.
+    Acfg.example.org.    DELEGI include-delegi=subcfg.example.org.
+
+    c.example.org.       AAAA   3fff::33
+
+    subcfg.example.org.  DELEGI server-ipv4=203.0.113.1 server-ipv6=3fff::2
+
+## Example.net zone file
+The following example shows an excerpt from an unsigned example.net zone.
+
+    b.example.net.       A      198.51.100.1
+
+    config2.example.net. DELEGI server-name=b.example.org.
+
 
 ## Responses
 
 The following sections show referral examples:
 
-## DO bit clear, DE bit clear
+### DO bit clear, DE bit clear
 
-### Query for foo.example
+#### Query for foo.example
 
-    ;; Header: QR RCODE=0
+    ;; Header: QR RCODE=NOERROR
     ;;
 
     ;; Question
@@ -665,17 +695,17 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    example.   300 IN NS    a.example.
-    example.   300 IN NS    b.example.net.
-    example.   300 IN NS    c.example.org.
+    example.   NS    a.example.
+    example.   NS    b.example.net.
+    example.   NS    c.example.org.
 
     ;; Additional
-    a.example. 300 IN A     192.0.2.1
-    a.example. 300 IN AAAA  2001:DB8::1
+    a.example. A     192.0.2.1
+    a.example. AAAA  2001:DB8::1
 
-### Query for foo.test
+#### Query for foo.test
 
-    ;; Header: QR AA RCODE=3
+    ;; Header: QR AA RCODE=NXDOMAIN
     ;;
 
     ;; Question
@@ -685,18 +715,18 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    .   300 IN SOA ...
+    .   SOA ...
 
     ;; Additional
     ;; OPT with Extended DNS Error: New Delegation Only
 
 
-## DO bit set, DE bit clear
+### DO bit set, DE bit clear
 
-### Query for foo.example
+#### Query for foo.example
 
 
-    ;; Header: QR DO RCODE=0
+    ;; Header: QR DO RCODE=NOERROR
     ;;
 
     ;; Question
@@ -707,20 +737,20 @@ The following sections show referral examples:
 
     ;; Authority
 
-    example.   300 IN NS    a.example.
-    example.   300 IN NS    b.example.net.
-    example.   300 IN NS    c.example.org.
-    example.   300 IN DS    65163 13 2 5F86F2F3AE2B02...
-    example.   300 IN RRSIG DS 13 4 300 20250214164848 (
-                            20250207134348 21261 . O0k558jHhyrC21J..= )
+    example.   NS    a.example.
+    example.   NS    b.example.net.
+    example.   NS    c.example.org.
+    example.   DS    44444 13 2 ABCDEF01234567...
+    example.   RRSIG DS 13 4 300 20260101000000 (
+                            20250101000000 33333 . SigExampleDS )
     ;; Additional
-    a.example. 300 IN A     192.0.2.1
-    a.example. 300 IN AAAA  2001:DB8::1
+    a.example. A     192.0.2.1
+    a.example. AAAA  2001:DB8::1
 
 
-### Query for foo.test {#legacynxdomain}
+#### Query for foo.test {#legacynxdomain}
 
-    ;; Header: QR DO AA RCODE=3
+    ;; Header: QR DO AA RCODE=NXDOMAIN
     ;;
 
     ;; Question
@@ -730,24 +760,22 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    .          300 IN SOA ...
-    .          300 IN RRSIG SOA ...
-    .          300 IN NSEC  aaa NS SOA RRSIG NSEC DNSKEY ZONEMD
-    .          300 IN RRSIG NSEC 13 4 300
-    test.      300 IN NSEC  a.test. RRSIG NSEC DELEG
-    test.      300 IN RRSIG NSEC 13 4 300  20250214164848 (
-                            20250207134348 21261 . aBFYask;djf7UqlK..= )
+    .          SOA ...
+    .          RRSIG SOA ...
+    test.      NSEC  . RRSIG NSEC DELEG
+    test.      RRSIG NSEC 13 4 300 20260101000000 (
+                            20250101000000 33333 . SigTestNSEC/ )
 
     ;; Additional
     ;; OPT with Extended DNS Error: New Delegation Only
 
 
-## DO bit clear, DE bit set
+### DO bit clear, DE bit set
 
-### Query for foo.example
+#### Query for foo.example
 
 
-    ;; Header: QR DE RCODE=0
+    ;; Header: QR DE RCODE=NOERROR
     ;;
 
     ;; Question
@@ -757,16 +785,15 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    example.   300 IN DELEG server-name=a.example.
-    example.   300 IN DELEG include-delegi=ns2.example.net.
-    example.   300 IN DELEG include-delegi=ns3.example.org.
+    example.   DELEG server-ipv4=192.0.2.1 server-ipv6=2001:DB8::1
+    example.   DELEG server-name=ns2.example.net.,ns3.example.org.
 
     ;; Additional
     ;; (empty)
 
-### Query for foo.test
+#### Query for foo.test
 
-    ;; Header: QR AA RCODE=0
+    ;; Header: QR AA RCODE=NOERROR
     ;;
 
     ;; Question
@@ -776,16 +803,20 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    test.      300 IN DELEG include-delegi=ns2.example.net
+    test.      DELEG server-ipv6=3fff::33
+    test.      DELEG include-delegi=Acfg.example.org.
+    test.      DELEG include-delegi=config2.example.net.
 
     ;; Additional
     ;; (empty)
 
-## DO bit set, DE bit set
+Follow-up example in {{delegi-example}} explains ultimate meaning of this response.
 
-### Query for foo.example
+### DO bit set, DE bit set
 
-    ;; Header: QR DO DE RCODE=0
+#### Query for foo.example
+
+    ;; Header: QR DO DE RCODE=NOERROR
     ;;
 
     ;; Question
@@ -795,23 +826,21 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-
-    example.   300 IN DELEG server-name=a.example.
-    example.   300 IN DELEG include-delegi=ns2.example.net.
-    example.   300 IN DELEG include-delegi=ns3.example.org.
-    example.   300 IN RRSIG DELEG 13 4 300 20250214164848 (
-                            20250207134348 21261 . HyDHYVT5KcqWc7J..= )
-    example.   300 IN DS    65163 13 2 5F86F2F3AE2B02...
-    example.   300 IN RRSIG DS 13 4 300 20250214164848 (
-                            20250207134348 21261 . O0k558jHhyrC21J..= )
+    example.   DELEG server-ipv4=192.0.2.1 server-ipv6=2001:DB8::1
+    example.   DELEG server-name=ns2.example.net.,ns3.example.org.
+    example.   RRSIG DELEG 13 4 300 20260101000000 (
+                            20250101000000 33333 . SigExampleDELEG/ )
+    example.   DS    44444 13 2 ABCDEF01234567...
+    example.   RRSIG DS 13 4 300 20260101000000 (
+                            20250101000000 33333 . SigExampleDS )
 
     ;; Additional
-    a.example. 300 IN A     192.0.2.1
-    a.example. 300 IN AAAA  2001:DB8::1
+    a.example. A     192.0.2.1
+    a.example. AAAA  2001:DB8::1
 
-### Query for foo.test
+#### Query for foo.test
 
-    ;; Header: QR DO DE AA RCODE=0
+    ;; Header: QR DO DE AA RCODE=NOERROR
     ;;
 
     ;; Question
@@ -821,15 +850,35 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    test.      300 IN DELEG include-delegi=ns2.example.net.
-    test.      300 IN RRSIG DELEG 13 4 300 20250214164848 (
-                            20250207134348 21261 . 98Aac9f7A1Ac26Q..= )
-    test.      300 IN NSEC  a.test. RRSIG NSEC DELEG
-    test.      300 IN RRSIG NSEC 13 4 300  20250214164848 (
-                            20250207134348 21261 . kj7YY5tr9h7UqlK..= )
+    test.      DELEG server-ipv6=3fff::33
+    test.      DELEG include-delegi=Acfg.example.org.
+    test.      DELEG include-delegi=config2.example.net.
+    test.      RRSIG DELEG 13 4 300 20260101000000 (
+                            20250101000000 33333 . SigTestDELEG )
+    test.      NSEC  . RRSIG NSEC DELEG
+    test.      RRSIG NSEC 13 4 300 20260101000000 (
+                            20250101000000 33333 . SigTestNSEC/ )
 
     ;; Additional
     ;; (empty)
+
+Follow-up example in {{delegi-example}} explains ultimate meaning of this response.
+
+## DELEGI Interpretation {#delegi-example}
+
+In the examples above, test. DELEG record uses indirection and points to other domain names with DELEGI, A, and AAAA records.
+During resolution, a resolver will gradually build set of nameservers to contact, as defined in {{slist}}.
+
+To vizualize end result of this process we represent full set of nameservers in form of a 'virtual' DELEG RRset.
+
+    test. DELEG server-ipv4=198.51.100.1
+    test. DELEG server-ipv4=203.0.113.1
+    test. DELEG server-ipv6=2001:DB8::6666
+    test. DELEG server-ipv6=3fff::2
+    ; IPv6 address 3fff::33 was de-duplicated (input RRsets listed it twice)
+    test. DELEG server-ipv6=3fff::33
+
+Implementations are free to use arbitrary representation for this data as it is not directly exposed via DNS protocol.
 
 
 # Acknowledgments
