@@ -622,16 +622,16 @@ TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
     example.   DELEG server-ipv4=192.0.2.1 server-ipv6=2001:DB8::1
     example.   DELEG server-name=ns2.example.net.,ns3.example.org.
     example.   RRSIG DELEG 13 4 300 20260101000000 (
-                            20250101000000 21261 . HyDHYVT5KcqWc7J..= )
+                            20250101000000 33333 . HyDHYVT5KcqWc7J..= )
     example.   NS    a.example.
     example.   NS    b.example.net.
     example.   NS    c.example.org.
     example.   DS    65163 13 2 5F86F2F3AE2B02...
     example.   RRSIG DS 13 4 300 20260101000000 (
-                            20250101000000 21261 . O0k558jHhyrC21J..= )
+                            20250101000000 33333 . O0k558jHhyrC21J..= )
     example.   NSEC  net. NS DS RRSIG NSEC DELEG
     example.   RRSIG NSEC 13 4 300 20260101000000 (
-                            20250101000000 21261 . 1Kl8vab96gG21Aa..= )
+                            20250101000000 33333 . 1Kl8vab96gG21Aa..= )
     ; unsigned glue is used for legacy (NS) delegation
     a.example. A     192.0.2.1
     a.example. AAAA  2001:DB8::1
@@ -640,10 +640,10 @@ The "test." delegation point has a DELEG record and no NS or DS records.
 
     test.      DELEG server-name=ns2.example.net.
     test.      RRSIG DELEG 13 4 300 20260101000000 (
-                            20250101000000 21261 . 98Aac9f7A1Ac26Q..= )
+                            20250101000000 33333 . 98Aac9f7A1Ac26Q..= )
     test.      NSEC  . RRSIG NSEC DELEG
     test.      RRSIG NSEC 13 4 300  20260101000000 (
-                            20250101000000 21261 . kj7YY5tr9h7UqlK..= )
+                            20250101000000 33333 . kj7YY5tr9h7UqlK..= )
 
 ## Responses
 
@@ -710,7 +710,7 @@ The following sections show referral examples:
     example.   NS    c.example.org.
     example.   DS    65163 13 2 5F86F2F3AE2B02...
     example.   RRSIG DS 13 4 300 20260101000000 (
-                            20250101000000 21261 . O0k558jHhyrC21J..= )
+                            20250101000000 33333 . O0k558jHhyrC21J..= )
     ;; Additional
     a.example. A     192.0.2.1
     a.example. AAAA  2001:DB8::1
@@ -732,7 +732,7 @@ The following sections show referral examples:
     .          RRSIG SOA ...
     test.      NSEC  . RRSIG NSEC DELEG
     test.      RRSIG NSEC 13 4 300  20260101000000 (
-                            20250101000000 21261 . aBFYask;djf7UqlK..= )
+                            20250101000000 33333 . aBFYask;djf7UqlK..= )
 
     ;; Additional
     ;; OPT with Extended DNS Error: New Delegation Only
@@ -793,10 +793,10 @@ The following sections show referral examples:
     example.   DELEG server-ipv4=192.0.2.1 server-ipv6=2001:DB8::1
     example.   DELEG server-name=ns2.example.net.,ns3.example.org.
     example.   RRSIG DELEG 13 4 300 20260101000000 (
-                            20250101000000 21261 . HyDHYVT5KcqWc7J..= )
+                            20250101000000 33333 . HyDHYVT5KcqWc7J..= )
     example.   DS    65163 13 2 5F86F2F3AE2B02...
     example.   RRSIG DS 13 4 300 20260101000000 (
-                            20250101000000 21261 . O0k558jHhyrC21J..= )
+                            20250101000000 33333 . O0k558jHhyrC21J..= )
 
     ;; Additional
     a.example. A     192.0.2.1
@@ -816,10 +816,10 @@ The following sections show referral examples:
     ;; Authority
     test.      DELEG server-name=ns2.example.net.
     test.      RRSIG DELEG 13 4 300 20260101000000 (
-                            20250101000000 21261 . 98Aac9f7A1Ac26Q..= )
+                            20250101000000 33333 . 98Aac9f7A1Ac26Q..= )
     test.      NSEC  . RRSIG NSEC DELEG
     test.      RRSIG NSEC 13 4 300  20260101000000 (
-                            20250101000000 21261 . kj7YY5tr9h7UqlK..= )
+                            20250101000000 33333 . kj7YY5tr9h7UqlK..= )
 
     ;; Additional
     ;; (empty)
