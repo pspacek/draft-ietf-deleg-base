@@ -321,8 +321,8 @@ The types of information defined in this document are:
 
 * server-ipv4: a set of IPv4 addresses for nameservers
 * server-ipv6: a set of IPv6 addresses for nameservers
-* server-name: the hostname of a nameserver; the addresses must be fetched
-* include-delegi: the domain name that points to a DELEGI RRset, which in turn has more information about the delegation
+* server-name: a set of hostnames of a nameservers; the addresses must be fetched
+* include-delegi: a set of domain names that point to a DELEGI RRsets, which in turn have more information about the delegation
 
 The presentation values for server-ipv4 and server-ipv6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
 The wire formats for server-ipv4 and server-ipv6 are a sequence of IP addresses in network byte order (for the respective address family).
@@ -586,13 +586,13 @@ Change Controller:  IETF
 
 Number:  3
 Name:  server-name
-Meaning:  The fully-qualified domain name of a nameserver
+Meaning:  A set of hostnames of nameservers
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
 Number:  4
 Name:  include-delegi
-Meaning:  The fully-qualified domain of a DELEGI record
+Meaning:  A set of domain names of DELEGI records
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
