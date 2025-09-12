@@ -305,7 +305,7 @@ Do not go back to the first step if doing so would exceed the amount of work tha
 
 The rest of the Step 2's description is not affected by this document.
 
-TODO: Determine what to do about ". DELEG" or ". DS" queries, which by definition do not have answers in the zone.
+TODO: Determine what to do about "QNAME=. QTYPE=DELEG" or "QNAME=. QTYPE=DS" queries, which by definition do not have answers in the DNS.
 
 ### Nameserver Information for Delegation {#nameserver-info}
 
