@@ -623,16 +623,20 @@ TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
     example.   DELEG server-name=ns2.example.net.,ns3.example.org.
     example.   RRSIG DELEG 13 4 300 20260101000000 (
                             20250101000000 33333 . SigExampleDELEG/ )
+
     example.   NS    a.example.
     example.   NS    b.example.net.
     example.   NS    c.example.org.
+
     example.   DS    44444 13 2 ABCDEF01234567...
     example.   RRSIG DS 13 4 300 20260101000000 (
                             20250101000000 33333 . SigExampleDS )
+
     example.   NSEC  net. NS DS RRSIG NSEC DELEG
     example.   RRSIG NSEC 13 4 300 20260101000000 (
                             20250101000000 33333 . SigExampleNSEC+/ )
-    ; unsigned glue is used for legacy (NS) delegation
+
+    ; unsigned glue for legacy (NS) delegation
     a.example. A     192.0.2.1
     a.example. AAAA  2001:DB8::1
 
@@ -641,6 +645,7 @@ The "test." delegation point has a DELEG record and no NS or DS records.
     test.      DELEG server-name=ns2.example.net.
     test.      RRSIG DELEG 13 4 300 20260101000000 (
                             20250101000000 33333 . SigTestDELEG )
+
     test.      NSEC  . RRSIG NSEC DELEG
     test.      RRSIG NSEC 13 4 300 20260101000000 (
                             20250101000000 33333 . SigTestNSEC/ )
