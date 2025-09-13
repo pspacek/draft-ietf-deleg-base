@@ -144,19 +144,19 @@ TODO: SVCB allows an empty list. I guess it is not a problem, it is small and wi
 
 ## RDATA Wire Format
 
-RDATA portion of RRtypes is variable length and entirely consists of "DelegInfos" element:
+The RDATA portion of the RRtypes has variable length and entirely consists of a single "DelegInfos" element:
 
         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         /                         DelegInfos                            /
         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-The format of the DelegInfos is identical to SvcParams format defined in Section 2.2 {{?RFC9460}},
+The format of the DelegInfos eleemnt is identical to the format of the SvcParams element defined in Section 2.2 {{?RFC9460}},
 including the requirements for strictly increasing numeric order of keys and duplicate keys not being allowed.
 
 All the requirements in Section 2.2 of {{?RFC9460}} apply.
 
-DelegInfos is a (possibly empty) sequence of individual DelegInfo elements.
-Wire format of an individual DelegInfo element is the same as SvcParam,
+The DelegInfos element is a (possibly empty) sequence of individual DelegInfo elements.
+The wire format of an individual DelegInfo element is the same as for a SvcParam element,
 but it references DelegInfo elements instead of SvcParam elements:
 
                     +0 (MSB)                            +1 (LSB)
@@ -168,8 +168,8 @@ but it references DelegInfo elements instead of SvcParam elements:
     4:  /                          DelegInfoValue ...                   /
         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-Permissible lengths depend on DelegInfoKey value.
-Some future keys can use zero length DelegInfoValue.
+The permissible lengths depend on the DelegInfoKey value.
+Some future keys may have zero length DelegInfoValue.
 
 ## Overview of Differences between DELEG and DELEGI Semantics
 
@@ -196,8 +196,8 @@ A DELEG RRset MAY be present with or without NS or DS RRsets at the delegation p
 The DELEG RRset MAY contain multiple records.
 
 DELEG RRsets MUST NOT appear at a zone's apex.
-Errorneous inclusion of DELEG RRset at zone's apex will cause DNSSEC validation failures.
-Servers MAY refuse to load such an invalid zone, similarly to DS RRtype.
+The errorneous inclusion of DELEG RRset at zone's apex will cause DNSSEC validation failures.
+Servers MAY refuse to load such an invalid zone, similarly to the DS RRtype.
 
 ## Resolvers
 
@@ -327,7 +327,7 @@ The names in the wire format MUST NOT be compressed.
 
 TODO: Are they? Are we going to forbid normal zone file expansion where names without trailing . get current origin appended to them?
 
-If any one of these keys is used, they MUST have a value (that is, they cannot be a key with a zero-length value).
+If any one of these keys is used, it MUST have a value (that is, it cannot be a key with a zero-length value).
 
 A DELEG or DELEGI record MUST NOT have more than one set of server information, chosen from the following:
 
