@@ -150,7 +150,7 @@ The RDATA portion of the RRtypes has variable length and entirely consists of a 
         /                         DelegInfos                            /
         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-The format of the DelegInfos eleemnt is identical to the format of the SvcParams element defined in Section 2.2 {{?RFC9460}},
+The format of the DelegInfos element is identical to the format of the SvcParams element defined in Section 2.2 {{?RFC9460}},
 including the requirements for strictly increasing numeric order of keys and duplicate keys not being allowed.
 
 All the requirements in Section 2.2 of {{?RFC9460}} apply.
@@ -196,7 +196,7 @@ A DELEG RRset MAY be present with or without NS or DS RRsets at the delegation p
 The DELEG RRset MAY contain multiple records.
 
 DELEG RRsets MUST NOT appear at a zone's apex.
-The errorneous inclusion of DELEG RRset at zone's apex will cause DNSSEC validation failures.
+The erroneous inclusion of DELEG RRset at zone's apex will cause DNSSEC validation failures.
 Servers MAY refuse to load such an invalid zone, similarly to the DS RRtype.
 
 ## Resolvers
@@ -869,7 +869,7 @@ Follow-up example in {{delegi-example}} explains ultimate meaning of this respon
 In the examples above, test. DELEG record uses indirection and points to other domain names with DELEGI, A, and AAAA records.
 During resolution, a resolver will gradually build set of nameservers to contact, as defined in {{slist}}.
 
-To vizualize end result of this process we represent full set of nameservers in form of a 'virtual' DELEG RRset.
+To visualize end result of this process we represent full set of nameservers in form of a 'virtual' DELEG RRset.
 
     test. DELEG server-ipv4=198.51.100.1
     test. DELEG server-ipv4=203.0.113.1
