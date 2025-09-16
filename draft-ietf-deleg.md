@@ -523,7 +523,7 @@ However, the deployment will not be protected from downgrade attacks against the
 To protect DNSSEC-secure DNS zones that use DELEG delegations, the delegating zone needs to have at least one DNSKEY with the ADT flag set to 1.
 Failure to set this flag in a DNSKEY record in the zone allows an attacker to remove the DELEG RR set from referrals which contain the DS RR set, and replace the original signed DELEG RR set with an arbitrary unsigned NS set.
 Doing so would be a downgrade from the strong protection offered by DNSSEC for DELEG.
-That is, the DELEG protocol when used with upgraded DNSKEY records gives the same protection to DELEG that the zone's DS RR set has. 
+That is, the DELEG protocol when used with upgraded DNSKEY records gives the same protection to DELEG that the zone's DS RR set has.
 Without DELEG, there are no security guarantees for the legacy NS RR set on the parent side of the zone cut.
 
 Please note that a full DNSKEY rollover is not necessary to achieve the downgrade protection for DELEG.
