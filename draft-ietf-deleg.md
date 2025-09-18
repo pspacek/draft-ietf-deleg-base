@@ -408,41 +408,47 @@ Please note, in practice the same process and records are used to prove the non-
 
 ### DELEG-unaware Clients
 
-DELEG-unaware clients do not use DELEG records for delegation.
-When a DELEG-aware authoritative server responds to a DELEG-unaware client, any DELEG record in the response would not signal a zone cut, is not returned in referral responses, and is not considered authoritative on the parent side of a zone cut.
-Because of this, DELEG-aware authoritative servers MUST answer as if they are DELEG-unaware to DELEG-unaware clients.
-Please note this instruction does not affect DNSSEC signing, i.e. no special handling for NSEC type bitmap is necessary and DELEG RR type is accurately represented even for DELEG-unaware clients.
+DELEG-unaware clients do not recognize DELEG records as a delegation, rather as ordinary records within the parent zone.
+However, the DELEG-aware authoritative server MUST still consider any other records at or below the delegation point as non-authoritative.
+The only exception is the DS record, which is authoritative if present at the delegation point.
 
-Two specific cases of DELEG-aware authoritative servers responding in a DELEG-unaware manner are described here.
+If the child zone is also configured on the authoritative server, QTYPE=DELEG (unlike DS and unlike DELEG-aware clients) does not imply answering from the parent zone, but from the child zone (like any regular RRTYPEs, e.g. AAAA).
+If only the parent zone is configured, following requierements apply:
 
-#### DELEG-unaware Clients Requesting QTYPE=DELEG
+#### DELEG-unaware clients facing DELEG+NS delegation
 
-From the perspective of DELEG-unaware clients, the DELEG RR type does not have special semantics and should behave like an old ordinary RR type, e.g. TXT.
-Thus, queries with DE=0 and QTYPE=DELEG MUST result in a normal legacy response.
-This would be a legacy referral response if there are NS records, or the actual DELEG RR type if the owner name does not have NS records.
+If both DELEG and NS records are present at the delegation point, the autoritative MUST answer any queries of any type (including QTYPE=DELEG!) at or below the delegation point with the legacy referral (NS and eventual DS) response.
 
-TODO: Should we have an example with auth having parent+child zone at the same time, and DE=0 QTYPE=DELEG query?
+Note that unlike DS, the DELEG-unaware client has no way to obtain such DELEG RRset in any response, even though it might recognize its presence from the NSEC record in some situations.
 
-#### DELEG-unaware Clients with DELEG RRs Present but No NS RRs
+#### DELEG-unaware clients facing DELEG-only delegation
 
-DELEG-unaware clients might ask for a name which belongs to a zone delegated only with DELEG RRs (that is, without any NS RRs).
-Such a zone is not resolvable for DELEG-unaware clients.
-In this case, the DELEG record itself cannot create a zone cut, and the DELEG-aware authoritative server MUST return a legacy response.
+If the DELEG RRset is present at the delegation point, but no NS record is there, the DELEG-aware autoritative server MUST answer positively and autoritatively to queries for the DELEG RRset itself and eventual accompanying DS RRset (if exists), as if they were ordinary records.
+However, the DELEG-aware authoritative server MUST answer negatively to any queries below the delegation point (NXDOMAIN) or to queries for different types at the delegation point (NODATA), as if there were no other records at and below the delegation point.
 
-An example of a legacy response using NXDOMAIN is in {{legacynxdomain}}.
-This legacy response might be confusing for subdomains of zones which actually exist because DELEG-aware clients would get a different answer, namely a delegation.
-TODO: debate response code in WG.
+The legacy (and often negative) response might be confusing for subdomains of zones which actually exist because DELEG-aware clients would get a different answer, namely a delegation. An example of a legacy response is in Appendix A.3.2.
 
-The authoritative server is RECOMMENDED to supplement these responses to DELEG-unaware resolvers with an {{!RFC8914}} Extended DNS Error using the (IANA-TBD) value "New Delegation Only" from the Extended DNS Error Codes registry.
+The authoritative server is RECOMMENDED to supplement these responses to DELEG-unaware resolvers with Extended DNS Error "New Delegation Only".
+
+The authoritative server MAY use some records at or below the delegation point non-authoritatively, for example as Glue records {{!RFC8499}}.
+
+TODO: debate if WG wants to do explicit SERVFAIL for this case instead of "just" EDE.
 
 ## DNSSEC Signers
 
 The DELEG record is authoritative on the parent side of a zone cut and needs to be signed as such.
-Existing rules from the DNSSEC specifications apply.
-In summary: for DNSSEC signing, treat the DELEG RR type the same way as the DS RR type.
 
 In order to protect validators from downgrade attacks this draft introduces a new DNSKEY flag ADT (Authoritative Delegation Types).
 In zones which contain a DELEG RR set, this flag MUST be set to 1 in at least one of the DNSKEY records published in the zone.
+
+### Signing DELEG+NS delegation
+
+The DELEG RRtype is treated the same way as DS RRtype. The bitmap of the respective NSEC or NSEC3 record contains the bit for DELEG type as well.
+
+### Signing DELEG-only delegation
+
+From the view of both DELEG-aware and DELEG-unaware clients, the DELEG RRset is, together with eventually existing DS RRset at the delegation point, the only authoritative RRset at or below the delegation point.
+Therefore, the respective NSEC or NSEC3 record MUST prove the existence of the DELEG RRset, the accompanying DS RRset (if exists), and the non-existence of any other types at the delegation point and any other names below.
 
 ## DNSSEC Validators {#dnssec-validators}
 
