@@ -379,6 +379,33 @@ DELEG-aware authoritative servers act differently when handling queries from DEL
 
 The server MUST copy the value of the DE bit from the query into the response, to signal that it is a DELEG-aware server.
 
+### DELEG-aware Clients
+
+When the client indicates that it is DELEG-aware by setting DE=1 in the query, DELEG-aware authoritative servers treat DELEG records as zone cuts, and the servers are authoritative on the parent side of the zone cut.
+This new zone cut has priority over a legacy delegation with NS RR set.
+
+#### DELEG-aware Clients Requesting QTYPE=DELEG
+
+An explicit query for the DELEG RR type at a delegation point behaves much like query for the DS RR type: the server answers authoritatively from the parent zone.
+All previous specifications for special handling queries with QTYPE=DS apply equally to QTYPE=DELEG.
+In summary, the server either provides an authoritative DELEG RR set or declares its non-existence, with relevant DNSSEC proofs when requested and available.
+
+#### Delegation with DELEG
+
+If the delegation has a DELEG RR set, the authoritative server MUST put the DELEG RR set into the Authority section of the referral.
+In this case, the server MUST NOT include the NS RR set in the Authority section.
+Include the covering RRSIG following the normal DNSSEC procedure for answers with authoritative zone data.
+
+Similarly, rules for DS RR set inclusion in referrals apply as specified by the DNSSEC protocol.
+
+#### DELEG-aware Clients with NS RRs Present but No DELEG RRs
+
+If the delegation does not have a DELEG RR set, the authoritative server MUST put the NS RR set into the authority section of the referral.
+The absence of the DELEG RR set MUST be proven as specified by the DNSSEC protocol for authoritative data.
+
+Similarly, rules for DS RR set inclusion into referrals apply as specified by the DNSSEC protocol.
+Please note, in practice the same process and records are used to prove the non-existence of both DELEG and DS RR sets.
+
 ### DELEG-unaware Clients
 
 DELEG-unaware clients do not use DELEG records for delegation.
@@ -407,33 +434,6 @@ This legacy response might be confusing for subdomains of zones which actually e
 TODO: debate response code in WG.
 
 The authoritative server is RECOMMENDED to supplement these responses to DELEG-unaware resolvers with an {{!RFC8914}} Extended DNS Error using the (IANA-TBD) value "New Delegation Only" from the Extended DNS Error Codes registry.
-
-### DELEG-aware Clients
-
-When the client indicates that it is DELEG-aware by setting DE=1 in the query, DELEG-aware authoritative servers treat DELEG records as zone cuts, and the servers are authoritative on the parent side of the zone cut.
-This new zone cut has priority over a legacy delegation with NS RR set.
-
-#### DELEG-aware Clients Requesting QTYPE=DELEG
-
-An explicit query for the DELEG RR type at a delegation point behaves much like query for the DS RR type: the server answers authoritatively from the parent zone.
-All previous specifications for special handling queries with QTYPE=DS apply equally to QTYPE=DELEG.
-In summary, the server either provides an authoritative DELEG RR set or declares its non-existence, with relevant DNSSEC proofs when requested and available.
-
-#### Delegation with DELEG
-
-If the delegation has a DELEG RR set, the authoritative server MUST put the DELEG RR set into the Authority section of the referral.
-In this case, the server MUST NOT include the NS RR set in the Authority section.
-Include the covering RRSIG following the normal DNSSEC procedure for answers with authoritative zone data.
-
-Similarly, rules for DS RR set inclusion in referrals apply as specified by the DNSSEC protocol.
-
-#### DELEG-aware Clients with NS RRs Present but No DELEG RRs
-
-If the delegation does not have a DELEG RR set, the authoritative server MUST put the NS RR set into the authority section of the referral.
-The absence of the DELEG RR set MUST be proven as specified by the DNSSEC protocol for authoritative data.
-
-Similarly, rules for DS RR set inclusion into referrals apply as specified by the DNSSEC protocol.
-Please note, in practice the same process and records are used to prove the non-existence of both DELEG and DS RR sets.
 
 ## DNSSEC Signers
 
