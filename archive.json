@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-18T01:51:36.470638+00:00",
+  "timestamp": "2025-09-21T02:02:42.833290+00:00",
   "repo": "pspacek/draft-ietf-deleg-base",
   "labels": [
     {
@@ -50,5 +50,32 @@
     }
   ],
   "issues": [],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOO_Egl86pPwBz",
+      "title": "Auth behavior lpe",
+      "url": "https://github.com/pspacek/draft-ietf-deleg-base/pull/1",
+      "state": "OPEN",
+      "author": "libor-peltan-cznic",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-09-18T09:31:49Z",
+      "updatedAt": "2025-09-18T09:31:49Z",
+      "baseRepository": "pspacek/draft-ietf-deleg-base",
+      "baseRefName": "main",
+      "baseRefOid": "ed5e6f42b529fb7f4b837a2568a01affdec477d6",
+      "headRepository": "libor-peltan-cznic/draft-ietf-deleg-base",
+      "headRefName": "auth_behavior_lpe",
+      "headRefOid": "f78d9cc82eb36aeae3be51a979b3b3143d625d4e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    }
+  ]
 }
