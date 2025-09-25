@@ -106,8 +106,7 @@ Terminology regarding the Domain Name System comes from {{?BCP219}}, with additi
 
 The DELEG record, RR type TBD, and the DELEGI record, RR type TBD2 (different from that of DELEG), have the same wire and presentation formats,
 but their semantics are different as described in a following section.
-
-TODO: Decide about class: IN or class independent? SVCB is IN-specific.
+These records are defined for the IN class.
 
 The record format is based on the extensible key=value list that was originally defined as "SvcParams" for the SVCB record type {{?RFC9460}}.
 Unlike SVCB, the DELEG protocol does not have "SvcPriority" and "TargetName" fields.
