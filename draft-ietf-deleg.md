@@ -95,10 +95,8 @@ all capitals, as shown here.
 
 Terminology regarding the Domain Name System comes from {{?BCP219}}, with addition terms defined here:
 
-* legacy delegation: A delegation that is done with an NS resouce record set (RR set)
-* legacy response: A response that does not take the special semantics of the DELEG record into account
-* legacy referral response: A response with an NS RR set in the AUTHORITY section, plus all relevant DNSSEC records
-* legacy resolver: A resolver which does not follow the DELEG protocol
+* legacy delegation: A delegation that is done with an NS RRset
+* legacy response: A response that does use the DELEG protocol described in this document
 * DELEG-aware: An authoritative server or resolver that follows the protocol defined in this document
 * DELEG-unaware: An authoritative server or resolver that does not follow the protocol defined in this document
 
@@ -390,8 +388,8 @@ Two specific cases of DELEG-aware authoritative servers responding in a DELEG-un
 #### DELEG-unaware Clients Requesting QTYPE=DELEG
 
 From the perspective of DELEG-unaware clients, the DELEG RR type does not have special semantics and should behave like an old ordinary RR type, e.g. TXT.
-Thus, queries with DE=0 and QTYPE=DELEG MUST result in a normal legacy response.
-This would be a legacy referral response if there are NS records, or the actual DELEG RR type if the owner name does not have NS records.
+Thus, queries with DE=0 and QTYPE=DELEG MUST result in a legacy response.
+This would be a legacy response if there are NS records (the NS RRset in the AUTHORITY section, plus all relevant DNSSEC records), or the actual DELEG record if the owner name does not have NS records.
 
 TODO: Should we have an example with auth having parent+child zone at the same time, and DE=0 QTYPE=DELEG query?
 
@@ -410,7 +408,7 @@ The authoritative server is RECOMMENDED to supplement these responses to DELEG-u
 ### DELEG-aware Clients
 
 When the client indicates that it is DELEG-aware by setting DE=1 in the query, DELEG-aware authoritative servers treat DELEG records as zone cuts, and the servers are authoritative on the parent side of the zone cut.
-This new zone cut has priority over a legacy delegation with NS RR set.
+This new zone cut has priority over a legacy delegation.
 
 #### DELEG-aware Clients Requesting QTYPE=DELEG
 
