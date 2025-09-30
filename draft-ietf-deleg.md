@@ -326,11 +326,9 @@ These keys MUST have a non-empty DelegInfoValue.
 The presentation values for server-ipv4 and server-ipv6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
 The wire formats for server-ipv4 and server-ipv6 are a sequence of IP addresses, in network byte order, for the respective address family.
 
-The presentation values for server-name and include-delegi are sets of fully-qualified domain names, separated by commas.
+The presentation value for server-name and include-delegi are a set of fully-qualified domain names and relative domain names, separated by commas.
 The wire format for server-name and include-delegi are each a concatenated set of a wire-format domain names, where the root label provides the separation between names.
 The names in the wire format MUST NOT be compressed.
-
-TODO: Are they? Are we going to forbid normal zone file expansion where names without trailing . get current origin appended to them?
 
 A DELEG or DELEGI record MUST have one, and only one, set of server information, chosen from the following:
 
