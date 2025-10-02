@@ -144,13 +144,6 @@ The DelegInfos presentation format is defined exactly the same as SvcParams in S
 DelegInfos MAY be zero-length; this is similar to what is allowed in SVCB records.
 A record with a zero-length DelegInfos field has no effect on the SLIST processing for resolvers.
 
-%%% OR %%%
-
-DelegInfos MUST NOT be zero-length.
-A record that has a zero-length DelegInfos field is considered malformed.
-Such a record cannot exist in a valid zone.
-A resolver that receives such a record MUST treat the entire response as an error.
-
 
 ## RDATA Wire Format
 
