@@ -399,7 +399,7 @@ TODO: Should we have an example with auth having parent+child zone at the same t
 
 DELEG-unaware clients might ask for a name which belongs to a zone delegated only with DELEG RRs (that is, without any NS RRs).
 Such a zone is not resolvable for DELEG-unaware clients.
-From the perspective of DELEG-unaware client, the DELEG record itself does create a zone cut.
+From the perspective of a DELEG-unaware client, the DELEG record itself does not create a zone cut.
 
 DELEG-aware authoritative server implementation has two options:
 
