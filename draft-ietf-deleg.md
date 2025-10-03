@@ -141,7 +141,9 @@ The DelegInfos presentation format is defined exactly the same as SvcParams in S
   - The rules from Appendix A of {{?RFC9460}} apply.
 - All the requirements in Section 2.1 of {{?RFC9460}} apply.
 
-TODO: SVCB allows an empty list. I guess it is not a problem, it is small and will simply be ignored?
+DelegInfos MAY be zero-length; this is similar to what is allowed in SVCB records.
+A record with a zero-length DelegInfos field has no effect on the SLIST processing for resolvers.
+
 
 ## RDATA Wire Format
 
