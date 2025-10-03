@@ -96,7 +96,7 @@ all capitals, as shown here.
 Terminology regarding the Domain Name System comes from {{?BCP219}}, with addition terms defined here:
 
 * legacy delegation: A delegation that is done with an NS RRset
-* legacy response: A response that does use the DELEG protocol described in this document
+* legacy response: A response that does not use the DELEG protocol described in this document
 * DELEG-aware: An authoritative server or resolver that follows the protocol defined in this document
 * DELEG-unaware: An authoritative server or resolver that does not follow the protocol defined in this document
 
