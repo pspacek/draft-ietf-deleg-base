@@ -126,7 +126,7 @@ The initial set of DelegInfoKeys and their formats are defined in {{nameserver-i
 
 ## Presentation Format
 
-The RDATA presentation format of the record consists of a single list, DelegInfos.
+The RDATA presentation format of the DELEG and DELEGI resource records consists of a single list, DelegInfos.
 
 The DelegInfos presentation format is defined exactly the same as SvcParams in Section 2.1 of {{?RFC9460}}. The following rules are adapted from SVCB, but with changed names:
 
@@ -145,7 +145,7 @@ A record with a zero-length DelegInfos field has no effect on the SLIST processi
 
 ## RDATA Wire Format
 
-The RDATA portion of the RR types has variable length and entirely consists of a single "DelegInfos" element:
+The RDATA portion of the DELEG and DELEGI resource record has variable length and entirely consists of a single "DelegInfos" element:
 
         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         /                         DelegInfos                            /
