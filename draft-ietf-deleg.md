@@ -633,7 +633,7 @@ TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
 
     example.   DELEG server-ipv4=192.0.2.1 server-ipv6=2001:DB8::1
     example.   DELEG server-name=ns2.example.net.,ns3.example.org.
-    example.   RRSIG DELEG 13 4 300 20260101000000 (
+    example.   RRSIG DELEG 13 1 300 20260101000000 (
                             20250101000000 33333 . SigExampleDELEG/ )
 
     example.   NS    a.example.
@@ -641,11 +641,11 @@ TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
     example.   NS    c.example.org.
 
     example.   DS    44444 13 2 ABCDEF01234567...
-    example.   RRSIG DS 13 4 300 20260101000000 (
+    example.   RRSIG DS 13 1 300 20260101000000 (
                             20250101000000 33333 . SigExampleDS )
 
     example.   NSEC  net. NS DS RRSIG NSEC DELEG
-    example.   RRSIG NSEC 13 4 300 20260101000000 (
+    example.   RRSIG NSEC 13 1 300 20260101000000 (
                             20250101000000 33333 . SigExampleNSEC+/ )
 
     ; unsigned glue for legacy (NS) delegation
@@ -661,11 +661,11 @@ This is an example of unnecessarily complicated setup to demonstrate capabilitie
     test.      DELEG server-ipv6=3fff::33
     test.      DELEG include-delegi=Acfg.example.org.
     test.      DELEG include-delegi=config2.example.net.
-    test.      RRSIG DELEG 13 4 300 20260101000000 (
+    test.      RRSIG DELEG 13 1 300 20260101000000 (
                             20250101000000 33333 . SigTestDELEG )
 
     test.      NSEC  . RRSIG NSEC DELEG
-    test.      RRSIG NSEC 13 4 300 20260101000000 (
+    test.      RRSIG NSEC 13 1 300 20260101000000 (
                             20250101000000 33333 . SigTestNSEC/ )
 
     ; a forgotten glue from legacy (NS) delegation
@@ -776,7 +776,7 @@ A forgotten glue record under the "test." delegation point is occluded by DELEG 
     example.   NS    b.example.net.
     example.   NS    c.example.org.
     example.   DS    44444 13 2 ABCDEF01234567...
-    example.   RRSIG DS 13 4 300 20260101000000 (
+    example.   RRSIG DS 13 1 300 20260101000000 (
                             20250101000000 33333 . SigExampleDS )
     ;; Additional
     a.example. A     192.0.2.1
@@ -798,7 +798,7 @@ A forgotten glue record under the "test." delegation point is occluded by DELEG 
     .          SOA ...
     .          RRSIG SOA ...
     test.      NSEC  . RRSIG NSEC DELEG
-    test.      RRSIG NSEC 13 4 300 20260101000000 (
+    test.      RRSIG NSEC 13 1 300 20260101000000 (
                             20250101000000 33333 . SigTestNSEC/ )
 
     ;; Additional
@@ -888,10 +888,10 @@ Follow-up example in {{delegi-example}} explains ultimate meaning of this respon
     ;; Authority
     example.   DELEG server-ipv4=192.0.2.1 server-ipv6=2001:DB8::1
     example.   DELEG server-name=ns2.example.net.,ns3.example.org.
-    example.   RRSIG DELEG 13 4 300 20260101000000 (
+    example.   RRSIG DELEG 13 1 300 20260101000000 (
                             20250101000000 33333 . SigExampleDELEG/ )
     example.   DS    44444 13 2 ABCDEF01234567...
-    example.   RRSIG DS 13 4 300 20260101000000 (
+    example.   RRSIG DS 13 1 300 20260101000000 (
                             20250101000000 33333 . SigExampleDS )
 
     ;; Additional
@@ -913,10 +913,10 @@ Follow-up example in {{delegi-example}} explains ultimate meaning of this respon
     test.      DELEG server-ipv6=3fff::33
     test.      DELEG include-delegi=Acfg.example.org.
     test.      DELEG include-delegi=config2.example.net.
-    test.      RRSIG DELEG 13 4 300 20260101000000 (
+    test.      RRSIG DELEG 13 1 300 20260101000000 (
                             20250101000000 33333 . SigTestDELEG )
     test.      NSEC  . RRSIG NSEC DELEG
-    test.      RRSIG NSEC 13 4 300 20260101000000 (
+    test.      RRSIG NSEC 13 1 300 20260101000000 (
                             20250101000000 33333 . SigTestNSEC/ )
 
     ;; Additional
