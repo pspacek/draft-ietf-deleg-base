@@ -371,6 +371,9 @@ The order in which to try the servers in the final SLIST is outside the scope of
 
 ## Authoritative Servers
 
+DELEG RR type defines a zone cut in similar way as NS RR type and thus behavior defined for zone cuts in existing pre-DELEG specifications apply.
+Most notably, presence of DELEG RR type occludes RRsets which might (usually errorneously) appear at or under the zone cut.
+
 DELEG-aware authoritative servers act differently when handling queries from DELEG-unaware clients (those with DE=0) than from DELEG-aware clients (those with DE=1).
 
 The server MUST copy the value of the DE bit from the query into the response, to signal that it is a DELEG-aware server.
@@ -442,7 +445,15 @@ The authoritative server is RECOMMENDED to supplement these responses to DELEG-u
 
 The DELEG record is authoritative on the parent side of a zone cut and needs to be signed as such.
 Existing rules from the DNSSEC specifications apply.
+
 In summary: for DNSSEC signing, treat the DELEG RR type the same way as the DS RR type.
+
+DELEG RR type defines a zone cut in similar way as NS RR type. This has several consequences which stem from existing pre-DELEG specifications:
+
+- All owner names below zone cut are occluded and thus not present in NSEC chains.
+- All RRsets which are not permissible at the parent side of zone cut are occluded too and not represented in NSEC chain type bitmap.
+
+See examples in {{example-root}} and {{example-occluded}}.
 
 In order to protect validators from downgrade attacks this draft introduces a new DNSKEY flag ADT (Authoritative Delegation Types).
 In zones which contain a DELEG RRset, this flag MUST be set to 1 in at least one of the DNSKEY records published in the zone.
@@ -620,7 +631,7 @@ The section will be removed when IANA makes permanent assignments.
 
 # Examples
 
-## Root zone file
+## Root zone file {#example-root}
 The following example shows an excerpt from a signed root zone.
 It shows the delegation point for "example." and "test."
 
@@ -804,7 +815,7 @@ A forgotten glue record under the "test." delegation point is occluded by DELEG 
     ;; Additional
     ;; OPT with Extended DNS Error: New Delegation Only
 
-#### Query for a.test {#occluded}
+#### Query for a.test {#example-occluded}
 
 A forgotten glue record under the "test." delegation point is occluded by DELEG RRset.
 This is indicated by NSEC chain which "skips" over the owner name with A RRset.
