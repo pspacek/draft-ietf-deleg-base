@@ -649,6 +649,7 @@ TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
                             20250101000000 33333 . SigExampleNSEC+/ )
 
     ; unsigned glue for legacy (NS) delegation
+    ; it is NOT present in NSEC chain
     a.example. A     192.0.2.1
     a.example. AAAA  2001:DB8::1
 
@@ -666,6 +667,10 @@ This is an example of unnecessarily complicated setup to demonstrate capabilitie
     test.      NSEC  . RRSIG NSEC DELEG
     test.      RRSIG NSEC 13 4 300 20260101000000 (
                             20250101000000 33333 . SigTestNSEC/ )
+
+    ; a forgotten glue from legacy (NS) delegation
+    ; it is NOT present in NSEC chain and it is occluded
+    a.test.    A     192.0.2.1
 
 Delegations to org and net zones omitted for brevity.
 
@@ -731,6 +736,25 @@ The following sections show referral examples:
     ;; Additional
     ;; OPT with Extended DNS Error: New Delegation Only
 
+#### Query for a.test
+
+A forgotten glue record under the "test." delegation point is occluded by DELEG RRset.
+
+    ;; Header: QR AA RCODE=NXDOMAIN
+    ;;
+
+    ;; Question
+    a.test.   IN A
+
+    ;; Answer
+    ;; (empty)
+
+    ;; Authority
+    .   SOA ...
+
+    ;; Additional
+    ;; OPT with Extended DNS Error: New Delegation Only
+
 
 ### DO bit set, DE bit clear
 
@@ -779,6 +803,31 @@ The following sections show referral examples:
 
     ;; Additional
     ;; OPT with Extended DNS Error: New Delegation Only
+
+#### Query for a.test {#occluded}
+
+A forgotten glue record under the "test." delegation point is occluded by DELEG RRset.
+This is indicated by NSEC chain which "skips" over the owner name with A RRset.
+
+    ;; Header: QR DO AA RCODE=NXDOMAIN
+    ;;
+
+    ;; Question
+    a.test.      IN A
+
+    ;; Answer
+    ;; (empty)
+
+    ;; Authority
+    .          SOA ...
+    .          RRSIG SOA ...
+    test.      NSEC  . RRSIG NSEC DELEG
+    test.      RRSIG NSEC 13 1 300 20260101000000 (
+                            20250101000000 33333 . SigTestNSEC/ )
+
+    ;; Additional
+    ;; OPT with Extended DNS Error: New Delegation Only
+
 
 
 ### DO bit clear, DE bit set
