@@ -159,7 +159,6 @@ All the requirements in Section 2.2 of {{?RFC9460}} apply.
 The DelegInfos element is a sequence of individual DelegInfo elements.
 The wire format of an individual DelegInfo element is the same as for a SvcParam element,
 but it references DelegInfo elements instead of SvcParam elements.
-Note that though SVCB allows SvcParams to be absent, DELEG will always require at least one DelegInfo in DelegInfos.
 
                     +0 (MSB)                            +1 (LSB)
         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -330,7 +329,7 @@ The presentation value for server-name and include-delegi are a set of fully-qua
 The wire format for server-name and include-delegi are each a concatenated set of a wire-format domain names, where the root label provides the separation between names.
 The names in the wire format MUST NOT be compressed.
 
-A DELEG or DELEGI record MUST have one, and only one, set of server information, chosen from the following:
+A DELEG or DELEGI record that has a non-empty DelegInfos MUST have one, and only one, set of server information, chosen from the following:
 
 - one server-ipv4 key
 - one server-ipv6 key
