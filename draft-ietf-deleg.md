@@ -506,12 +506,9 @@ TODO: Add more here
 ## Preventing Over-work Attacks {#too-much-work}
 
 Resolvers MUST prevent situations where accidental misconfiguration of zones or malicious attacks cause them to perform too much work when resolving.
-This document describes two sets of actions that, if not controlled, could lead to over-work attacks:
+This document describes two sets of actions that, if not controlled, could lead to over-work attacks.
 
-- Names with many subdomains can cause walking up the tree to populate SLIST ({{finding-best}}) to be burdensome.
-To prevent this, the resolver SHOULD NOT walk up more than %%TODO: come up with a number%% labels in order to contribute to SLIST.
-
-- Long chains of include-delegi information ({{nameserver-info}}), and those with circular chains of include-delegi information, can be burdensome.
+Long chains of include-delegi information ({{nameserver-info}}), and those with circular chains of include-delegi information, can be burdensome.
 To prevent this, the resolver SHOULD NOT follow more than 3 include-delegi chains in an RRset when populating SLIST.
 Note that include-delegi chains can have CNAME steps in them; in such a case, a CNAME step is counted the same as a DELEGI step when determining when to stop following a chain.
 
