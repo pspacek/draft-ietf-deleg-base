@@ -371,8 +371,9 @@ The order in which to try the servers in the final SLIST is outside the scope of
 
 ## Authoritative Servers
 
-The DELEG RR type defines a zone cut in similar way as the NS RR type, and thus behavior defined for zone cuts in existing pre-DELEG specifications apply.
-Most notably, the presence of a DELEG RRset occludes RRsets which might (usually errorneously) appear at or under the zone cut.
+The DELEG RR type defines a zone cut in similar way as the NS RR type
+Behavior defined for zone cuts in existing pre-DELEG specifications apply to zone cuts created by the DELEG record.
+A notable example of this is that the occlusion (usually accidentally) created by NS records in a parent zone would also be created by DELEG records in a parent zone.
 
 DELEG-aware authoritative servers act differently when handling queries from DELEG-unaware clients (those with DE=0) than from DELEG-aware clients (those with DE=1).
 
