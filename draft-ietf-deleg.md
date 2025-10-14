@@ -424,7 +424,7 @@ An authoritative server responding to DELEG-unaware clients has to handle three 
 
 #### DELEG-unaware Clients with DELEG RRs Present but No NS RRs {#no-ns}
 
-DELEG-unaware clients might ask for a name or RR type which belongs to a zone delegated only with DELEG RRs (that is, without any NS RRs).
+Authoritative servers may receive requests from DELEG-unaware clients for which the child zone is authoritative and is delegated with DELEG RRs only (that is, without any NS RRs).
 Such a zone is by definition not resolvable for DELEG-unaware clients.
 From the perspective of a DELEG-unaware client, the zone cut created by the DELEG RRs is invisible.
 In such a situation, the authoritative server should respnd in a way to limit confusion and/or colateral damage for the DELEG-unaware client.
