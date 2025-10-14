@@ -6,11 +6,11 @@ deleg                                                           T. April
 Internet-Draft                                               Google, LLC
 Updates: 1034, 1035, 6672, 6840 (if approved)                  P. Špaček
 Intended status: Standards Track                                     ISC
-Expires: 16 April 2026                                          R. Weber
+Expires: 17 April 2026                                          R. Weber
                                                      Akamai Technologies
                                                              D. Lawrence
                                                               Salesforce
-                                                         13 October 2025
+                                                         14 October 2025
 
 
                      Extensible Delegation for DNS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 April 2026.
+   This Internet-Draft will expire on 17 April 2026.
 
 Copyright Notice
 
@@ -706,13 +706,14 @@ Table of Contents
 
 3.2.2.1.  DELEG-unaware Clients with DELEG RRs Present but No NS RRs
 
-   DELEG-unaware clients might ask for a name or RR type which belongs
-   to a zone delegated only with DELEG RRs (that is, without any NS
-   RRs).  Such a zone is by definition not resolvable for DELEG-unaware
-   clients.  From the perspective of a DELEG-unaware client, the zone
-   cut created by the DELEG RRs is invisible.  In such a situation, the
-   authoritative server should respnd in a way to limit confusion and/or
-   colateral damage for the DELEG-unaware client.
+   Authoritative servers may receive requests from DELEG-unaware clients
+   for which the child zone is authoritative and is delegated with DELEG
+   RRs only (that is, without any NS RRs).  Such a zone is by definition
+   not resolvable for DELEG-unaware clients.  From the perspective of a
+   DELEG-unaware client, the zone cut created by the DELEG RRs is
+   invisible.  In such a situation, the authoritative server should
+   respnd in a way to limit confusion and/or colateral damage for the
+   DELEG-unaware client.
 
    The authoritative server is RECOMMENDED to supplement its responses
    to DELEG-unaware resolvers with an [RFC8914] Extended DNS Error using
