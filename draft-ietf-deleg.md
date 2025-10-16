@@ -315,19 +315,22 @@ The DELEG and DELEGI records have four keys that describe information about name
 The purpose of this information is to populate the SLIST with IP addresses of the name servers for a zone.
 The types of information defined in this document are:
 
-* server-ipv4: a set of IPv4 addresses for name servers
-* server-ipv6: a set of IPv6 addresses for name servers
-* server-name: a set of hostnames of name servers; the addresses must be fetched
-* include-delegi: a set of domain names that point to a DELEGI RRsets, which in turn have more information about the delegation
+* server-ipv4: an unordered collection of IPv4 addresses for name servers
+* server-ipv6: an unordered collection of IPv6 addresses for name servers
+* server-name: an unordered collection of hostnames of name servers; the addresses must be fetched
+* include-delegi: an unordered collection of domain names that point to a DELEGI RRsets, which in turn have more information about the delegation
 
 These keys MUST have a non-empty DelegInfoValue.
 
 The presentation values for server-ipv4 and server-ipv6 are comma-separated list of one or more IP addresses of the appropriate family in standard textual format {{?RFC5952}} {{?RFC4001}}.
 The wire formats for server-ipv4 and server-ipv6 are a sequence of IP addresses, in network byte order, for the respective address family.
 
-The presentation value for server-name and include-delegi are a set of fully-qualified domain names and relative domain names, separated by commas.
+The presentation values for server-name and include-delegi are an unordered collection of fully-qualified domain names and relative domain names, separated by commas.
 The wire format for server-name and include-delegi are each a concatenated set of a wire-format domain names, where the root label provides the separation between names.
 The names in the wire format MUST NOT be compressed.
+
+TODO: Describe how escaping works for server-name and include-delegi.
+This will be the same as the escaping mechanism defined in SVCB.
 
 A DELEG or DELEGI record that has a non-empty DelegInfos MUST have one, and only one, set of server information, chosen from the following:
 
@@ -371,7 +374,7 @@ The order in which to try the servers in the final SLIST is outside the scope of
 
 ## Authoritative Servers
 
-The DELEG RR type defines a zone cut in similar way as the NS RR type
+The DELEG RR type defines a zone cut in similar way as the NS RR type.
 Behavior defined for zone cuts in existing pre-DELEG specifications apply to zone cuts created by the DELEG record.
 A notable example of this is that the occlusion (usually accidentally) created by NS records in a parent zone would also be created by DELEG records in a parent zone.
 
@@ -603,25 +606,25 @@ The "DELEG Delegation Information" registry should be populated with the followi
 ~~~
 Number:  1
 Name:  server-ipv4
-Meaning:  A set of IPv4 addresses of name servers
+Meaning:  An unordered collection of IPv4 addresses of name servers
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
 Number:  2
 Name:  server-ipv6
-Meaning:  A set of IPv6 addresses of name servers
+Meaning:  An unordered collection of IPv6 addresses of name servers
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
 Number:  3
 Name:  server-name
-Meaning:  A set of hostnames of name servers
+Meaning:  An unordered collection of hostnames of name servers
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
 Number:  4
 Name:  include-delegi
-Meaning:  A set of domain names of DELEGI records
+Meaning:  An unordered collection of domain names of DELEGI records
 Reference:  {{nameserver-info}} of this document
 Change Controller:  IETF
 
