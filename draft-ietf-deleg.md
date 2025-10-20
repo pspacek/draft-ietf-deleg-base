@@ -581,7 +581,7 @@ IANA is requested to assign a bit from the EDNS Header Flags registry ({{!RFC689
 
 IANA is requested to assign a value from the Extended DNS Error Codes ({{!RFC8914}}), with the Purpose "New Delegation Only" and referencing this document.
 
-IANA is requested to add the name "deleg" to DNS Resolver Information Keys registry ({{{!RFC9606}}}),
+IANA is requested to add the name "deleg" to DNS Resolver Information Keys registry ({{!RFC9606}}),
 with the description of "The presence of the key indicates that DELEG protocol is supported."
 and referencing this document.
 
