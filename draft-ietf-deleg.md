@@ -529,6 +529,12 @@ A referral response with an unsigned NS and signed DS RRsets does not require ad
 
 A Validating Stub Resolver that is DELEG-aware has to use a Security-Aware Resolver that is DELEG-aware and, if it is behind a forwarder, that forwarder has to be security-aware and DELEG-aware as well.
 
+{{!RFC9606}} specifies a DNS resource record type RESINFO to allow resolvers to publish information about their capabilities and policies. This can be used to inform DNS clients that DELEG is supported by the DNS resolver.
+
+A resolver which supports {{!RFC9606}} SHOULD add the "deleg" key if it supports DELEG protocol.
+
+Note that, per the rules for the keys defined in Section 6.4 of {{!RFC6763}}, if there is no '=' in a key, then it is a boolean attribute, simply identified as being present, with no value.
+
 # Security Considerations
 
 TODO: Add more here
@@ -573,6 +579,10 @@ This value has been proven to work whereas bit 0 was proven to break in practica
 IANA is requested to assign a bit from the EDNS Header Flags registry ({{!RFC6891}}), with the abbreviation DE, the description "DELEG enabled", and referencing this document.
 
 IANA is requested to assign a value from the Extended DNS Error Codes ({{!RFC8914}}), with the Purpose "New Delegation Only" and referencing this document.
+
+IANA is requested to add the name "deleg" to DNS Resolver Information Keys registry ({{{!RFC9606}}}),
+with the description of "The presence of the key indicates that DELEG protocol is supported."
+and referencing this document.
 
 ## New Registry for Delegation Information
 
@@ -978,3 +988,5 @@ Work on DELEG protocol has started at IETF 118 Hackaton.
 Hackaton participants: Christian Elmerot, David Blacka, David Lawrence, Edward Lewis, Erik Nygren, George Michaelson, Jan Včelák, Klaus Darilion, Libor Peltan, Manu Bretelle, Peter van Dijk, Petr Špaček, Philip Homburg, Ralf Weber, Roy Arends, Shane Kerr, Shumon Huque, Vandan Adhvaryu, Vladimír Čunát, Andreas Schulze.
 
 Other people joined the effort after the initial hackaton: Ben Schwartz, Bob Halley, Paul Hoffman, Miek Gieben ...
+
+RESINFO extension was contributed by Florian Obser.
