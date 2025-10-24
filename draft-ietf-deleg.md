@@ -106,7 +106,7 @@ Terminology regarding the Domain Name System comes from {{?BCP219}}, with additi
 This section is a brief overview of the protocol.
 It is meant for people who want to understand the protocol before they dive deeper into the protocol specifics.
 
-A DELEG-aware resolver sets the DE bit in the EDNS0 header to 1 in queries to authoritative servers as a signal that it is indeed DELEG-aware ({{de-bit}}).
+When a DELEG-aware resolver sends queries, it sets the DE bit in the EDNS0 header to 1 in queries to authoritative servers as a signal that it is indeed DELEG-aware ({{de-bit}}).
 DELEG-unaware authoritative servers ignore this signal.
 
 A DELEG-aware authoritative server uses that signal to determine the type of response it will send.
