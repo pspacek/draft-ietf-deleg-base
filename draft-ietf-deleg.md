@@ -119,17 +119,17 @@ The Rdata for DELEG records has key=value pairs ({{nameserver-info}}).
 
 * "server-ipv4" and "server-ipv6" keys have IP addresses for the delegated name servers
 * "server-name" keys have hostnames for the delegated name servers; the addresses must be fetched
-* "include-delegi" keys have hostnames of other nameservers which in turn have more information about the delegation
+* "include-delegi" keys have domain names which in turn have more information about the delegation
 
 The DELEG-aware resolver seeing the DELEG RRset uses that information to form the list of best servers to ask about the original zone ({{finding-best}}).
 If the DELEG RRset contains "include-delegi", the resolver queries those hostnames for DELEGI RRsets.
 DELEGI records have the same format as DELEG records; thus, they can have the same key=value pairs.
 
 The DELEG protocol changes how zones are signed ({{signers}}) and validated ({{dnssec-validators}}).
-The changes are primarily because DELEG RRsets are authoritative and thus are signed and validated as authoritative data (similar to DS records).
+The changes are primarily because DELEG RRsets are authoritative on the parent side of a zone cut and thus are signed and validated as authoritative data (similar to DS records).
 
 There are many parts of the DELEG protocol that are not included in this brief overview.
-For example, DELEG-aware authoritative servers have many choices to make depending both on the request and the contents of the zone file.
+For example, DELEG-aware authoritative servers have choices to make depending both on the request and the contents of the zone file.
 For those readers who learn better from examples than the definitive text, see {{examples}}.
 
 
