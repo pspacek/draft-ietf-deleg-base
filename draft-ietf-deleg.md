@@ -699,16 +699,14 @@ The "test." delegation has DELEG but no NS records.
 
 TODO: Add examples that have server-name and include-delegi being sets of more than one name.
 
-TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
-
     example.   DELEG server-ipv4=192.0.2.1 server-ipv6=2001:DB8::1
     example.   DELEG server-name=ns2.example.net.,ns3.example.org.
     example.   RRSIG DELEG 13 1 300 20260101000000 (
                             20250101000000 33333 . SigExampleDELEG/ )
 
-    example.   NS    a.example.
-    example.   NS    b.example.net.
-    example.   NS    c.example.org.
+    example.   NS    ns1.example.
+    example.   NS    ns2.example.net.
+    example.   NS    ns3.example.org.
 
     example.   DS    44444 13 2 ABCDEF01234567...
     example.   RRSIG DS 13 1 300 20260101000000 (
@@ -720,8 +718,8 @@ TODO: Examples that show DELEGI records in ns2.example.net and ns3.example.org.
 
     ; unsigned glue for legacy (NS) delegation
     ; it is NOT present in NSEC chain
-    a.example. A     192.0.2.1
-    a.example. AAAA  2001:DB8::1
+    ns1.example. A     192.0.2.1
+    ns1.example. AAAA  2001:DB8::1
 
 The "test." delegation point has a DELEG record and no NS or DS records.
 
@@ -748,17 +746,17 @@ Delegations to org and net zones omitted for brevity.
 The following example shows an excerpt from an unsigned example.org zone.
 
     Acfg.example.org.    DELEGI server-ipv6=2001:DB8::6666
-    Acfg.example.org.    DELEGI server-name=c.example.org.
+    Acfg.example.org.    DELEGI server-name=ns3.example.org.
     Acfg.example.org.    DELEGI include-delegi=subcfg.example.org.
 
-    c.example.org.       AAAA   3fff::33
+    ns3.example.org.       AAAA   3fff::33
 
     subcfg.example.org.  DELEGI server-ipv4=203.0.113.1 server-ipv6=3fff::2
 
 ## Example.net zone file
 The following example shows an excerpt from an unsigned example.net zone.
 
-    b.example.net.       A      198.51.100.1
+    ns2.example.net.       A      198.51.100.1
 
     config2.example.net. DELEGI server-name=b.example.org.
 
@@ -781,13 +779,13 @@ The following sections show referral examples:
     ;; (empty)
 
     ;; Authority
-    example.   NS    a.example.
-    example.   NS    b.example.net.
-    example.   NS    c.example.org.
+    example.   NS    ns1.example.
+    example.   NS    ns2.example.net.
+    example.   NS    ns3.example.org.
 
     ;; Additional
-    a.example. A     192.0.2.1
-    a.example. AAAA  2001:DB8::1
+    ns1.example. A     192.0.2.1
+    ns1.example. AAAA  2001:DB8::1
 
 #### Query for foo.test
 
@@ -842,15 +840,15 @@ A forgotten glue record under the "test." delegation point is occluded by DELEG 
 
     ;; Authority
 
-    example.   NS    a.example.
-    example.   NS    b.example.net.
-    example.   NS    c.example.org.
+    example.   NS    ns1.example.
+    example.   NS    ns2.example.net.
+    example.   NS    ns3.example.org.
     example.   DS    44444 13 2 ABCDEF01234567...
     example.   RRSIG DS 13 1 300 20260101000000 (
                             20250101000000 33333 . SigExampleDS )
     ;; Additional
-    a.example. A     192.0.2.1
-    a.example. AAAA  2001:DB8::1
+    ns1.example. A     192.0.2.1
+    ns1.example. AAAA  2001:DB8::1
 
 
 #### Query for foo.test {#legacynxdomain}
@@ -965,8 +963,8 @@ Follow-up example in {{delegi-example}} explains ultimate meaning of this respon
                             20250101000000 33333 . SigExampleDS )
 
     ;; Additional
-    a.example. A     192.0.2.1
-    a.example. AAAA  2001:DB8::1
+    ns1.example. A     192.0.2.1
+    ns1.example. AAAA  2001:DB8::1
 
 #### Query for foo.test
 
