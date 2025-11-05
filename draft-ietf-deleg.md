@@ -240,6 +240,7 @@ Record types defined as authoritative on the parent side of zone cut, currently 
 
 DELEG-unaware resolvers can get different types of answers for QTYPE=DELEG queries based on the configuration of the server, such as whether it is DELEG-aware and whether it also is authoritative for subdomains.
 For example, a DELEG-unaware authoritative name server which has loaded DELEG records via the {{?RFC3597}} unknown types mechanism would answer with them only if there were no NS records at the owner name, and answer with an NS delegation otherwise.
+See {{de0-deleg}} for more information.
 
 ### Algorithm for "Finding the Best Servers to Ask" {#finding-best}
 
@@ -450,7 +451,7 @@ The advantage of this approach is simplicity of implementation and it is easy to
 
 TODO: List as many of the possible situations that need to be considered for variant 2, and the proposed the single appropriate response for each situation. This list will probably change for the next few iterations of this draft.
 
-#### DELEG-unaware Clients Requesting QTYPE=DELEG
+#### DELEG-unaware Clients Requesting QTYPE=DELEG {#de0-deleg}
 
 From the perspective of DELEG-unaware clients, the DELEG RR type does not have special semantics and should behave like an old ordinary RR type such as TXT.
 Thus, queries with DE=0 and QTYPE=DELEG MUST result in a response which can be validated by DELEG-unaware client.
