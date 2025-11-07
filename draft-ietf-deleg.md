@@ -387,7 +387,7 @@ Each individual DELEG record inside a DELEG RRset, or each individual DELEGI rec
 
 A resolver processes each individual DELEG record within a DELEG RRset, or each individual DELEGI record in a DELEGI RRset, using the following steps:
 
-1. If a record has more than one type of server information key (excluding the IPv4/IPV6 case), or has multiple server information keys of the same type, that record is malformed.
+1. If a record has more than one type of server information key (excluding the IPv4/IPv6 case), or has multiple server information keys of the same type, that record is malformed.
 Stop processing this record.
 
 1. If server-ipv4 and/or server-ipv6 keys are present inside the record, copy all of the address values into SLIST.
