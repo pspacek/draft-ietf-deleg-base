@@ -172,7 +172,6 @@ The DelegInfos presentation format is defined exactly the same as SvcParams in S
 - All the requirements in Section 2.1 of {{?RFC9460}} apply.
 
 DelegInfos MAY be zero-length; this is similar to what is allowed in SVCB records.
-A record with a zero-length DelegInfos field has no effect on the SLIST processing for resolvers.
 
 
 ## RDATA Wire Format
@@ -188,7 +187,7 @@ including the requirements for strictly increasing numeric order to keys and no 
 
 All the requirements in Section 2.2 of {{?RFC9460}} apply.
 
-The DelegInfos element is a sequence of individual DelegInfo elements.
+The DelegInfos element is a sequence of individual DelegInfo elements and MAY be empty.
 The wire format of an individual DelegInfo element is the same as for a SvcParam element,
 but it references DelegInfo elements instead of SvcParam elements.
 
@@ -401,6 +400,7 @@ Stop processing this record.
 Recursively apply the algorithm described in this section, after checking that the maximum loop count described in {{too-much-work}} has not been reached.
 
 1. If none of the above applies, SLIST is not modified by this particular record.
+A record with a zero-length DelegInfos field has no effect on the SLIST processing for resolvers.
 
 A DELEG-aware resolver MAY implement lazy filling of SLIST, such as by deferring processing remaining records if SLIST already has what the resolver considers a sufficiently large pool of addresses to contact.
 
