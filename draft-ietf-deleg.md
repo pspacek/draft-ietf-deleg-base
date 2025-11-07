@@ -358,7 +358,12 @@ The presentation values for server-ipv4 and server-ipv6 are comma-separated list
 The wire formats for server-ipv4 and server-ipv6 are a sequence of IP addresses, in network byte order, for the respective address family.
 
 The presentation values for server-name and include-delegi are an unordered collection of fully-qualified domain names and relative domain names, separated by commas.
-The wire format for server-name and include-delegi are each a concatenated set of a wire-format domain names, where the root label provides the separation between names.
+The wire format for server-name and include-delegi are each a concatenated unordered collection of a wire-format domain names, where the root label provides the separation between names:
+
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-
+    | name | name | name | ... |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-
+
 The names in the wire format MUST NOT be compressed.
 
 TODO: Describe how escaping works for server-name and include-delegi.
