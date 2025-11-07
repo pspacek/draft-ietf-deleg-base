@@ -392,6 +392,9 @@ If not, stop processing this record.
 1. Check that all keys listed as mandatory are supported.
 If not, stop processing this record.
 
+1. Remove all DelegInfo elements with unsupported DelegInfoKey values.
+A resulting record with a zero-length DelegInfos field has no effect on the SLIST processing for resolvers.
+
 1. If a record has more than one type of server information key (excluding the IPv4/IPv6 case), or has multiple server information keys of the same type, that record is malformed.
 Stop processing this record.
 
@@ -406,7 +409,6 @@ Stop processing this record.
 Recursively apply the algorithm described in this section, after checking that the maximum loop count described in {{too-much-work}} has not been reached.
 
 1. If none of the above applies, SLIST is not modified by this particular record.
-A record with a zero-length DelegInfos field has no effect on the SLIST processing for resolvers.
 
 A DELEG-aware resolver MAY implement lazy filling of SLIST, such as by deferring processing remaining records if SLIST already has what the resolver considers a sufficiently large pool of addresses to contact.
 
