@@ -172,7 +172,6 @@ The DelegInfos presentation format is defined exactly the same as SvcParams in S
 - All the requirements in Section 2.1 of {{?RFC9460}} apply.
 
 DelegInfos MAY be zero-length; this is similar to what is allowed in SVCB records.
-A record with a zero-length DelegInfos field has no effect on the SLIST processing for resolvers.
 
 
 ## RDATA Wire Format
@@ -188,7 +187,7 @@ including the requirements for strictly increasing numeric order to keys and no 
 
 All the requirements in Section 2.2 of {{?RFC9460}} apply.
 
-The DelegInfos element is a sequence of individual DelegInfo elements.
+The DelegInfos element is a sequence of individual DelegInfo elements and MAY be empty.
 The wire format of an individual DelegInfo element is the same as for a SvcParam element,
 but it references DelegInfo elements instead of SvcParam elements.
 
@@ -330,7 +329,7 @@ For example, if the QNAME is "test.example." and the QTYPE is DELEG or DS, set S
 
     1. For a given SNAME, check for the existence of a DELEG RRset.
 If it exists, the resolver MUST use its content to populate SLIST.
-However, if the DELEG RRset is known to exist but is unusable (for example, if it is found in DNSSEC BAD cache), the resolver MUST NOT instead use an NS RRset; instead, the resolver MUST treat this case as if no servers were available.
+However, if the DELEG RRset is known to exist but is unusable (for example, if it is found in DNSSEC BAD cache, or content of individual RRs is unusable for any reason), the resolver MUST NOT instead use an NS RRset; instead, the resolver MUST treat this case as if no servers were available.
 
     1. If a given SNAME is proven to not have a DELEG RRset but does have an NS RRset, the resolver MUST copy the NS RRset into SLIST.
 
@@ -377,6 +376,7 @@ This restriction only applies to a single DELEG or DELEGI record; a DELEG or DEL
 
 When using server-name, the addresses for all the names in the set must be fetched using normal DNS resolution.
 This means the names in the value of the server-name key or the include-delegi key MUST NOT be inside the delegated domain.
+If this constraint is violated the whole RR (but not the whole RRset) MUST be ignored while constructing SLIST ({{slist}}).
 
 With this initial DELEG specification, servers are still expected to be reached on the standard DNS port for both UDP and TCP, 53.  While a future specification is expected to address other transports using other ports, its eventual semantics are not covered here.
 
@@ -386,7 +386,16 @@ Each individual DELEG record inside a DELEG RRset, or each individual DELEGI rec
 
 A resolver processes each individual DELEG record within a DELEG RRset, or each individual DELEGI record in a DELEGI RRset, using the following steps:
 
-1. If a record has more than one type of server information key (excluding the IPv4/IPV6 case), or has multiple server information keys of the same type, that record is malformed.
+1. If mandatory key is present, check that all the mandatory keys are part of the DelegInfos in this RR.
+If not, stop processing this record.
+
+1. Check that all keys listed as mandatory are supported.
+If not, stop processing this record.
+
+1. Remove all DelegInfo elements with unsupported DelegInfoKey values.
+A resulting record with a zero-length DelegInfos field has no effect on the SLIST processing for resolvers.
+
+1. If a record has more than one type of server information key (excluding the IPv4/IPv6 case), or has multiple server information keys of the same type, that record is malformed.
 Stop processing this record.
 
 1. If server-ipv4 and/or server-ipv6 keys are present inside the record, copy all of the address values into SLIST.
@@ -648,6 +657,12 @@ This arrangement supports the development of new parameters while ensuring that 
 The "DELEG Delegation Information" registry should be populated with the following initial registrations:
 
 ~~~
+Number:  0
+Name:  mandatory
+Meaning: Mandatory keys in this RR
+Reference:  {{nameserver-info}} of this document
+Change Controller:  IETF
+
 Number:  1
 Name:  server-ipv4
 Meaning:  An unordered collection of IPv4 addresses of name servers
