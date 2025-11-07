@@ -178,9 +178,9 @@ DelegInfos MAY be zero-length; this is similar to what is allowed in SVCB record
 
 The RDATA portion of the DELEG and DELEGI resource record has variable length and entirely consists of a single "DelegInfos" element:
 
-        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        /                         DelegInfos                            /
-        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    /                         DelegInfos                            /
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 The format of the DelegInfos element is identical to the format of the SvcParams element defined in {{?RFC9460}} Section 2.2,
 including the requirements for strictly increasing numeric order to keys and no key duplication allowed.
