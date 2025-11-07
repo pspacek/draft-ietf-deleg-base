@@ -386,6 +386,12 @@ Each individual DELEG record inside a DELEG RRset, or each individual DELEGI rec
 
 A resolver processes each individual DELEG record within a DELEG RRset, or each individual DELEGI record in a DELEGI RRset, using the following steps:
 
+1. If mandatory key is present, check that all the mandatory keys are part of the DelegInfos in this RR.
+If not, stop processing this record.
+
+1. Check that all keys listed as mandatory are supported.
+If not, stop processing this record.
+
 1. If a record has more than one type of server information key (excluding the IPv4/IPv6 case), or has multiple server information keys of the same type, that record is malformed.
 Stop processing this record.
 
@@ -649,6 +655,12 @@ This arrangement supports the development of new parameters while ensuring that 
 The "DELEG Delegation Information" registry should be populated with the following initial registrations:
 
 ~~~
+Number:  0
+Name:  mandatory
+Meaning: Mandatory keys in this RR
+Reference:  {{nameserver-info}} of this document
+Change Controller:  IETF
+
 Number:  1
 Name:  server-ipv4
 Meaning:  An unordered collection of IPv4 addresses of name servers
