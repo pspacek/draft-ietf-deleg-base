@@ -380,8 +380,8 @@ A DELEG or DELEGI record that has a non-empty DelegInfos MUST have one, and only
 This restriction only applies to a single DELEG or DELEGI record; a DELEG or DELEGI RRset can have records with different server information keys.
 
 When using server-name, the addresses for all the names in the set must be fetched using normal DNS resolution.
-This means the names in the value of the server-name key or the include-delegi key MUST NOT be inside the delegated domain.
-If this constraint is violated the whole RR (but not the whole RRset) MUST be ignored while constructing SLIST ({{slist}}).
+This means the names in the value of the server-name key or the include-delegi key cannot sensibly be inside the delegated domain.
+Resolvers thus will ignore nameserver names in the server-name key or the include-delegi key if they are in the delegated domain.
 
 With this initial DELEG specification, servers are still expected to be reached on the standard DNS port for both UDP and TCP, 53.  While a future specification is expected to address other transports using other ports, its eventual semantics are not covered here.
 
