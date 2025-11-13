@@ -391,14 +391,12 @@ Each individual DELEG record inside a DELEG RRset, or each individual DELEGI rec
 
 A resolver processes each individual DELEG record within a DELEG RRset, or each individual DELEGI record in a DELEGI RRset, using the following steps:
 
-1. If mandatory key is present, check that all the mandatory keys are part of the DelegInfos in this RR.
-If not, stop processing this record.
-
-1. Check that all keys listed as mandatory are supported.
-If not, stop processing this record.
-
 1. Remove all DelegInfo elements with unsupported DelegInfoKey values.
-A resulting record with a zero-length DelegInfos field has no effect on the SLIST processing for resolvers.
+If the resulting record has zero-length DelegInfos field, it MUST NOT have any effect on the SLIST processing for resolvers.
+
+1. If a DelegInfo element with DelegInfoKey "mandatory" is present, check its DelegInfoValue:
+The DelegInfoValue is a list of keys which MUST have a corresponding DelegInfo elements in this record.
+If any of the listed DelegInfo elements is not found, resolver MUST stop processing this record.
 
 1. If a record has more than one type of server information key (excluding the IPv4/IPv6 case), or has multiple server information keys of the same type, that record is malformed.
 Stop processing this record.
