@@ -106,6 +106,7 @@ This section is a brief overview of the protocol.
 It is meant for people who want to understand the protocol before they dive deeper into the protocol specifics.
 
 When a DELEG-aware resolver sends queries, it sets the DE bit in the EDNS0 header to 1 in queries to authoritative servers as a signal that it is indeed DELEG-aware ({{de-bit}}).
+
 DELEG-unaware authoritative servers ignore this signal.
 
 A DELEG-aware authoritative server uses that signal to determine the type of response it will send.
@@ -119,6 +120,7 @@ The Rdata for DELEG records has key=value pairs ({{nameserver-info}}).
 * "server-ipv4" and "server-ipv6" keys have IP addresses for the delegated name servers
 * "server-name" keys have hostnames for the delegated name servers; the addresses must be fetched
 * "include-delegi" keys have domain names which in turn have more information about the delegation
+* "mandatory" key has list of other keys which resolver must understand before using the record
 
 The DELEG-aware resolver seeing the DELEG RRset uses that information to form the list of best servers to ask about the original zone ({{finding-best}}).
 If the DELEG RRset contains "include-delegi", the resolver queries those hostnames for DELEGI RRsets.
@@ -384,6 +386,17 @@ This means the names in the value of the server-name key or the include-delegi k
 Resolvers MUST ignore names in the server-name key or the include-delegi key if they are in the delegated domain.
 
 With this initial DELEG specification, servers are still expected to be reached on the standard DNS port for both UDP and TCP, 53.  While a future specification is expected to address other transports using other ports, its eventual semantics are not covered here.
+
+### Metadata keys {#mandatory}
+This initial DELEG specification defines a single key which is not directly used for contacting DNS servers but it serves as a protocol extensibility mechanism.
+
+Any DELEG or DELEGI record can have key named "mandatory", which is similar to the key of the same name in {{!RFC9460}}.
+
+The presentation value MUST be a comma-separated list of one or more valid DelegInfoKeys, either by their registered name or in the unknown-key format.
+
+In wire format, it is a sequence of DelegInfoKey numeric values in network byte order, concatenated in strictly increasing numeric order.
+
+The "mandatory" key itself is optional, but when it is present a given RR MUST NOT be used by a resolver in resolution process if any of the DelegInfoKeys referenced by the "mandatory" DelegInfo element are not supported by given implementation.
 
 ### Populating the SLIST from DELEG and DELEGI Records {#slist}
 
@@ -663,7 +676,7 @@ The "DELEG Delegation Information" registry should be populated with the followi
 Number:  0
 Name:  mandatory
 Meaning: Mandatory keys in this RR
-Reference:  {{nameserver-info}} of this document
+Reference:  {{mandatory}} of this document
 Change Controller:  IETF
 
 Number:  1
