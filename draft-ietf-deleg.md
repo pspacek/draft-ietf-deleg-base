@@ -611,7 +611,6 @@ Without DELEG, there are no security guarantees for the NS RR set on the parent 
 
 Please note that a full DNSKEY rollover is not necessary to achieve the downgrade protection for DELEG.
 Any single DNSKEY with the ADT flag set to 1 is sufficient; the zone can introduce an otherwise unused record into the DNSKEY RRset.
-This DNSKEY RR can even use an unknown signing algorithm and zero-length key material to minimize size increase of the DNSKEY RRset.
 
 # IANA Considerations
 
