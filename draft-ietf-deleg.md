@@ -339,7 +339,7 @@ However, if the DELEG RRset is known to exist but is unusable (for example, if i
 
 The rest of Step 2's description is not affected by this document.
 
-Resolvers MAY respond to "QNAME=. / QTYPE=DELEG" queries in the same fashion as they respond to "QNAME=. / QTYPE=DS" queries.
+Resolvers MUST respond to "QNAME=. / QTYPE=DELEG" queries in the same fashion as they respond to "QNAME=. / QTYPE=DS" queries.
 
 ### Name Server Information for Delegation {#nameserver-info}
 
