@@ -120,7 +120,7 @@ The Rdata for DELEG records has key=value pairs ({{nameserver-info}}).
 * "server-ipv4" and "server-ipv6" keys have IP addresses for the delegated name servers
 * "server-name" keys have hostnames for the delegated name servers; the addresses must be fetched
 * "include-delegi" keys have domain names which in turn have more information about the delegation
-* "mandatory" key has list of other keys which resolver must understand before using the record
+* "mandatory" keys have a list of other keys which the resolver must understand in order to use the record
 
 The DELEG-aware resolver seeing the DELEG RRset uses that information to form the list of best servers to ask about the original zone ({{finding-best}}).
 If the DELEG RRset contains "include-delegi", the resolver queries those hostnames for DELEGI RRsets.
@@ -388,15 +388,15 @@ Resolvers MUST ignore names in the server-name key or the include-delegi key if 
 With this initial DELEG specification, servers are still expected to be reached on the standard DNS port for both UDP and TCP, 53.  While a future specification is expected to address other transports using other ports, its eventual semantics are not covered here.
 
 ### Metadata keys {#mandatory}
-This initial DELEG specification defines a single key which is not directly used for contacting DNS servers but it serves as a protocol extensibility mechanism.
+This specification defines a key which serves as a protocol extensibility mechanism, but is not directly used for contacting DNS servers.
 
-Any DELEG or DELEGI record can have key named "mandatory", which is similar to the key of the same name in {{!RFC9460}}.
+Any DELEG or DELEGI record can have key named "mandatory" which is similar to the key of the same name in {{!RFC9460}}.
 
-The presentation value MUST be a comma-separated list of one or more valid DelegInfoKeys, either by their registered name or in the unknown-key format.
+The value in the presentation value MUST be a comma-separated list of one or more valid DelegInfoKeys, either by their registered name or in the unknown-key format.
 
-In wire format, it is a sequence of DelegInfoKey numeric values in network byte order, concatenated in strictly increasing numeric order.
+The value in the wire format is a sequence of DelegInfoKey numeric values in network byte order, concatenated, in strictly increasing numeric order.
 
-The "mandatory" key itself is optional, but when it is present a given RR MUST NOT be used by a resolver in resolution process if any of the DelegInfoKeys referenced by the "mandatory" DelegInfo element are not supported by given implementation.
+The "mandatory" key itself is optional, but when it is present, the RR in which it appears MUST NOT be used by a resolver in the resolution process if any of the DelegInfoKeys referenced by the "mandatory" DelegInfo element are not supported in the resolver's implementation.
 
 ### Populating the SLIST from DELEG and DELEGI Records {#slist}
 
@@ -405,11 +405,15 @@ Each individual DELEG record inside a DELEG RRset, or each individual DELEGI rec
 A resolver processes each individual DELEG record within a DELEG RRset, or each individual DELEGI record in a DELEGI RRset, using the following steps:
 
 1. Remove all DelegInfo elements with unsupported DelegInfoKey values.
-If the resulting record has zero-length DelegInfos field, it MUST NOT have any effect on the SLIST processing for resolvers.
+If the resulting record has zero-length DelegInfos field, stop processing the record.
 
-1. If a DelegInfo element with DelegInfoKey "mandatory" is present, check its DelegInfoValue:
+1. If a DelegInfo element with the "mandatory" DelegInfoKey is present, check its DelegInfoValue.
 The DelegInfoValue is a list of keys which MUST have a corresponding DelegInfo elements in this record.
-If any of the listed DelegInfo elements is not found, resolver MUST stop processing this record.
+If any of the listed DelegInfo elements is not found, stop processing this record.
+
+1. If a DelegInfo element with the "mandatory" DelegInfoKey is present, check its DelegInfoValue.
+The DelegInfoValue is a list of keys which MUST be understood by the resolver in order to process the record.
+If any of the listed DelegInfo elements is not understood by the resolver, stop processing this record.
 
 1. If a record has more than one type of server information key (excluding the IPv4/IPv6 case), or has multiple server information keys of the same type, that record is malformed.
 Stop processing this record.
