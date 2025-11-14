@@ -597,8 +597,6 @@ Note that include-delegi chains can have CNAME steps in them; in such a case, a 
 
 ## Preventing Downgrade Attacks
 
-TODO: this section is a bit redundant with "Referral Downgrade Protection" above; harmonize them.
-
 During the rollout of the DELEG protocol, the operator of an authoritative server can upgrade the server software to be DELEG-aware before changing any DNS zones.
 Such deployment should work and provide DELEG-aware clients with correct DELEG-aware answers.
 However, the deployment will not be protected from downgrade attacks against the DELEG protocol.
