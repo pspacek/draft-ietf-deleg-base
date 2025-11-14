@@ -335,7 +335,6 @@ However, if the DELEG RRset is known to exist but is unusable (for example, if i
 
     1. If SLIST is now populated, stop walking up the DNS tree.
 However, if SLIST is not populated, remove the leftmost label from SNAME and go back to the first step, using the newly shortened SNAME.
-Do not go back to the first step if doing so would exceed the amount of work that the resolver is configured to do when processing names; see {{too-much-work}}.
 
 The rest of Step 2's description is not affected by this document.
 
