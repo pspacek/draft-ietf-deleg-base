@@ -334,8 +334,8 @@ However, if the DELEG RRset is known to exist but is unusable (for example, if i
     1. If a given SNAME is proven to not have a DELEG RRset but does have an NS RRset, the resolver MUST copy the NS RRset into SLIST.
 
     1. If SLIST is now populated, stop walking up the DNS tree.
-However, if SLIST is not populated, remove the leftmost label from SNAME and go back to the first step, using the newly shortened SNAME.
-Do not go back to the first step if doing so would exceed the amount of work that the resolver is configured to do when processing names; see {{too-much-work}}.
+
+    1. However, if SLIST is not populated, remove the leftmost label from SNAME and go back to the first step, using the newly shortened SNAME.
 
 The rest of Step 2's description is not affected by this document.
 
@@ -597,8 +597,6 @@ Note that include-delegi chains can have CNAME steps in them; in such a case, a 
 
 ## Preventing Downgrade Attacks
 
-TODO: this section is a bit redundant with "Referral Downgrade Protection" above; harmonize them.
-
 During the rollout of the DELEG protocol, the operator of an authoritative server can upgrade the server software to be DELEG-aware before changing any DNS zones.
 Such deployment should work and provide DELEG-aware clients with correct DELEG-aware answers.
 However, the deployment will not be protected from downgrade attacks against the DELEG protocol.
@@ -611,7 +609,6 @@ Without DELEG, there are no security guarantees for the NS RR set on the parent 
 
 Please note that a full DNSKEY rollover is not necessary to achieve the downgrade protection for DELEG.
 Any single DNSKEY with the ADT flag set to 1 is sufficient; the zone can introduce an otherwise unused record into the DNSKEY RRset.
-This DNSKEY RR can even use an unknown signing algorithm and zero-length key material to minimize size increase of the DNSKEY RRset.
 
 # IANA Considerations
 
