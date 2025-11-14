@@ -334,7 +334,8 @@ However, if the DELEG RRset is known to exist but is unusable (for example, if i
     1. If a given SNAME is proven to not have a DELEG RRset but does have an NS RRset, the resolver MUST copy the NS RRset into SLIST.
 
     1. If SLIST is now populated, stop walking up the DNS tree.
-However, if SLIST is not populated, remove the leftmost label from SNAME and go back to the first step, using the newly shortened SNAME.
+
+    1. However, if SLIST is not populated, remove the leftmost label from SNAME and go back to the first step, using the newly shortened SNAME.
 
 The rest of Step 2's description is not affected by this document.
 
