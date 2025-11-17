@@ -7,10 +7,10 @@ Internet-Draft                                               Google, LLC
 Updates: 1034, 1035, 4035, 6672, 6840 (if                      P. Špaček
          approved)                                                   ISC
 Intended status: Standards Track                                R. Weber
-Expires: 18 May 2026                                 Akamai Technologies
+Expires: 21 May 2026                                 Akamai Technologies
                                                              D. Lawrence
                                                               Salesforce
-                                                        14 November 2025
+                                                        17 November 2025
 
 
                      Extensible Delegation for DNS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 May 2026.
+   This Internet-Draft will expire on 21 May 2026.
 
 Copyright Notice
 
@@ -604,15 +604,18 @@ Table of Contents
 
    The presentation values for server-name and include-delegi are an
    unordered collection of fully-qualified domain names and relative
-   domain names, separated by commas.  Relative names in presentation
-   format are interpreted according origin rules in [RFC1035] section
-   5.1.  Parsing the comma-separated list is specified in [RFC9460]
-   section A.1.
+   domain names, separated by commas.  Relative names in the
+   presentation format are interpreted according origin rules in
+   Section 5.1 of [RFC1035].  Parsing the comma-separated list is
+   specified in Section A.1 of [RFC9460].
 
-   Please note arbitrary names are acceptable on the protocol level.
-   Unusual names with special characters require double-escaping by
-   applying rules of [RFC1034] section 5.1 together with escaping rules
-   from [RFC9460] section A.1.  TODO: add an insane example?
+   The DELEG protocol allows the use of all valid domain names, as
+   defined in [RFC1035].  The presentation format for names with special
+   characters requires both double-escaping by applying rules of
+   Section 5.1 of [RFC1034] together with the escaping rules from
+   Section A.1 of [RFC9460].
+
+   TODO: add an example that requires this escaping.
 
    The wire format for server-name and include-delegi are each a
    concatenated unordered collection of a wire-format domain names,
