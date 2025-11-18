@@ -106,6 +106,7 @@ This section is a brief overview of the protocol.
 It is meant for people who want to understand the protocol before they dive deeper into the protocol specifics.
 
 When a DELEG-aware resolver sends queries, it sets the DE bit in the EDNS0 header to 1 in queries to authoritative servers as a signal that it is indeed DELEG-aware ({{de-bit}}).
+
 DELEG-unaware authoritative servers ignore this signal.
 
 A DELEG-aware authoritative server uses that signal to determine the type of response it will send.
@@ -119,6 +120,7 @@ The Rdata for DELEG records has key=value pairs ({{nameserver-info}}).
 * "server-ipv4" and "server-ipv6" keys have IP addresses for the delegated name servers
 * "server-name" keys have hostnames for the delegated name servers; the addresses must be fetched
 * "include-delegi" keys have domain names which in turn have more information about the delegation
+* "mandatory" keys have a list of other keys which the resolver must understand in order to use the record
 
 The DELEG-aware resolver seeing the DELEG RRset uses that information to form the list of best servers to ask about the original zone ({{finding-best}}).
 If the DELEG RRset contains "include-delegi", the resolver queries those hostnames for DELEGI RRsets.
@@ -276,9 +278,9 @@ See {{de0-deleg}} for more information.
 ### Algorithm for "Finding the Best Servers to Ask" {#finding-best}
 
 This document updates instructions for finding the best servers to ask.
-That information currently is covered in Section 5.3.3 of {{!RFC1034}} and Section 3.4.1 of {{!RFC6672}} with the text "2. Find the best servers to ask."
-Section 3.1.4.1 of {{!RFC4035}} should have explicitly updated Section 5.3.3 of {{!RFC1034}} for the DS RR type, but failed to do so.
-This document simply extends this existing behavior to DELEG RR type as well, and makes this special case explicit.
+It was covered in Section 5.3.3 of {{!RFC1034}} and Section 3.4.1 of {{!RFC6672}} with the text "2. Find the best servers to ask.".
+These instructions were informally updated by section 4.2 of {{!RFC4035}} for the DS RR type but the algorithm change was not made explicit.
+This document simply extends this existing behavior from DS RR type to DELEG RR type as well, and makes this special case explicit.
 
 When a DELEG RRset exists for a delegation in a zone, DELEG-aware resolvers ignore any NS RRset for the delegated zone, whether from the parent or from the apex of the child.
 
@@ -334,12 +336,12 @@ However, if the DELEG RRset is known to exist but is unusable (for example, if i
     1. If a given SNAME is proven to not have a DELEG RRset but does have an NS RRset, the resolver MUST copy the NS RRset into SLIST.
 
     1. If SLIST is now populated, stop walking up the DNS tree.
-However, if SLIST is not populated, remove the leftmost label from SNAME and go back to the first step, using the newly shortened SNAME.
-Do not go back to the first step if doing so would exceed the amount of work that the resolver is configured to do when processing names; see {{too-much-work}}.
+
+    1. However, if SLIST is not populated, remove the leftmost label from SNAME and go back to the first step, using the newly shortened SNAME.
 
 The rest of Step 2's description is not affected by this document.
 
-Resolvers MAY respond to "QNAME=. / QTYPE=DELEG" queries in the same fashion as they respond to "QNAME=. / QTYPE=DS" queries.
+Resolvers MUST respond to "QNAME=. / QTYPE=DELEG" queries in the same fashion as they respond to "QNAME=. / QTYPE=DS" queries.
 
 ### Name Server Information for Delegation {#nameserver-info}
 
@@ -358,6 +360,14 @@ The presentation values for server-ipv4 and server-ipv6 are comma-separated list
 The wire formats for server-ipv4 and server-ipv6 are a sequence of IP addresses, in network byte order, for the respective address family.
 
 The presentation values for server-name and include-delegi are an unordered collection of fully-qualified domain names and relative domain names, separated by commas.
+Relative names in the presentation format are interpreted according origin rules in Section 5.1 of {{!RFC1035}}.
+Parsing the comma-separated list is specified in Section A.1 of {{!RFC9460}}.
+
+The DELEG protocol allows the use of all valid domain names, as defined in {{!RFC1035}} and Section 11 of {{!RFC2181}}.
+The presentation format for names with special characters requires both double-escaping by applying rules of Section 5.1 of {{!RFC1034}} together with the escaping rules from Section A.1 of {{RFC9460}}.
+
+TODO: add an example that requires this escaping.
+
 The wire format for server-name and include-delegi are each a concatenated unordered collection of a wire-format domain names, where the root label provides the separation between names:
 
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-
@@ -365,9 +375,6 @@ The wire format for server-name and include-delegi are each a concatenated unord
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
 The names in the wire format MUST NOT be compressed.
-
-TODO: Describe how escaping works for server-name and include-delegi.
-This will be the same as the escaping mechanism defined in SVCB.
 
 A DELEG or DELEGI record that has a non-empty DelegInfos MUST have one, and only one, set of server information, chosen from the following:
 
@@ -380,10 +387,21 @@ A DELEG or DELEGI record that has a non-empty DelegInfos MUST have one, and only
 This restriction only applies to a single DELEG or DELEGI record; a DELEG or DELEGI RRset can have records with different server information keys.
 
 When using server-name, the addresses for all the names in the set must be fetched using normal DNS resolution.
-This means the names in the value of the server-name key or the include-delegi key MUST NOT be inside the delegated domain.
-If this constraint is violated the whole RR (but not the whole RRset) MUST be ignored while constructing SLIST ({{slist}}).
+This means the names in the value of the server-name key or the include-delegi key cannot sensibly be inside the delegated domain.
+Resolvers MUST ignore names in the server-name key or the include-delegi key if they are in the delegated domain.
 
 With this initial DELEG specification, servers are still expected to be reached on the standard DNS port for both UDP and TCP, 53.  While a future specification is expected to address other transports using other ports, its eventual semantics are not covered here.
+
+### Metadata keys {#mandatory}
+This specification defines a key which serves as a protocol extensibility mechanism, but is not directly used for contacting DNS servers.
+
+Any DELEG or DELEGI record can have key named "mandatory" which is similar to the key of the same name in {{!RFC9460}}.
+
+The value in the presentation value MUST be a comma-separated list of one or more valid DelegInfoKeys, either by their registered name or in the unknown-key format.
+
+The value in the wire format is a sequence of DelegInfoKey numeric values in network byte order, concatenated, in strictly increasing numeric order.
+
+The "mandatory" key itself is optional, but when it is present, the RR in which it appears MUST NOT be used by a resolver in the resolution process if any of the DelegInfoKeys referenced by the "mandatory" DelegInfo element are not supported in the resolver's implementation.
 
 ### Populating the SLIST from DELEG and DELEGI Records {#slist}
 
@@ -391,14 +409,12 @@ Each individual DELEG record inside a DELEG RRset, or each individual DELEGI rec
 
 A resolver processes each individual DELEG record within a DELEG RRset, or each individual DELEGI record in a DELEGI RRset, using the following steps:
 
-1. If mandatory key is present, check that all the mandatory keys are part of the DelegInfos in this RR.
-If not, stop processing this record.
-
-1. Check that all keys listed as mandatory are supported.
-If not, stop processing this record.
-
 1. Remove all DelegInfo elements with unsupported DelegInfoKey values.
-A resulting record with a zero-length DelegInfos field has no effect on the SLIST processing for resolvers.
+If the resulting record has zero-length DelegInfos field, stop processing the record.
+
+1. If a DelegInfo element with the "mandatory" DelegInfoKey is present, check its DelegInfoValue.
+The DelegInfoValue is a list of keys which MUST have a corresponding DelegInfo elements in this record.
+If any of the listed DelegInfo elements is not found, stop processing this record.
 
 1. If a record has more than one type of server information key (excluding the IPv4/IPv6 case), or has multiple server information keys of the same type, that record is malformed.
 Stop processing this record.
@@ -588,8 +604,6 @@ Note that include-delegi chains can have CNAME steps in them; in such a case, a 
 
 ## Preventing Downgrade Attacks
 
-TODO: this section is a bit redundant with "Referral Downgrade Protection" above; harmonize them.
-
 During the rollout of the DELEG protocol, the operator of an authoritative server can upgrade the server software to be DELEG-aware before changing any DNS zones.
 Such deployment should work and provide DELEG-aware clients with correct DELEG-aware answers.
 However, the deployment will not be protected from downgrade attacks against the DELEG protocol.
@@ -602,7 +616,6 @@ Without DELEG, there are no security guarantees for the NS RR set on the parent 
 
 Please note that a full DNSKEY rollover is not necessary to achieve the downgrade protection for DELEG.
 Any single DNSKEY with the ADT flag set to 1 is sufficient; the zone can introduce an otherwise unused record into the DNSKEY RRset.
-This DNSKEY RR can even use an unknown signing algorithm and zero-length key material to minimize size increase of the DNSKEY RRset.
 
 # IANA Considerations
 
@@ -656,7 +669,7 @@ The "DELEG Delegation Information" registry should be populated with the followi
 Number:  0
 Name:  mandatory
 Meaning: Mandatory keys in this RR
-Reference:  {{nameserver-info}} of this document
+Reference:  {{mandatory}} of this document
 Change Controller:  IETF
 
 Number:  1
