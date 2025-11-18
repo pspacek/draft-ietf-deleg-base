@@ -7,10 +7,10 @@ Internet-Draft                                               Google, LLC
 Updates: 1034, 1035, 4035, 6672, 6840 (if                      P. Špaček
          approved)                                                   ISC
 Intended status: Standards Track                                R. Weber
-Expires: 21 May 2026                                 Akamai Technologies
+Expires: 22 May 2026                                 Akamai Technologies
                                                              D. Lawrence
                                                               Salesforce
-                                                        17 November 2025
+                                                        18 November 2025
 
 
                      Extensible Delegation for DNS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 May 2026.
+   This Internet-Draft will expire on 22 May 2026.
 
 Copyright Notice
 
@@ -610,10 +610,10 @@ Table of Contents
    specified in Section A.1 of [RFC9460].
 
    The DELEG protocol allows the use of all valid domain names, as
-   defined in [RFC1035].  The presentation format for names with special
-   characters requires both double-escaping by applying rules of
-   Section 5.1 of [RFC1034] together with the escaping rules from
-   Section A.1 of [RFC9460].
+   defined in [RFC1035] and Section 11 of [RFC2181].  The presentation
+   format for names with special characters requires both double-
+   escaping by applying rules of Section 5.1 of [RFC1034] together with
+   the escaping rules from Section A.1 of [RFC9460].
 
    TODO: add an example that requires this escaping.
 
@@ -1144,6 +1144,10 @@ Table of Contents
    [RFC1035]  Mockapetris, P., "Domain names - implementation and
               specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
               November 1987, <https://www.rfc-editor.org/rfc/rfc1035>.
+
+   [RFC2181]  Elz, R. and R. Bush, "Clarifications to the DNS
+              Specification", RFC 2181, DOI 10.17487/RFC2181, July 1997,
+              <https://www.rfc-editor.org/rfc/rfc2181>.
 
    [RFC4034]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Resource Records for the DNS Security Extensions",
