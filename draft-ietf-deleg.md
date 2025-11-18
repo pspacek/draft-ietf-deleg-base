@@ -361,7 +361,7 @@ The presentation values for server-name and include-delegi are an unordered coll
 Relative names in the presentation format are interpreted according origin rules in Section 5.1 of {{!RFC1035}}.
 Parsing the comma-separated list is specified in Section A.1 of {{!RFC9460}}.
 
-The DELEG protocol allows the use of all valid domain names, as defined in {{!RFC1035}}.
+The DELEG protocol allows the use of all valid domain names, as defined in {{!RFC1035}} and Section 11 of {{!RFC2181}}.
 The presentation format for names with special characters requires both double-escaping by applying rules of Section 5.1 of {{!RFC1034}} together with the escaping rules from Section A.1 of {{RFC9460}}.
 
 TODO: add an example that requires this escaping.
