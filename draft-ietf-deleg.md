@@ -411,7 +411,6 @@ If the resulting record has zero-length DelegInfos field, stop processing the re
 The DelegInfoValue is a list of keys which MUST have a corresponding DelegInfo elements in this record.
 If any of the listed DelegInfo elements is not found, stop processing this record.
 
-
 1. If a record has more than one type of server information key (excluding the IPv4/IPv6 case), or has multiple server information keys of the same type, that record is malformed.
 Stop processing this record.
 
