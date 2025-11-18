@@ -493,7 +493,7 @@ An authoritative server responding to DELEG-unaware clients has to handle three 
 Authoritative servers may receive requests from DELEG-unaware clients for which the child zone is authoritative and is delegated with DELEG RRs only (that is, without any NS RRs).
 Such a zone is by definition not resolvable for DELEG-unaware clients.
 From the perspective of a DELEG-unaware client, the zone cut created by the DELEG RRs is invisible.
-In such a situation, the authoritative server should respnd in a way to makes sense to DELEG-unaware clients.
+In such a situation, the authoritative server should respond in a way that makes sense to DELEG-unaware clients.
 
 The primary current use case for zone owners that have zones to have DELEG records but no NS records is that they want resolution of those zones only if the resolver uses future features of the DELEG protocol, such as encrypted DNS transports.
 
