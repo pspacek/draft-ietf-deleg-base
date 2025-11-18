@@ -7,10 +7,10 @@ Internet-Draft                                               Google, LLC
 Updates: 1034, 1035, 4035, 6672, 6840 (if                      P. Špaček
          approved)                                                   ISC
 Intended status: Standards Track                                R. Weber
-Expires: 18 May 2026                                 Akamai Technologies
+Expires: 22 May 2026                                 Akamai Technologies
                                                              D. Lawrence
                                                               Salesforce
-                                                        14 November 2025
+                                                        18 November 2025
 
 
                      Extensible Delegation for DNS
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 May 2026.
+   This Internet-Draft will expire on 22 May 2026.
 
 Copyright Notice
 
@@ -696,31 +696,25 @@ Table of Contents
        this record.  If any of the listed DelegInfo elements is not
        found, stop processing this record.
 
-   3.  If a DelegInfo element with the "mandatory" DelegInfoKey is
-       present, check its DelegInfoValue.  The DelegInfoValue is a list
-       of keys which MUST be understood by the resolver in order to
-       process the record.  If any of the listed DelegInfo elements is
-       not understood by the resolver, stop processing this record.
-
-   4.  If a record has more than one type of server information key
+   3.  If a record has more than one type of server information key
        (excluding the IPv4/IPv6 case), or has multiple server
        information keys of the same type, that record is malformed.
        Stop processing this record.
 
-   5.  If server-ipv4 and/or server-ipv6 keys are present inside the
+   4.  If server-ipv4 and/or server-ipv6 keys are present inside the
        record, copy all of the address values into SLIST.  Stop
        processing this record.
 
-   6.  If a server-name key is present in the record, resolve each name
+   5.  If a server-name key is present in the record, resolve each name
        in the value into IPv4 and/or IPv6 addresses.  Copy these
        addresses into SLIST.  Stop processing this record.
 
-   7.  If an include-delegi key is present in the record, resolve each
+   6.  If an include-delegi key is present in the record, resolve each
        name in the value using the DELEGI RR type.  Recursively apply
        the algorithm described in this section, after checking that the
        maximum loop count described in Section 5.1 has not been reached.
 
-   8.  If none of the above applies, SLIST is not modified by this
+   7.  If none of the above applies, SLIST is not modified by this
        particular record.
 
    A DELEG-aware resolver MAY implement lazy filling of SLIST, such as
