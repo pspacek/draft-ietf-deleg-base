@@ -360,6 +360,14 @@ The presentation values for server-ipv4 and server-ipv6 are comma-separated list
 The wire formats for server-ipv4 and server-ipv6 are a sequence of IP addresses, in network byte order, for the respective address family.
 
 The presentation values for server-name and include-delegi are an unordered collection of fully-qualified domain names and relative domain names, separated by commas.
+Relative names in the presentation format are interpreted according origin rules in Section 5.1 of {{!RFC1035}}.
+Parsing the comma-separated list is specified in Section A.1 of {{!RFC9460}}.
+
+The DELEG protocol allows the use of all valid domain names, as defined in {{!RFC1035}} and Section 11 of {{!RFC2181}}.
+The presentation format for names with special characters requires both double-escaping by applying rules of Section 5.1 of {{!RFC1034}} together with the escaping rules from Section A.1 of {{RFC9460}}.
+
+TODO: add an example that requires this escaping.
+
 The wire format for server-name and include-delegi are each a concatenated unordered collection of a wire-format domain names, where the root label provides the separation between names:
 
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-
@@ -367,9 +375,6 @@ The wire format for server-name and include-delegi are each a concatenated unord
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
 The names in the wire format MUST NOT be compressed.
-
-TODO: Describe how escaping works for server-name and include-delegi.
-This will be the same as the escaping mechanism defined in SVCB.
 
 A DELEG or DELEGI record that has a non-empty DelegInfos MUST have one, and only one, set of server information, chosen from the following:
 
