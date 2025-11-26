@@ -28,11 +28,6 @@ ipr: trust200902
 
 author:
 -
-    ins: T. April
-    name: Tim April
-    organization: Google, LLC
-    email: ietf@tapril.net
--
     ins: P.Špaček
     name: Petr Špaček
     organization: ISC
