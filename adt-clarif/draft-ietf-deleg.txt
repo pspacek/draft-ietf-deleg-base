@@ -922,10 +922,11 @@ Table of Contents
    See examples in Appendix A.1 and Appendix A.4.2.3.
 
    In order to protect validators from downgrade attacks (see
-   Section 6.2) this draft introduces a new DNSKEY flag ADT
-   (Authoritative Delegation Types, see Section 7.1).  For downgrade
-   resistance, zones which contain a DELEG RRset MUST set ADT flag to 1
-   in at least one of the DNSKEY records published in the zone.
+   Section 6.2), this draft introduces a new DNSKEY flag ADT
+   (Authoritative Delegation Types, see Section 7.1).  In order to
+   achieve downgrade resistance, zones which contain a DELEG RRset MUST
+   set the ADT flag to 1 in at least one of the DNSKEY records published
+   in the zone.
 
 4.4.  DNSSEC Validators
 
@@ -990,15 +991,16 @@ Table of Contents
 
 4.4.4.  Positive responses
 
-   An existing DELEG RRset is authoritative in and signed by the parent
-   zone, similarly to DS RRset (see Section 4.3).
+   An existing DELEG RRset is authoritative in, and signed by, the
+   parent zone, similar to a DS RRset (see Section 4.3).
 
-   A validator SHOULD NOT treat a positive response with DELEG RRset as
-   DNSSEC-bogus only because all DNSKEYs in zone have ADT flag set to 0.
-   Such zone would not be protected from downgrade attacks (Section 6.2)
-   but this behavior is consistent with other non-DELEG DNSSEC
-   specifications: Validators are not expected to detect inconsistencies
-   in data if a chain of trust can be established.
+   If all the DNSKEY records in zone have the ADT flag set to 0, a
+   validator SHOULD NOT use this fact to treat a positive response with
+   DELEG RRset as bogus for DNSSEC.  Such a zone would not be protected
+   from downgrade attacks (Section 6.2), but this behavior is consistent
+   with DNSSEC specifications that precede this one: validators are not
+   expected to detect inconsistencies in data if a chain of trust can be
+   established.
 
 4.4.5.  Chaining
 

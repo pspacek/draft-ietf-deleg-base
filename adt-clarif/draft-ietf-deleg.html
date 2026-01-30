@@ -1983,8 +1983,8 @@ Existing rules from the DNSSEC specifications apply.<a href="#section-4.3-1" cla
 </li>
         </ul>
 <p id="section-4.3-5">See examples in <a href="#example-root" class="auto internal xref">Appendix A.1</a> and <a href="#example-occluded" class="auto internal xref">Appendix A.4.2.3</a>.<a href="#section-4.3-5" class="pilcrow">¶</a></p>
-<p id="section-4.3-6">In order to protect validators from downgrade attacks (see <a href="#downgrade-attacks" class="auto internal xref">Section 6.2</a>) this draft introduces a new DNSKEY flag ADT (Authoritative Delegation Types, see <a href="#iana-existing" class="auto internal xref">Section 7.1</a>).
-For downgrade resistance, zones which contain a DELEG RRset MUST set ADT flag to 1 in at least one of the DNSKEY records published in the zone.<a href="#section-4.3-6" class="pilcrow">¶</a></p>
+<p id="section-4.3-6">In order to protect validators from downgrade attacks (see <a href="#downgrade-attacks" class="auto internal xref">Section 6.2</a>), this draft introduces a new DNSKEY flag ADT (Authoritative Delegation Types, see <a href="#iana-existing" class="auto internal xref">Section 7.1</a>).
+In order to achieve downgrade resistance, zones which contain a DELEG RRset MUST set the ADT flag to 1 in at least one of the DNSKEY records published in the zone.<a href="#section-4.3-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="dnssec-validators">
@@ -2053,10 +2053,10 @@ A referral response with an unsigned NS and signed DS RRsets does not require ad
           <h4 id="name-positive-responses">
 <a href="#section-4.4.4" class="section-number selfRef">4.4.4. </a><a href="#name-positive-responses" class="section-name selfRef">Positive responses</a>
           </h4>
-<p id="section-4.4.4-1">An existing DELEG RRset is authoritative in and signed by the parent zone, similarly to DS RRset (see <a href="#signers" class="auto internal xref">Section 4.3</a>).<a href="#section-4.4.4-1" class="pilcrow">¶</a></p>
-<p id="section-4.4.4-2">A validator SHOULD NOT treat a positive response with DELEG RRset as DNSSEC-bogus only because all DNSKEYs in zone have ADT flag set to 0.
-Such zone would not be protected from downgrade attacks (<a href="#downgrade-attacks" class="auto internal xref">Section 6.2</a>) but this behavior is consistent with other non-DELEG DNSSEC specifications:
-Validators are not expected to detect inconsistencies in data if a chain of trust can be established.<a href="#section-4.4.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.4.4-1">An existing DELEG RRset is authoritative in, and signed by, the parent zone, similar to a DS RRset (see <a href="#signers" class="auto internal xref">Section 4.3</a>).<a href="#section-4.4.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.4.4-2">If all the DNSKEY records in zone have the ADT flag set to 0, a validator SHOULD NOT use this fact to treat a positive response with DELEG RRset as bogus for DNSSEC.
+Such a zone would not be protected from downgrade attacks (<a href="#downgrade-attacks" class="auto internal xref">Section 6.2</a>), but this behavior is consistent with DNSSEC specifications that precede this one:
+validators are not expected to detect inconsistencies in data if a chain of trust can be established.<a href="#section-4.4.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="chaining">
