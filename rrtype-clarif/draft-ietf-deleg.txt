@@ -7,8 +7,8 @@ Internet-Draft                                                       ISC
 Updates: 1034, 1035, 4035, 6672, 6840 (if                       R. Weber
          approved)                                   Akamai Technologies
 Intended status: Standards Track                             D. Lawrence
-Expires: 2 August 2026                                        Salesforce
-                                                         29 January 2026
+Expires: 3 August 2026                                        Salesforce
+                                                         30 January 2026
 
 
                      Extensible Delegation for DNS
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 August 2026.
+   This Internet-Draft will expire on 3 August 2026.
 
 Copyright Notice
 
@@ -721,8 +721,8 @@ Table of Contents
 
    4.  If any DNS name referenced by server-name key or the include-
        delegi key is equal to or is a subdomain of the delegated domain
-       (that is, if the name is the same as the DELEG record owner),
-       that record is malformed.  Stop processing this record.
+       (i.e. the DELEG record owner), that record is malformed.  Stop
+       processing this record.
 
        This check MUST be performed against the original owner name of
        the DELEG record even if the currently-processed record is a
