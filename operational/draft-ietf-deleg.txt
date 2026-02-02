@@ -104,7 +104,7 @@ Table of Contents
        4.4.4.  Chaining
    5.  Operational Considerations
      5.1.  NS and DELEG Combined
-     5.2.  NS Not Required
+     5.2.  NS Not Required by Protocol
      5.3.  Authoritative Deployment
        5.3.1.  Enabling ADT Flag
    6.  Security Considerations
@@ -1028,7 +1028,7 @@ Table of Contents
    independent on the protocol level, but it does not prohibit a
    provisioning system from generating one record type from the other.
 
-5.2.  NS Not Required
+5.2.  NS Not Required by Protocol
 
    A zone delegated exclusively using DELEG records is not resolvable by
    non-DELEG aware resolvers.  In that case the zone is not required to
@@ -1715,7 +1715,8 @@ Acknowledgments
    Adhvaryu, Vladimír Čunát, Andreas Schulze.
 
    Other people joined the effort after the initial hackaton: Ben
-   Schwartz, Bob Halley, Paul Hoffman, Miek Gieben, Ray Hunter ...
+   Schwartz, Bob Halley, Paul Hoffman, Miek Gieben, Ray Hunter, Håvard
+   Eidnes ...
 
    RESINFO extension was contributed by Florian Obser.
 

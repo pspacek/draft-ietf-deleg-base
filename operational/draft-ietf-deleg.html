@@ -1260,7 +1260,7 @@ The new delegation records are extensible, can be secured with DNSSEC, and elimi
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-ns-and-deleg-combined" class="internal xref">NS and DELEG Combined</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
-                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-ns-not-required" class="internal xref">NS Not Required</a></p>
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-ns-not-required-by-protocol" class="internal xref">NS Not Required by Protocol</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
                 <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-authoritative-deployment" class="internal xref">Authoritative Deployment</a></p>
@@ -2095,10 +2095,10 @@ This specification treats both NS and DELEG RRsets as completely independent on 
 but it does not prohibit a provisioning system from generating one record type from the other.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="ns-not-required">
+<div id="ns-not-required-by-protocol">
 <section id="section-5.2">
-        <h3 id="name-ns-not-required">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-ns-not-required" class="section-name selfRef">NS Not Required</a>
+        <h3 id="name-ns-not-required-by-protocol">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-ns-not-required-by-protocol" class="section-name selfRef">NS Not Required by Protocol</a>
         </h3>
 <p id="section-5.2-1">A zone delegated exclusively using DELEG records is not resolvable by non-DELEG aware resolvers.
 In that case the zone is not required to have NS RRset in the child zone apex.
@@ -2906,7 +2906,7 @@ test. DELEG server-ipv6=3fff::33
 John Levine, Erik Nygren, Jon Reed, Ben Kaduk, Mashooq Muhaimen, Jason Moreau, Jerrod Wiesman, Billy Tiemann, Gordon Marx and Brian Wellington.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 <p id="appendix-B-2">Work on DELEG protocol has started at IETF 118 Hackaton.
 Hackaton participants: Christian Elmerot, David Blacka, David Lawrence, Edward Lewis, Erik Nygren, George Michaelson, Jan Včelák, Klaus Darilion, Libor Peltan, Manu Bretelle, Peter van Dijk, Petr Špaček, Philip Homburg, Ralf Weber, Roy Arends, Shane Kerr, Shumon Huque, Vandan Adhvaryu, Vladimír Čunát, Andreas Schulze.<a href="#appendix-B-2" class="pilcrow">¶</a></p>
-<p id="appendix-B-3">Other people joined the effort after the initial hackaton: Ben Schwartz, Bob Halley, Paul Hoffman, Miek Gieben, Ray Hunter ...<a href="#appendix-B-3" class="pilcrow">¶</a></p>
+<p id="appendix-B-3">Other people joined the effort after the initial hackaton: Ben Schwartz, Bob Halley, Paul Hoffman, Miek Gieben, Ray Hunter, Håvard Eidnes ...<a href="#appendix-B-3" class="pilcrow">¶</a></p>
 <p id="appendix-B-4">RESINFO extension was contributed by Florian Obser.<a href="#appendix-B-4" class="pilcrow">¶</a></p>
 </section>
 </div>
