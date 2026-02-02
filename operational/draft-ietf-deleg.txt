@@ -7,8 +7,8 @@ Internet-Draft                                                       ISC
 Updates: 1034, 1035, 4035, 6672, 6840 (if                       R. Weber
          approved)                                   Akamai Technologies
 Intended status: Standards Track                             D. Lawrence
-Expires: 3 August 2026                                        Salesforce
-                                                         30 January 2026
+Expires: 6 August 2026                                        Salesforce
+                                                         2 February 2026
 
 
                      Extensible Delegation for DNS
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 August 2026.
+   This Internet-Draft will expire on 6 August 2026.
 
 Copyright Notice
 
@@ -1030,11 +1030,11 @@ Table of Contents
 
 5.2.  NS Not Required
 
-   A zone that is delegated using only DELEG records is not reachable by
-   non-DELEG aware resolvers.  In this case, the zone is not required to
+   A zone delegated exclusively using DELEG records is not resolvable by
+   non-DELEG aware resolvers.  In that case the zone is not required to
    have NS RRset in the child zone apex.  Software to manage zone
    content or check the validity of zones needs to be updated to allow
-   zones without apex NS RRset.
+   zones without an NS RRset at the apex.
 
 5.3.  Authoritative Deployment
 
@@ -1715,7 +1715,7 @@ Acknowledgments
    Adhvaryu, Vladimír Čunát, Andreas Schulze.
 
    Other people joined the effort after the initial hackaton: Ben
-   Schwartz, Bob Halley, Paul Hoffman, Miek Gieben ...
+   Schwartz, Bob Halley, Paul Hoffman, Miek Gieben, Ray Hunter ...
 
    RESINFO extension was contributed by Florian Obser.
 
