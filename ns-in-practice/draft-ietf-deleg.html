@@ -2121,11 +2121,11 @@ Software to manage zone content or check the validity of zones needs to be updat
         <h3 id="name-ns-maybe-required-in-practi">
 <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-ns-maybe-required-in-practi" class="section-name selfRef">NS Maybe Required in Practice</a>
         </h3>
-<p id="section-6.2-1">Although DELEG removes the protocol requirement for NS records, resolver support for DELEG will be incomplete for a prolonged period.
+<p id="section-6.2-1">Although DELEG removes the protocol requirement for NS records, resolver support for DELEG will be incomplete for a long time after this protocol is first deployed.
 Zones intended for global reachability need to continue publishing NS records until DELEG support is sufficiently widespread.
 DELEG-only delegation is appropriate only where all intended users are known to use DELEG-capable resolvers.
-This might be the case when a zone should be reachable only via secure transport.
-The decision to drop NS records should be guided by operational measurements of resolver adoption.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+This might be the case when a zone operater wants a zone be reachable only over secure transport, for example.
+The decision to drop NS records should be guided by operational measurements of resolver adoption of the DELEG protocol.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="ns-and-deleg-combined">
