@@ -1052,7 +1052,7 @@ Table of Contents
    reachability need to continue publishing NS records until DELEG
    support is sufficiently widespread.  DELEG-only delegation is
    appropriate only where all intended users are known to use DELEG-
-   capable resolvers.  This might be the case when a zone operater wants
+   capable resolvers.  This might be the case when a zone operator wants
    a zone be reachable only over secure transport, for example.  The
    decision to drop NS records should be guided by operational
    measurements of resolver adoption of the DELEG protocol.
