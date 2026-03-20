@@ -4,6 +4,8 @@ import itertools
 import dns.message
 import dns.name
 
+from generate_zones import zone
+
 OUTFILE = "queries.tcpdns"
 
 
@@ -26,19 +28,25 @@ def gen_queries(delegation_owner: str):
         if de:
             ednsflags |= 0x2000
 
-        # print("-" * 40)
-        # print(qname, qtype, f"DO={do} DE={de}")
-        assert qtype
-        yield dns.message.make_query(qname, qtype, ednsflags=ednsflags)
+        print(qname, qtype, f"DO={do} DE={de}")
+        q = dns.message.make_query(qname, qtype, ednsflags=ednsflags)
+        q.flags = 0  # remove default RD bit (and everything else, too)
+        yield q
+
+
+def write_query(query, outfile):
+    wire = query.to_wire()
+    msglen = len(wire)
+    assert outfile.write(msglen.to_bytes(length=2, byteorder="big")) == 2
+    assert outfile.write(wire) == msglen
 
 
 def main():
+    zone_data = zone({"nsec": None})
     with open(OUTFILE, "wb") as outf:
-        for query in gen_queries("test"):
-            wire = query.to_wire()
-            msglen = len(wire)
-            assert outf.write(msglen.to_bytes(length=2, byteorder="big")) == 2
-            assert outf.write(wire) == msglen
+        for owner, _, _ in zone_data:
+            for query in gen_queries(f"{owner}.test."):
+                write_query(query, outf)
 
 
 if __name__ == "__main__":
