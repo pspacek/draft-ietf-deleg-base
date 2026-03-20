@@ -2,9 +2,17 @@
 # from pprint import pprint
 import itertools
 from pathlib import Path
-from typing import Optional
+from dns.name import from_text
+import dns.name
 
 OUTDIR = Path("zones")
+SUBTREE = from_text("test.")
+DNSSEC_PARAMS = [
+    {"nsec": None, "origin": from_text("unsigned", origin=SUBTREE)},
+    {"nsec": 1, "origin": from_text("nsec", origin=SUBTREE)},
+    {"nsec": 3, "optout": False, "origin": from_text("nsec3", origin=SUBTREE)},
+    {"nsec": 3, "optout": True, "origin": from_text("optout-nsec3", origin=SUBTREE)},
+]
 
 rr_examples = {
     "ns": ["NS", "ns1.test."],
@@ -26,7 +34,7 @@ def delegation_name(ns: bool, deleg: bool, a: bool):
     return "-".join(present)
 
 
-def zone(nsec, optout: Optional[bool] = False):
+def zone_data():
     rr_combinations = [
         {"ns": bool1, "deleg": bool2, "a": bool3}
         for bool1, bool2, bool3 in itertools.product(*[[False, True]] * 3)
@@ -50,20 +58,22 @@ def print_zone(rrtuples):
         print("\t".join([owner, rrtype, rdata]))
 
 
-def zones():
-    dnssec_params = [
-        {"nsec": None},
-        {"nsec": 1},
-        {"nsec": 3, "optout": False},
-        {"nsec": 3, "optout": True},
-    ]
+def parent_zones():
+    zones = {}
 
-    for zone_params in [{"nsec": None}]:
-        print_zone(zone(**zone_params))
+    for zone_params in DNSSEC_PARAMS:
+        zones[zone_params["origin"]] = zone_data()
+    return zones
+
+
+def zone_path(origin: dns.name.Name):
+    return Path(str(origin.relativize(dns.name.root) + from_text("zone", origin=None)))
 
 
 def main():
-    zones()
+    for origin, rrtuples in parent_zones().items():
+        with open(zone_path(origin), "w") as zf:
+            zf.writelines("\t".join(rrtuple) for rrtuple in rrtuples)
 
 
 if __name__ == "__main__":

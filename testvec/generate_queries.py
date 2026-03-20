@@ -4,12 +4,12 @@ import itertools
 import dns.message
 import dns.name
 
-from generate_zones import zone
+from generate_zones import parent_zones
 
 OUTFILE = "queries.tcpdns"
 
 
-def gen_queries(delegation_owner: str):
+def gen_queries(delegation_owner: dns.name.Name):
     subdomains = [None, "sub"]
     qtypes = ["NS", "TYPE61440", "DS", "A", "TXT"]
     booleans = [False, True]
@@ -17,11 +17,9 @@ def gen_queries(delegation_owner: str):
         *[subdomains, qtypes, booleans, booleans]
     ):
         if prefix:
-            qname = dns.name.from_text(
-                prefix, origin=dns.name.from_text(delegation_owner)
-            )
+            qname = dns.name.from_text(prefix, origin=delegation_owner)
         else:
-            qname = dns.name.from_text(delegation_owner)
+            qname = delegation_owner
         ednsflags = 0
         if do:
             ednsflags |= 0x8000
@@ -42,11 +40,12 @@ def write_query(query, outfile):
 
 
 def main():
-    zone_data = zone({"nsec": None})
     with open(OUTFILE, "wb") as outf:
-        for owner, _, _ in zone_data:
-            for query in gen_queries(f"{owner}.test."):
-                write_query(query, outf)
+        for origin, zonedata in parent_zones().items():
+            for owner_rel, _, _ in zonedata:
+                owner = dns.name.from_text(owner_rel, origin)
+                for query in gen_queries(owner):
+                    write_query(query, outf)
 
 
 if __name__ == "__main__":
