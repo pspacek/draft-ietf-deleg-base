@@ -77,6 +77,7 @@ def parent_zones():
 def main():
     for origin, rrtuples in parent_zones().items():
         with open(zone_path(origin), "w") as zf:
+            zf.write("$TTL 86400\n")
             zf.writelines(f'{"\t".join(rrtuple)}\n' for rrtuple in rrtuples)
 
 
