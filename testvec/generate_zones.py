@@ -14,6 +14,14 @@ DNSSEC_PARAMS = [
     {"nsec": 3, "optout": True, "origin": from_text("optout-nsec3", origin=SUBTREE)},
 ]
 
+
+def zone_path(origin: dns.name.Name):
+    return Path(str(origin.relativize(dns.name.root) + from_text("zone", origin=None)))
+
+
+for zone_params in DNSSEC_PARAMS:
+    zone_params["zone_path"] = zone_path(zone_params["origin"])
+
 rr_examples = {
     "ns": ["NS", "ns1.test."],
     "a": ["A", "192.0.2.1"],
@@ -66,14 +74,10 @@ def parent_zones():
     return zones
 
 
-def zone_path(origin: dns.name.Name):
-    return Path(str(origin.relativize(dns.name.root) + from_text("zone", origin=None)))
-
-
 def main():
     for origin, rrtuples in parent_zones().items():
         with open(zone_path(origin), "w") as zf:
-            zf.writelines("\t".join(rrtuple) for rrtuple in rrtuples)
+            zf.writelines(f'{"\t".join(rrtuple)}\n' for rrtuple in rrtuples)
 
 
 if __name__ == "__main__":
