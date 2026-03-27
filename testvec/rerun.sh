@@ -8,6 +8,10 @@ rm -rf deleg/
 ~/w/pkg/respdiff/git/msgdiff.py -c respdiff.cfg deleg/
 ~/w/pkg/respdiff/git/diffsum.py -c respdiff.cfg deleg/
 
-dig +unknownformat +dnssec +de @127.0.0.1 -p 5375 nsec.test. AXFR >xfr-nsec-knot.db
-dig +unknownformat +dnssec +de @127.0.0.1 -p 5366 nsec.test. AXFR >xfr-nsec-bind.db
-#ldns-compare-zones <(ldns-read-zone xfr-nsec-knot.db) <(lread-read-zone xfr-nsec-bind.db)
+pushd wrk
+for ZONE in $ALLZONES; do
+  dig +unknownformat +dnssec +de @127.0.0.1 -p 5375 nsec.test. AXFR >xfr.${ZONE}.knot.db
+  dig +unknownformat +dnssec +de @127.0.0.1 -p 5366 nsec.test. AXFR >xfr.${ZONE}.bind.db
+  ldns-compare-zones -e xfr.${ZONE}.knot.db xfr.${ZONE}.bind.db
+done
+popd
