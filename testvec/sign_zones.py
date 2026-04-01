@@ -22,11 +22,23 @@ def generate_keyfiles():
             "-fADT",
             "-fKSK",
             "-aECDSAP256SHA256",
+            "-P20000101000000",
+            "-A20000101000000",
             str(zone_params["origin"]),
         ]
         out = subprocess.check_output(keygen_cmd)
         keyfile = out.decode("ascii").strip()
         zone_params["keyfile"] = keyfile
+
+        settime_cmd = [
+            "dnssec-settime",
+            "-s",
+            "-d",
+            "OMNIPRESENT",
+            "20000101000000",
+            keyfile,
+        ]
+        out = subprocess.check_output(settime_cmd)
     return zones
 
 
