@@ -58,6 +58,8 @@ def sign(zone_params):
         "-S",  # smart signing: automatically finds key files
         # for the zone and determines how they are to be used
         # (so we don't have to manipulate zone file by hand to include DNSKEY)
+        "-G",
+        "",
     ]
     if zone_params["nsec"] == 3:
         cmd.extend(["-3", "-", "-H", "0"])
