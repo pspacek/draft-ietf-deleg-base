@@ -7,3 +7,4 @@ K*.private
 *.zone.signed
 *.test.
 deleg/
+sdig/
