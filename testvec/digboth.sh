@@ -5,3 +5,5 @@ echo '=== KNOT ==='
 dig -r @127.0.0.1 -p 5375 "$@"
 echo '=== BIND ==='
 dig -r @127.0.0.1 -p 5366 "$@"
+echo '=== PowerDNS ==='
+dig -r @127.0.0.1 -p 5377 "$@"

@@ -1,0 +1,10 @@
+wrk/
+queries.tcpdns
+K*.key
+K*.state
+K*.private
+*.zone
+*.zone.signed
+*.test.
+deleg/
+sdig/
