@@ -1,4 +1,16 @@
 #!/usr/bin/bash
+# Set up the "wrk" directory with all the zones and key data required
+# for testing.
+# This requires DelExt capable builds of BIND (each-deleg-auth branch),
+# Knot (master branch) and PowerDNS (auth-deleg branch of the pieterlexis/pdns fork)
+# to be in $PATH.
+#
+# After running this script, `cd` into the "wrk" directory and start the nameservers:
+#
+# named -c ../named.conf -f -g
+# knotd -c ../knotd.conf -v
+# pdns_server --config-dir=..
+
 set -o nounset -o errexit -o xtrace
 
 source testvars.sh
