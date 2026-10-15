@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-10-13T06:32:57.188836+00:00",
+  "timestamp": "2026-10-15T04:16:40.423877+00:00",
   "repo": "pspacek/draft-ietf-deleg-base",
   "labels": [
     {
@@ -84,6 +84,55 @@
         }
       ],
       "reviews": []
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOO_Egl88AAAABIYn13g",
+      "title": "Add PowerDNS to test harness (plus other things)",
+      "url": "https://github.com/pspacek/draft-ietf-deleg-base/pull/2",
+      "state": "MERGED",
+      "author": "pieterlexis",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Hi,\n\nThis PR adds PowerDNS to the test harness, as well as the following:\n\nIt adds an [`sdig`](https://doc.powerdns.com/authoritative/manpages/sdig.1.html) (\"simple dig\") based test to (I think) better compare nameserver responses with each other.\n\nAs well as some clean ups like a gitignore file to ignore generated files and some comments in the authsetup script.",
+      "createdAt": "2026-10-14T12:11:24Z",
+      "updatedAt": "2026-10-14T14:28:15Z",
+      "baseRepository": "pspacek/draft-ietf-deleg-base",
+      "baseRefName": "testvectors",
+      "baseRefOid": "1da0dc24da71b233150b9f87ca2b3c181797d5fb",
+      "headRepository": "pieterlexis/draft-ietf-deleg-base",
+      "headRefName": "testvectors-pdns",
+      "headRefOid": "b398e39f48b8fd02edf40ac2c93705ff4a0ed2b5",
+      "closedAt": "2026-10-14T14:28:15Z",
+      "mergedAt": "2026-10-14T14:28:15Z",
+      "mergedBy": "pspacek",
+      "mergeCommit": {
+        "oid": "fd77015055ca5d1330a1b188312b0544be97621e"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOO_Egl88AAAABSPvNdg",
+          "commit": {
+            "abbreviatedOid": "208e33e"
+          },
+          "author": "pspacek",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-10-14T14:20:45Z",
+          "updatedAt": "2026-10-14T14:20:45Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "I would just omit this line because it makes the behavior confusing for this use-case. People can edit it as needed.",
+              "createdAt": "2026-10-14T14:20:45Z",
+              "updatedAt": "2026-10-14T14:20:45Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
